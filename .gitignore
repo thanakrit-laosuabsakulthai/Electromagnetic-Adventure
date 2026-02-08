@@ -5,8 +5,8 @@
 !.gitignore
 !/.vscode/
 !/.vscode/c_cpp_properties.json
-!.CmakePresets.json
-!.CMakeLists.txt
+!CmakePresets.json
+!CMakeLists.txt
 !/Capital/
 !/Capital/**
 !/Parity/

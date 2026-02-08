@@ -1,0 +1,37 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "Visual Studio Build Tools 2022 Release - amd64",
+            "displayName": "Visual Studio Build Tools 2022 Release - amd64",
+            "description": "Using compilers for Visual Studio 17 2022 (x64 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/output/build/amd64",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/output/install/amd64",
+                "CMAKE_C_COMPILER": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe",
+                "CMAKE_CXX_COMPILER": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Quiet",
+            "description": "Build with minimal output",
+            "displayName": "Addition - Quiet",
+            "configurePreset": "Visual Studio Build Tools 2022 Release - amd64",
+            "nativeToolOptions": [
+                "/nologo",
+                "/verbosity:minimal"
+            ]
+        },
+        {
+            "name": "Visual Studio Build Tools 2022 Release - amd64-debug",
+            "displayName": "Visual Studio Build Tools 2022 Release - amd64 - Debug",
+            "configurePreset": "Visual Studio Build Tools 2022 Release - amd64",
+            "configuration": "Debug"
+        }
+    ]
+}
