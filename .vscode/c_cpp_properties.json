@@ -17,7 +17,8 @@
             "cStandard": "c23",
             "compilerArgs": [
                 "/std:c++23"
-            ]
+            ],
+            "compileCommands": "${workspaceFolder}/output/build/amd64/compile_commands.json"
         }
     ],
     "version": 4

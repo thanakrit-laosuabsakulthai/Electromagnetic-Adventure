@@ -1,56 +1,11 @@
-#include <deque>
-#include <memory>
-#include <iostream>
-#include <string>
-#include <format>
-#include <print>
-
-// Forward declare game state
-class Overworld;
-
-enum class BoardType
-{
-	LuckyBoard,
-	EventBoard,
-	UnluckyBoard,
-	DemonBoard
-};
-
-enum class DieRoll : int
-{
-	One = 1,
-	Two,
-	Three,
-	Four,
-	Five,
-	Six
-};
-
-// Base class for all game actions
-struct Rule
-{
-	virtual ~Rule() = default;
-	virtual void execute(Overworld &world) = 0;
-};
-
-// Main game loop in Overworld
-class Overworld
-{
-	public:
-	
-	DieRoll die_roll_for_random_board = DieRoll::One;
-	
-	std::deque<std::unique_ptr<Rule>> event_queue;	
-	void main_loop()
-	{
-		while (!event_queue.empty())
-		{
-			std::unique_ptr<Rule> event = std::move(event_queue.front());
-			event_queue.pop_front();
-			event->execute(*this);
-		}
-	}
-};
+#if defined(__INTELLISENSE__)
+	#include "overworld.cppm" // Use the shim header for IntelliSense
+	#include <memory>
+	#include <print>
+#else
+	import Parity;
+	import std; // Standard library import
+#endif
 
 /*
 apply the result:
@@ -64,6 +19,7 @@ apply the result:
 
 just print the action for now
 */
+using namespace Parity;
 
 struct Apply_Lucky_Board_Result_Rule : Rule
 {
@@ -100,7 +56,7 @@ struct Apply_Lucky_Board_Result_Rule : Rule
 struct Roll_For_Random_Board_Rule : Rule
 {
 	void execute(Overworld &world) override {
-		world.die_roll_for_random_board = static_cast<DieRoll>((rand() % 6) + 1);
+		world.die_roll_for_random_board = static_cast<DieRoll>((std::rand() % 6) + 1);
 	}
 };
 
@@ -114,8 +70,11 @@ struct Lucky_Board_Rule : Rule
 
 int main()
 {
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 	Overworld world;
 	world.event_queue.push_back(std::make_unique<Lucky_Board_Rule>());
 	world.main_loop();
 	return 0;
 }
+
+// Parity::DieRoll roll = Parity::DieRoll::One;
