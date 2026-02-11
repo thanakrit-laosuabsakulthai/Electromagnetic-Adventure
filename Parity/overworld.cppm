@@ -1,15 +1,18 @@
-export module Parity;
+export module Parity.World;
 
-#if defined(__INTELLISENSE__)
+#if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <deque>
 	#include <memory>
 	#include <print>
-	#include "diceroll.cppm" // Use the shim header for IntelliSense
+	#include "diceroll.cppm"
+	#include "biology.cppm"
 	export using namespace Parity;
 #else
 	import std; // Standard library import
-	export import Parity.DieRoll;
+	import Parity.DieRoll;
+	import Parity.Biology;
 #endif
+
 
 export namespace Parity {
 
@@ -22,7 +25,10 @@ export class Overworld
 {
 	public:
 	
-	DieRoll die_roll_for_random_board = DieRoll::One;
+	DieRoll die_roll_for_fortune_board = DieRoll::One;
+	int fortune_board_multiplier = 1; 
+	Humanity playerbase;
+	PlayerIdentity active_player = PlayerIdentity::AmethystApprentice;
 	
 	std::deque<std::unique_ptr<Rule>> event_queue;
 	void main_loop()
@@ -34,6 +40,11 @@ export class Overworld
 			event->execute(*this);
 		}
 	}
+	
+	template <typename Extent_of_Rule, typename... Argument_of_Rule>
+	void event(Argument_of_Rule&&... custom_arguments) {
+		event_queue.push_back(std::make_unique<Extent_of_Rule>(std::forward<Argument_of_Rule>(custom_arguments)...));
+	}
 };
-
 } // namespace Parity
+
