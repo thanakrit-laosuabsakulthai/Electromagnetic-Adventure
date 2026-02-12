@@ -4,7 +4,6 @@ export module Parity.Biology;
 	#include <unordered_set>
 	#include <unordered_map>
 	#include <string>
-	export using namespace Parity;
 #else
 	import std; // Standard library import
 #endif
@@ -62,13 +61,13 @@ export constexpr std::string_view to_string(PlayerIdentity identity) {
 	using enum PlayerIdentity;
 	switch (identity) {
 	case AmethystApprentice:
-		return "Amethyst Apprentice";
+		return "AmethystApprentice";
 	case SapphireSummoner:
-		return "Sapphire Summoner";
+		return "SapphireSummoner";
 	case EmeraldEnchantress:
-		return "Emerald Enchantress";
+		return "EmeraldEnchantress";
 	case OpalinOracle:
-		return "Opalin Oracle";
+		return "OpalinOracle";
 	}
 	return "Unknown PlayerIdentity";
 }

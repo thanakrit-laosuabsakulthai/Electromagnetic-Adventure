@@ -1,12 +1,7 @@
 #if defined(__INTELLISENSE__)
 	#include <memory>
 	#include <print>
-	#include "fortuneboard.cppm"
-	#include "overworld.cppm"
-	namespace Parity
-	{
-		// ??? What's going on with Intellisense???
-	}
+	#include "type-definition.cppm"
 #else
 	import Parity;
 	import std; // Standard library import
@@ -31,6 +26,9 @@ int main()
 {
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 	Overworld world;
+	
+	Parity::print_all_landmark_notations(); // Testing for now
+	
 	world.event<Lucky_Board>();
 	
 	do {

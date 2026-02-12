@@ -1,9 +1,8 @@
 export module Parity.FortuneBoard;
 
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
-	#include <print> // Nobody knows what's going on with IntelliSense now
-	// #include "overworld.cppm"
-	export using namespace Parity;
+	#include <print>
+	#include "type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.DieRoll;
@@ -18,8 +17,7 @@ export struct Gain_Gold_Coin : Rule
 	int amount_of_gold_coin;
 	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
 	void execute(Overworld &world) override {
-		amount_of_gold_coin *= world.fortune_board_multiplier;
-		world.fortune_board_multiplier = 1; // Reset multiplier after use
+		amount_of_gold_coin *= world.useFortuneBoardMultiplier();
 		
 		world.playerbase[world.active_player].gold_coin += amount_of_gold_coin;
 		std::print("Gave {} [Gold Coin] to {}.\n", amount_of_gold_coin, to_string(world.active_player));
@@ -31,8 +29,7 @@ export struct Gain_Permanent_Power_Point : Rule
 	int amount_of_permanent_power;
 	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}
 	void execute(Overworld &world) override {
-		int amount_of_permanent_power = amount_of_permanent_power * world.fortune_board_multiplier;
-		world.fortune_board_multiplier = 1; // Reset multiplier after use
+		amount_of_permanent_power *= world.useFortuneBoardMultiplier();
 		
 		world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;
 		std::print("Gave {} [Permanent Power] to {}.\n", amount_of_permanent_power, to_string(world.active_player));

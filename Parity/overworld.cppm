@@ -4,9 +4,7 @@ export module Parity.World;
 	#include <deque>
 	#include <memory>
 	#include <print>
-	#include "diceroll.cppm"
-	#include "biology.cppm"
-	export using namespace Parity;
+	#include "type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.DieRoll;
@@ -26,7 +24,13 @@ export class Overworld
 	public:
 	
 	DieRoll die_roll_for_fortune_board = DieRoll::One;
-	int fortune_board_multiplier = 1; 
+	int fortune_board_multiplier = 1;
+	int useFortuneBoardMultiplier() {
+		int current_multiplier = fortune_board_multiplier;
+		fortune_board_multiplier = 1; // Reset after use
+		return current_multiplier;
+	}
+	
 	Humanity playerbase;
 	PlayerIdentity active_player = PlayerIdentity::AmethystApprentice;
 	
