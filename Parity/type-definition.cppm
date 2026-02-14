@@ -3,6 +3,8 @@
 #include <unordered_set>
 #include <deque>
 #include <memory>
+#include <map>
+#include <vector>
 
 export namespace Parity {
 
@@ -15,6 +17,8 @@ export enum class DieRoll : int
 	Five,
 	Six
 };
+
+// +++------>>> biology.cppm <<<------+++
 
 export enum class PlayerIdentity {
 	AmethystApprentice,
@@ -41,12 +45,34 @@ export struct PlayerPosession {
 
 export using Humanity = std::unordered_map<PlayerIdentity, PlayerPosession>;
 
-export constexpr std::string_view to_string(PlayerIdentity identity);
+export inline std::string_view to_string(PlayerIdentity identity);
+
+// +++------>>> overworld.cppm <<<------+++
 
 export struct Rule { 
 	virtual ~Rule();
 	virtual void execute(class Overworld &world);
 };
+
+export class Overworld
+{
+	public:
+	
+	DieRoll die_roll_for_fortune_board;
+	int fortune_board_multiplier;
+	int useFortuneBoardMultiplier();
+	Humanity playerbase;
+	PlayerIdentity active_player;
+	
+	int amount_of_new_event;
+	std::deque<std::unique_ptr<Rule>> event_queue;
+	void main_loop();
+	
+	template <typename Extent_of_Rule, typename... Argument_of_Rule>
+	void event(Argument_of_Rule&&... custom_arguments);
+};
+
+// +++------>>> fortuneboard.cppm <<<------+++
 
 export struct Gain_Gold_Coin : Rule {
 	int amount_of_gold_coin;
@@ -73,22 +99,125 @@ export struct Lucky_Board : Rule {
 	void execute(Overworld &world) override;
 };
 
-export class Overworld
-{
-	public:
-	
-	DieRoll die_roll_for_fortune_board;
-	int fortune_board_multiplier;
-	int useFortuneBoardMultiplier();
-	Humanity playerbase;
-	PlayerIdentity active_player;
-	
-	std::deque<std::unique_ptr<Rule>> event_queue;
-	void main_loop();
-	
-	template <typename Extent_of_Rule, typename... Argument_of_Rule>
-	void event(Argument_of_Rule&&... custom_arguments);
+// +++------>>> geography.cppm <<<------+++
+
+export enum class Landmark : int {
+	DiamondOfCattail = 1,
+	OrdinaryCattail,
+	GoldenCattail,
+	OpticalAurum,
+	OpticalMarketplace,
+	OpticalCorruption,
+	ContestedCorruption,
+	SparseForestland,
+	AutumnForestland,
+	FountainOfApricot,
+	PrismaticFieldstone,
+	SouthernHorizon,
+	NorthernHorizon,
+	TheCataclysm,
+	DiamondOfParity
 };
+
+export enum class Region {
+	Capital,
+	Prefecture,
+	Wilderness,
+	Afterfae,
+	Demonic,
+	Pandemonium
+};
+
+
+export enum class Zone {
+	SafeZone,
+	DemonZone,
+	NeutralZone
+};
+
+export enum class ApparentQuality {
+	Color,
+	ImitationOfColor
+};
+
+export enum class ApparentColor {
+	Pink,
+	Green,
+	Orange,
+	Yellow,
+	Red,
+	Purple,
+	PinkOrangeYellowGradient,
+	RedPurpleGradient,
+	WhiteGrayGradient
+};
+
+export enum class ApparentGeometry {
+	Square,
+	Diamond,
+	Rectangle,
+	LongRectangle
+};
+
+export enum class Path {
+	WalkPath,
+	WarpPath,
+	ArrowPath,
+	ArrowWarpPath,
+	ArrowRestrictedPath,
+	ArrowRestrictedWarpPath
+};
+
+export enum class Direction {
+	Above,
+	Below,
+	Left,
+	Right,
+	AboveLeft,
+	AboveRight,
+	BelowLeft,
+	BelowRight
+};
+
+export struct Pathway {
+	Path pathType;
+	Landmark destination;
+	Direction direction;
+};
+
+export using Passageway = std::vector<Pathway>;
+
+export struct LandmarkPosession {
+	Zone zone;
+	Region region;
+	ApparentQuality apparentQuality;
+	ApparentColor apparentColor;
+	ApparentGeometry apparentGeometry;
+	Passageway passageway;
+};
+
+export using Geography = std::map<Landmark, LandmarkPosession>;
+
+export Geography Atlas;
+
+export inline std::string_view to_string(Landmark landmark);
+export inline std::string_view to_string(Region region);
+export inline std::string_view to_string(Zone zone);
+export inline std::string_view to_string(ApparentColor color);
+export inline std::string_view to_string(ApparentGeometry geometry);
+export inline std::string_view to_string(Direction direction);
+export inline std::string_view to_string(Path path);
+
+
+// +++------>>> notation.cppm <<<------+++
+
+export inline std::string_view to_braket_notation(ApparentGeometry geometry);
+export inline std::string_view to_sapce_notation(ApparentGeometry geometry);
+export inline std::string_view to_zone_notation(Zone zone);
+export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color);
+export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry);
+export inline std::string zone_notation_synthesis(Zone zone, std::string content_prepend_zone);
+export inline std::string braket_notation_synthesis(ApparentGeometry geometry, std::string content_inside_braket);
 
 export void print_all_landmark_notations();
 

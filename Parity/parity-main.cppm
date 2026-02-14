@@ -38,8 +38,13 @@ int main()
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 
 		to_string(world.active_player),
 		world.playerbase[world.active_player].gold_coin,
-		world.playerbase[world.active_player].permanent_power_point);
-		
+		world.playerbase[world.active_player].permanent_power_point
+	);
+	
+	// print 10 empty lines
+	for (int i = 0; i < 10; ++i) {
+		std::print("\n");
+	}
 	return 0;
 }
 

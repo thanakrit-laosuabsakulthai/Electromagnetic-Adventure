@@ -12,7 +12,10 @@ export module Parity.Geography;
 	import std; // Standard library import
 #endif
 
-enum class Landmark : int {
+export namespace Parity
+{
+
+export enum class Landmark : int {
 	DiamondOfCattail = 1,
 	OrdinaryCattail,
 	GoldenCattail,
@@ -30,7 +33,7 @@ enum class Landmark : int {
 	DiamondOfParity
 };
 
-enum class Region {
+export enum class Region {
 	Capital,
 	Prefecture,
 	Wilderness,
@@ -40,18 +43,18 @@ enum class Region {
 };
 
 
-enum class Zone {
+export enum class Zone {
 	SafeZone,
 	DemonZone,
 	NeutralZone
 };
 
-enum class ApparentQuality {
+export enum class ApparentQuality {
 	Color,
 	ImitationOfColor
 };
 
-enum class ApparentColor {
+export enum class ApparentColor {
 	Pink,
 	Green,
 	Orange,
@@ -63,14 +66,14 @@ enum class ApparentColor {
 	WhiteGrayGradient
 };
 
-enum class ApparentGeometry {
+export enum class ApparentGeometry {
 	Square,
 	Diamond,
 	Rectangle,
 	LongRectangle
 };
 
-enum class Path {
+export enum class Path {
 	WalkPath,
 	WarpPath,
 	ArrowPath,
@@ -79,7 +82,7 @@ enum class Path {
 	ArrowRestrictedWarpPath
 };
 
-enum class Direction {
+export enum class Direction {
 	Above,
 	Below,
 	Left,
@@ -90,24 +93,15 @@ enum class Direction {
 	BelowRight
 };
 
-struct Pathway {
+export struct Pathway {
 	Path pathType;
 	Landmark destination;
 	Direction direction;
 };
 
-inline bool operator<(const Pathway& a, const Pathway& b) noexcept {
-	// compare by fields in a stable order (cast scoped enums to int)
-	if (static_cast<int>(a.pathType) != static_cast<int>(b.pathType))
-		return static_cast<int>(a.pathType) < static_cast<int>(b.pathType);
-	if (static_cast<int>(a.destination) != static_cast<int>(b.destination))
-		return static_cast<int>(a.destination) < static_cast<int>(b.destination);
-	return static_cast<int>(a.direction) < static_cast<int>(b.direction);
-}
+export using Passageway = std::vector<Pathway>;
 
-using Passageway = std::set<Pathway>;
-
-struct LocationPosession {
+export struct LandmarkPosession {
 	Zone zone;
 	Region region;
 	ApparentQuality apparentQuality;
@@ -116,9 +110,9 @@ struct LocationPosession {
 	Passageway passageway;
 };
 
-using Geography = std::map<Landmark, LocationPosession>;
+export using Geography = std::map<Landmark, LandmarkPosession>;
 
-Geography atlas = {
+export Geography Atlas = {
 	{ Landmark::DiamondOfCattail, {
 		Zone::SafeZone,
 		Region::Capital,
@@ -294,9 +288,9 @@ Geography atlas = {
 	} }
 };
 
-std::string_view to_string(Landmark landmark) {
+export inline std::string_view to_string(Landmark landmark) {
 	using enum Landmark;
-	std::map<Landmark, std::string_view> landmarkToString = {
+	static const std::map<Landmark, std::string_view> landmarkToString = {
 		{DiamondOfCattail, "Diamond of Cattail"},
 		{OrdinaryCattail, "Ordinary Cattail"},
 		{GoldenCattail, "Golden Cattail"},
@@ -317,7 +311,7 @@ std::string_view to_string(Landmark landmark) {
 	return landmarkToString.at(landmark);
 }
 
-std::string_view to_string(Region region) {
+export inline std::string_view to_string(Region region) {
 	using enum Region;
 	static const std::map<Region, std::string_view> regionToString = {
 		{Capital, "Capital"},
@@ -331,7 +325,7 @@ std::string_view to_string(Region region) {
 	return regionToString.at(region);
 }
 
-std::string_view to_string(Zone zone) {
+export inline std::string_view to_string(Zone zone) {
 	using enum Zone;
 	static const std::map<Zone, std::string_view> zoneToString = {
 		{SafeZone, "Safe Zone"},
@@ -342,7 +336,7 @@ std::string_view to_string(Zone zone) {
 	return zoneToString.at(zone);
 }
 
-std::string_view to_string(ApparentColor color) {
+export inline std::string_view to_string(ApparentColor color) {
 	using enum ApparentColor;
 	static const std::map<ApparentColor, std::string_view> colorToString = {
 		{Pink, "Pink"},
@@ -359,7 +353,7 @@ std::string_view to_string(ApparentColor color) {
 	return colorToString.at(color);
 }
 
-std::string_view to_string(ApparentGeometry geometry) {
+export inline std::string_view to_string(ApparentGeometry geometry) {
 	using enum ApparentGeometry;
 	static const std::map<ApparentGeometry, std::string_view> geometryToString = {
 		{Square, "Square"},
@@ -371,7 +365,7 @@ std::string_view to_string(ApparentGeometry geometry) {
 	return geometryToString.at(geometry);
 }
 
-std::string_view to_string(Direction direction) {
+export inline std::string_view to_string(Direction direction) {
 	using enum Direction;
 	static const std::map<Direction, std::string_view> directionToString = {
 		{Above, "↑ above"},
@@ -387,78 +381,21 @@ std::string_view to_string(Direction direction) {
 	return directionToString.at(direction);
 }
 
-inline std::string_view to_notation(ApparentGeometry geometry) {
-	using enum ApparentGeometry;
-	switch (geometry) {
-	case Square:
-		return "⟦{}⟧";
-	case Diamond:
-		return "⟨{}⟩";
-	case Rectangle:
-	case LongRectangle:
-		return "｢{}｣";
-	}
+export inline std::string_view to_string(Path path) {
+	using enum Path;
+	static const std::map<Path, std::string_view> pathToString = {
+		{WalkPath, "—"},
+		{WarpPath, "—"},
+		{ArrowPath, "→"},
+		{ArrowWarpPath, "→"},
+		{ArrowRestrictedPath, "←×—"},
+		{ArrowRestrictedWarpPath, "←×—"}
+	};
 	
-	throw std::logic_error("Out of bound enum value of ApparentGeometry in function to_notation()");
+	return pathToString.at(path);
 }
 
-enum class AdjectiveOrdering {
-	Color_Over_Long,
-	Long_Over_Color
-}; 
-
-inline std::string_view to_notation(ApparentGeometry geometry, AdjectiveOrdering customization) {
-	switch (geometry) {
-	case ApparentGeometry::Square:
-		return "{} Square Space";
-		break;
-	case ApparentGeometry::Diamond:
-		return "{} Diamond Space";
-		break;
-	case ApparentGeometry::Rectangle:
-		return "{} Space";
-		break;
-	case ApparentGeometry::LongRectangle:
-		if (customization == AdjectiveOrdering::Color_Over_Long) {
-			return "{} Long Space";
-		} else {
-			return "Long {} Space";
-		}
-	}
-	
-	throw std::logic_error("Out of bound enum value of ApparentGeometry in function to_notation()");
-}
-
-
-inline std::string word_synthesis(ApparentGeometry geometry, ApparentColor color, AdjectiveOrdering customization) {
-	std::string color_word = std::string(to_string(color));
-	std::string shape_color_space_notation = std::string(to_notation(geometry, customization));
-	return std::vformat(shape_color_space_notation, std::make_format_args(color_word));
-}
-
-inline std::string notation_synthesis(ApparentGeometry geometry, ApparentColor color, AdjectiveOrdering customization) {
-	std::string bracketed_notation = std::string(to_notation(geometry));
-	std::string shape_color_space_notation = word_synthesis(geometry, color, customization);
-	return std::vformat(bracketed_notation, std::make_format_args(shape_color_space_notation));
-}
-
-export namespace Parity
-{
-
-void print_all_landmark_notations() {
-	for (const auto& [landmark, location] : atlas) {
-		std::string notation = notation_synthesis(
-			location.apparentGeometry,
-			location.apparentColor,
-			AdjectiveOrdering::Long_Over_Color
-		);
-		std::print("{}\n", notation);
-	}
-}
-
-} // namespace Parity
-
-
+} // End of namespace Parity
 
 /* 
 1. Diamond of Cattail (Capital)

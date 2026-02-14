@@ -57,19 +57,16 @@ export struct PlayerPosession {
 
 export using Humanity = std::unordered_map<PlayerIdentity, PlayerPosession>;
 
-export constexpr std::string_view to_string(PlayerIdentity identity) {
+export inline std::string_view to_string(PlayerIdentity identity) {
 	using enum PlayerIdentity;
-	switch (identity) {
-	case AmethystApprentice:
-		return "AmethystApprentice";
-	case SapphireSummoner:
-		return "SapphireSummoner";
-	case EmeraldEnchantress:
-		return "EmeraldEnchantress";
-	case OpalinOracle:
-		return "OpalinOracle";
-	}
-	return "Unknown PlayerIdentity";
+	static const std::map<PlayerIdentity, std::string_view> identityToString = {
+		{AmethystApprentice, "AmethystApprentice"},
+		{SapphireSummoner, "SapphireSummoner"},
+		{EmeraldEnchantress, "EmeraldEnchantress"},
+		{OpalinOracle, "OpalinOracle"}
+	};
+	
+	return identityToString.at(identity);
 }
 
 } // namespace Parity

@@ -24,6 +24,7 @@ export class Overworld
 	public:
 	
 	DieRoll die_roll_for_fortune_board = DieRoll::One;
+	
 	int fortune_board_multiplier = 1;
 	int useFortuneBoardMultiplier() {
 		int current_multiplier = fortune_board_multiplier;
@@ -34,20 +35,34 @@ export class Overworld
 	Humanity playerbase;
 	PlayerIdentity active_player = PlayerIdentity::AmethystApprentice;
 	
+	int amount_of_new_event = 0;
+	
+	void relocate_new_events_to_front() {
+		if (amount_of_new_event > 0) {
+			std::rotate(event_queue.begin(), event_queue.end() - amount_of_new_event, event_queue.end());
+			amount_of_new_event = 0;
+		}
+	}
+	
 	std::deque<std::unique_ptr<Rule>> event_queue;
 	void main_loop()
 	{
+		amount_of_new_event = 0; // Reset the counter at the start of the loop
+		
 		while (!event_queue.empty())
 		{
 			std::unique_ptr<Rule> event = std::move(event_queue.front());
 			event_queue.pop_front();
 			event->execute(*this);
+			
+			relocate_new_events_to_front();
 		}
 	}
 	
 	template <typename Extent_of_Rule, typename... Argument_of_Rule>
 	void event(Argument_of_Rule&&... custom_arguments) {
 		event_queue.push_back(std::make_unique<Extent_of_Rule>(std::forward<Argument_of_Rule>(custom_arguments)...));
+		amount_of_new_event++;
 	}
 };
 } // namespace Parity
