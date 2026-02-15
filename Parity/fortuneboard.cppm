@@ -2,12 +2,15 @@ export module Parity.FortuneBoard;
 
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <print>
+	#include <format>
+	#include <string>
 	#include "type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.DieRoll;
 	import Parity.Biology;
 	import Parity.World;
+	import Parity.Announcement;
 #endif
 export namespace Parity
 {
@@ -20,7 +23,10 @@ export struct Gain_Gold_Coin : Rule
 		amount_of_gold_coin *= world.useFortuneBoardMultiplier();
 		
 		world.playerbase[world.active_player].gold_coin += amount_of_gold_coin;
-		std::print("Gave {} [Gold Coin] to {}.\n", amount_of_gold_coin, to_string(world.active_player));
+		
+		std::string_view active_player_name = to_string(world.active_player);
+		std::string bygone_text = std::vformat("Gave {} [Gold Coin] to {}.", std::make_format_args(amount_of_gold_coin, active_player_name));
+		world.announce.bygone(bygone_text);
 	}
 };
 
@@ -31,8 +37,9 @@ export struct Gain_Permanent_Power_Point : Rule
 	void execute(Overworld &world) override {
 		amount_of_permanent_power *= world.useFortuneBoardMultiplier();
 		
-		world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;
-		std::print("Gave {} [Permanent Power] to {}.\n", amount_of_permanent_power, to_string(world.active_player));
+		std::string_view active_player_name = to_string(world.active_player);
+		std::string bygone_text = std::vformat("Gave {} [permanent Power Point] to {}.", std::make_format_args(amount_of_permanent_power, active_player_name));
+		world.announce.bygone(bygone_text);
 	}
 };
 
@@ -40,7 +47,10 @@ export struct Double_Fortune_Board_Multiplier : Rule
 {
 	void execute(Overworld &world) override {
 		world.fortune_board_multiplier *= 2;
-		std::print("Doubled Fortune Board Multiplier to {}.\n", world.fortune_board_multiplier);
+		
+		std::string_view active_player_name = to_string(world.active_player);
+		std::string bygone_text = std::vformat("Doubled the Fortune Board multiplier for {}.", std::make_format_args(active_player_name));
+		world.announce.bygone(bygone_text);
 	}
 }; 
 
@@ -56,26 +66,26 @@ export struct Apply_Lucky_Board_Result : Rule
 		using enum DieRoll;
 		switch (roll) {
 		case One:
-			std::print("Apply Lucky Board Result: Trigger the Event Board once.\n");
+			world.announce.result("Trigger the Event Board once.");
 			break;
 		case Two:
-			std::print("Apply Lucky Board Result: Trigger the Lucky Board again, but the result is doubled.\n");
+			world.announce.result("Trigger the Lucky Board again, but the result is doubled.");
 			world.event<Double_Fortune_Board_Multiplier>();
 			world.event<Lucky_Board>();
 			break;
 		case Three:
-			std::print("Apply Lucky Board Result: Move again 1 space (optional).\n");
+			world.announce.result("Move again 1 space (optional).");
 			break;
 		case Four:
-			std::print("Apply Lucky Board Result: Gain 1 Gold Coin.\n");
+			world.announce.result("Gain 1 Gold Coin.");
 			world.event<Gain_Gold_Coin>(1);
 			break;
 		case Five:
-			std::print("Apply Lucky Board Result: Gain 1 permanent Power point.\n");
+			world.announce.result("Gain 1 permanent Power point.");
 			world.event<Gain_Permanent_Power_Point>(1);
 			break;
 		case Six:
-			std::print("Apply Lucky Board Result: Gain 5 Gold Coins.\n");
+			world.announce.result("Gain 5 Gold Coins.");
 			world.event<Gain_Gold_Coin>(5);
 			break;
 		}
@@ -86,15 +96,34 @@ export struct Roll_For_Random_Board : Rule
 {
 	void execute(Overworld &world) override {
 		world.die_roll_for_fortune_board = static_cast<DieRoll>((std::rand() % 6) + 1);
+		
+		// std::string die_number = std::to_string(static_cast<int>(world.die_roll_for_fortune_board));
+		// world.announce.bygone(std::vformat("Rolled [{}] on the die.", std::make_format_args(die_number)));
 	}
 };
 
 export struct Lucky_Board : Rule
 {
 	void execute(Overworld &world) override {
+		std::string_view active_player_name = to_string(world.active_player);
+		std::string action_text = std::vformat("{} rolls the Lucky Board once.", std::make_format_args(active_player_name));
+		world.announce.action(action_text);
+		
 		world.event<Roll_For_Random_Board>();
 		world.event<Apply_Lucky_Board_Result>();
 	} // Logic to roll on the board
 };
 
 } // namespace Parity
+
+/* 
+- **» Action 3:** AmethystApprentice rolls the Lucky Board once.
+- Roll 1 die and apply the result…
+	- [ ] Trigger the Event Board once.
+	- [ ] Trigger the Lucky Board again, but the result is doubled.
+	- [ ] Move again 1 space (optional).
+	- [x] Gain 1 Gold Coin.
+	- [ ] Gain 1 permanent Power point.
+	- [ ] Gain 5 Gold Coins.
+- **« Result 3:** Gain 1 ==Gold Coin==
+*/

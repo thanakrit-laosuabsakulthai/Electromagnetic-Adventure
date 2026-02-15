@@ -2,7 +2,7 @@ export module Parity.Biology;
 
 #if defined(__INTELLISENSE__)
 	#include <unordered_set>
-	#include <unordered_map>
+	#include <map>
 	#include <string>
 #else
 	import std; // Standard library import
@@ -55,7 +55,7 @@ export struct PlayerPosession {
 	std::unordered_set<OpticalEffect> active_optical_effect;
 };
 
-export using Humanity = std::unordered_map<PlayerIdentity, PlayerPosession>;
+export using Humanity = std::map<PlayerIdentity, PlayerPosession>;
 
 export inline std::string_view to_string(PlayerIdentity identity) {
 	using enum PlayerIdentity;

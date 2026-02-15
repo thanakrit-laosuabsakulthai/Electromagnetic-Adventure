@@ -7,6 +7,7 @@ export module Parity;
 	#include "fortuneboard.cppm"
 	#include "geography.cppm"
 	#include "notation.cppm"
+	#include "announcement.cppm"
 #else
 	export import Parity.World;
 	export import Parity.FortuneBoard;
@@ -14,4 +15,5 @@ export module Parity;
 	export import Parity.DieRoll;
 	export import Parity.Geography;
 	export import Parity.Notation;
+	export import Parity.Announcement;
 #endif

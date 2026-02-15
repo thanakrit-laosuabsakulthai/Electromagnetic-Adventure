@@ -58,6 +58,8 @@ export class Overworld
 {
 	public:
 	
+	Announcement announce;
+	
 	DieRoll die_roll_for_fortune_board;
 	int fortune_board_multiplier;
 	int useFortuneBoardMultiplier();
@@ -220,5 +222,39 @@ export inline std::string zone_notation_synthesis(Zone zone, std::string content
 export inline std::string braket_notation_synthesis(ApparentGeometry geometry, std::string content_inside_braket);
 
 export void print_all_landmark_notations();
+
+// +++------>>> announcement.cppm <<<------+++
+
+enum class AnnouncementClause {
+	Subtitle,
+	ConsequentialAction,
+	ConsequentialResult,
+	ConsequenctalBullet,
+	ConsequentialIndentation,
+	ConsequentialItalic,
+};
+
+enum class FormattingNotation {
+	Plain,
+	Bold,
+	Italic,
+	Underline,
+	Cyan,
+};
+
+inline std::string_view to_notation(FormattingNotation notation);
+inline std::string bold(const std::string content);
+inline std::string italic(const std::string content);
+inline std::string cyan(const std::string content);
+inline std::string italic_cyan(const std::string content);
+
+class Announcement {
+public:
+	AnnouncementClause clause;
+	int consequential_ordinal = 0;
+	void action(const std::string& content_append_action);
+	void result(const std::string& content_append_result);
+	void bygone(const std::string& content_of_bygone);
+};
 
 } // namespace Parity

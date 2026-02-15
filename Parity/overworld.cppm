@@ -4,11 +4,13 @@ export module Parity.World;
 	#include <deque>
 	#include <memory>
 	#include <print>
+	#include <iostream>
 	#include "type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.DieRoll;
 	import Parity.Biology;
+	import Parity.Announcement;
 #endif
 
 
@@ -23,6 +25,8 @@ export class Overworld
 {
 	public:
 	
+	Announcement announce;
+	
 	DieRoll die_roll_for_fortune_board = DieRoll::One;
 	
 	int fortune_board_multiplier = 1;
@@ -32,7 +36,10 @@ export class Overworld
 		return current_multiplier;
 	}
 	
-	Humanity playerbase;
+	Humanity playerbase = {
+		{PlayerIdentity::AmethystApprentice, {}}
+	};
+	
 	PlayerIdentity active_player = PlayerIdentity::AmethystApprentice;
 	
 	int amount_of_new_event = 0;
@@ -51,6 +58,10 @@ export class Overworld
 		
 		while (!event_queue.empty())
 		{
+			// Wait for enter and clear the enter line
+			// std::cin.get();
+			// std::cout << "\033[1A\033[2K"; // Move cursor up and clear the line
+			
 			std::unique_ptr<Rule> event = std::move(event_queue.front());
 			event_queue.pop_front();
 			event->execute(*this);

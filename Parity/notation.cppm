@@ -60,7 +60,7 @@ export inline std::string word_synthesis(ApparentQuality quality, ApparentColor 
 
 export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry) {
 	std::string quality_color_word = word_synthesis(quality, color);
-	std::string shape_space_notation = std::string(to_sapce_notation(geometry));
+	std::string_view shape_space_notation = to_sapce_notation(geometry);
 	
 	return std::vformat(shape_space_notation, std::make_format_args(quality_color_word));
 }
@@ -86,6 +86,7 @@ export void print_all_landmark_notations() {
 		std::string full_notation = braket_notation_synthesis(posession.apparentGeometry, apparent_zone_word);
 		std::print("{}: {}\n", landmark_name, full_notation);
 	}
+	std::print("\n");
 }
 
 } // End of namespace Parity
