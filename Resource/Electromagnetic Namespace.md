@@ -1,0 +1,135 @@
+- **Material**
+	- electromagnetic:vitality_heart
+	- electromagnetic:vitality_maximum_heart
+	- electromagnetic:gold_coin
+	- electromagnetic:permanent_power
+- **Item**
+	- electromagnetic:radio_waves
+	- electromagnetic:micro_waves
+	- electromagnetic:infrared_waves
+	- electromagnetic:light_wave
+	- electromagnetic:ultraviolet_wave
+	- electromagnetic:x_rays
+	- electromagnetic:gamma_rays
+- **Apparent Quality**
+	- electromagnetic:color
+	- electromagnetic:imitation_of_color
+- **Apparent Color**
+	- electromagnetic:pink
+	- electromagnetic:green
+	- electromagnetic:orange
+	- electromagnetic:yellow
+	- electromagnetic:red
+	- electromagnetic:purple
+	- electromagnetic:pink_orange_yellow_gradient
+	- electromagnetic:red_purple_gradient
+	- electromagnetic:white_gray_gradient
+- **Apparent Geometry**
+	- electromagnetic:square
+	- electromagnetic:diamond
+	- electromagnetic:rectangle
+	- electromagnetic:long_rectangle
+- **Zone**
+	- electromagnetic:safe_zone
+	- electromagnetic:demon_zone
+	- electromagnetic:neutral_zone
+- **Player**
+	- electromagnetic:player
+- **Demon**
+	- electromagnetic:electric_minion
+	- electromagnetic:magnetic_demon
+	- electromagnetic:magnetic_mage_demon
+	- electromagnetic:electromagnetic_demon_boss
+- **Status Effect**
+	- electromagnetic:advantage
+	- electromagnetic:weakness
+	- electromagnetic:repulsion
+	- electromagnetic:chromatic
+	- electromagnetic:collimation
+- **Path**
+	- electromagnetic:path
+	- electromagnetic:warp_path
+	- electromagnetic:arrow_path
+	- electromagnetic:arrow_warp_path
+	- electromagnetic:arrow_restricted_path
+	- electromagnetic:arrow_restricted_warp_path
+- **Direction**
+	- electromagnetic:above
+	- electromagnetic:below
+	- electromagnetic:left
+	- electromagnetic:right
+	- electromagnetic:above_left
+	- electromagnetic:above_right
+	- electromagnetic:below_left
+	- electromagnetic:below_right
+- **Combat Result**
+	- electromagnetic:draw
+	- electromagnetic:player_win
+	- electromagnetic:player_lose
+- **Transaction**
+	- electromagnetic:die_roll_for_random_board
+	- electromagnetic:die_roll_for_attacker 
+	- electromagnetic:die_roll_for_defender
+	- electromagnetic:advantage_dice_roll_for_attacker
+	- electromagnetic:advantage_dice_roll_for_defender 
+	- electromagnetic:summon
+	- electromagnetic:teleport
+	- electromagnetic:kill
+	- electromagnetic:apply_status
+	- electromagnetic:remove_status
+	- electromagnetic:modify_material_quantity
+	- electromagnetic:modify_chromatic_quality
+	- electromagnetic:give_item
+	- electromagnetic:take_item
+	- electromagnetic:double_random_board_multiplier 
+	- electromagnetic:reset_random_board_multiplier 
+- **Rule**
+	- electromagnetic:character_and_demon_information_sheet
+	- electromagnetic:rule_of_color
+	- electromagnetic:rule_of_status
+	- electromagnetic:lucky_board
+	- electromagnetic:event_board
+	- electromagnetic:unlucky_board
+	- electromagnetic:demon_board
+	- electromagnetic:shop
+	- electromagnetic:rule_of_optic
+	- electromagnetic:rule_of_parity
+	- electromagnetic:rule_of_history
+	- electromagnetic:rule_of_adventure
+	- electromagnetic:combat_procedure
+- **Geography**
+	- electromagnetic:diamond_of_cattail
+	- electromagnetic:ordinary_cattail
+	- electromagnetic:golden_cattail
+	- electromagnetic:optical_aurum
+	- electromagnetic:optical_marketplace
+	- electromagnetic:optical_corruption
+	- electromagnetic:contested_corruption
+	- electromagnetic:sparse_forestland
+	- electromagnetic:autumn_forestland
+	- electromagnetic:fountain_of_apricot
+	- electromagnetic:prismatic_fieldstone
+	- electromagnetic:southern_horizon
+	- electromagnetic:northern_horizon
+	- electromagnetic:the_cataclysm
+	- electromagnetic:diamond_of_parity
+- **Region** 
+	- electromagnetic:capital
+	- electromagnetic:prefecture
+	- electromagnetic:wilderness
+	- electromagnetic:afterfae
+	- electromagnetic:demonic
+	- electromagnetic:pandemonium
+
+
+
+
+
+
+
+
+
+
+
+
+
