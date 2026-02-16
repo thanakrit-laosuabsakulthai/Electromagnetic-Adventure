@@ -4,6 +4,7 @@
 #include <deque>
 #include <memory>
 #include <map>
+#include <string>
 #include <vector>
 
 export namespace Parity {
@@ -45,6 +46,8 @@ export struct PlayerPosession {
 
 export using Humanity = std::unordered_map<PlayerIdentity, PlayerPosession>;
 
+// +++------>>> physiology.cppm <<<------+++
+
 export inline std::string_view to_string(PlayerIdentity identity);
 
 // +++------>>> overworld.cppm <<<------+++
@@ -58,15 +61,28 @@ export class Overworld
 {
 	public:
 	
+	// +++ announcement +++
 	Announcement announce;
+	// +++ geography +++
+	Geography atlas;
+	// +++ expedition-embark +++
+	Expedition expedition;
+	std::string lexicon_synthesis_A();
 	
+	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board;
 	int fortune_board_multiplier;
 	int useFortuneBoardMultiplier();
+	
+	// +++  biology-physiology +++
 	Humanity playerbase;
 	PlayerIdentity active_player;
+	std::string_view getActivePlayerName();
 	
+	// +++ rule-event +++
 	int amount_of_new_event;
+	void relocate_new_events_to_front();
+	
 	std::deque<std::unique_ptr<Rule>> event_queue;
 	void main_loop();
 	
@@ -202,6 +218,8 @@ export using Geography = std::map<Landmark, LandmarkPosession>;
 
 export Geography Atlas;
 
+// +++------>>> notation.cppm <<<------+++
+
 export inline std::string_view to_string(Landmark landmark);
 export inline std::string_view to_string(Region region);
 export inline std::string_view to_string(Zone zone);
@@ -209,9 +227,6 @@ export inline std::string_view to_string(ApparentColor color);
 export inline std::string_view to_string(ApparentGeometry geometry);
 export inline std::string_view to_string(Direction direction);
 export inline std::string_view to_string(Path path);
-
-
-// +++------>>> notation.cppm <<<------+++
 
 export inline std::string_view to_braket_notation(ApparentGeometry geometry);
 export inline std::string_view to_sapce_notation(ApparentGeometry geometry);
@@ -255,6 +270,22 @@ public:
 	void action(const std::string& content_append_action);
 	void result(const std::string& content_append_result);
 	void bygone(const std::string& content_of_bygone);
+	void subtitle(const std::string& content_of_subtitle);
+};
+
+// +++------>>> expedition.cppm <<<------+++
+
+struct Expedition
+{
+	Landmark landmark_of_beginning = Landmark::DiamondOfCattail;
+};
+
+export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
+
+// +++------>>> embark.cppm <<<------+++
+
+export struct Embark : Rule {
+	void execute(Overworld &world) override;
 };
 
 } // namespace Parity

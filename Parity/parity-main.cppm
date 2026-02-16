@@ -29,6 +29,8 @@ int main()
 	
 	Parity::print_all_landmark_notations(); // Testing for now
 	
+	world.event<Embark>(); // Start the expedition
+	
 	world.event<Lucky_Board>();
 	
 	do {

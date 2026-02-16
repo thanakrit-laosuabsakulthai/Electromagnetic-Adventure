@@ -10,11 +10,14 @@ export module Parity.World;
 	import std; // Standard library import
 	import Parity.DieRoll;
 	import Parity.Biology;
+	import Parity.Geography;
+	import Parity.Expedition;
 	import Parity.Announcement;
 #endif
 
 
 export namespace Parity {
+
 
 export struct Rule { 
 	virtual ~Rule() = default;
@@ -25,23 +28,26 @@ export class Overworld
 {
 	public:
 	
+	// +++ announcement +++
 	Announcement announce;
+	// +++ geography +++
+	Geography atlas = Atlas;
+	// +++ expedition-embark +++
+	Expedition expedition;
+	std::string lexicon_synthesis_A();
 	
+	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board = DieRoll::One;
-	
 	int fortune_board_multiplier = 1;
-	int useFortuneBoardMultiplier() {
-		int current_multiplier = fortune_board_multiplier;
-		fortune_board_multiplier = 1; // Reset after use
-		return current_multiplier;
-	}
+	int useFortuneBoardMultiplier();
 	
-	Humanity playerbase = {
-		{PlayerIdentity::AmethystApprentice, {}}
-	};
-	
+	// +++  biology-physiology +++
+	Humanity playerbase = {{PlayerIdentity::AmethystApprentice, {}}};
 	PlayerIdentity active_player = PlayerIdentity::AmethystApprentice;
+	std::string_view getActivePlayerName();
 	
+	
+	/// +++ rule-event +++
 	int amount_of_new_event = 0;
 	
 	void relocate_new_events_to_front() {

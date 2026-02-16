@@ -57,16 +57,4 @@ export struct PlayerPosession {
 
 export using Humanity = std::map<PlayerIdentity, PlayerPosession>;
 
-export inline std::string_view to_string(PlayerIdentity identity) {
-	using enum PlayerIdentity;
-	static const std::map<PlayerIdentity, std::string_view> identityToString = {
-		{AmethystApprentice, "AmethystApprentice"},
-		{SapphireSummoner, "SapphireSummoner"},
-		{EmeraldEnchantress, "EmeraldEnchantress"},
-		{OpalinOracle, "OpalinOracle"}
-	};
-	
-	return identityToString.at(identity);
-}
-
 } // namespace Parity

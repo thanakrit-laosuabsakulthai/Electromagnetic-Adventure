@@ -9,6 +9,7 @@ export module Parity.FortuneBoard;
 	import std; // Standard library import
 	import Parity.DieRoll;
 	import Parity.Biology;
+	import Parity.Physiology;
 	import Parity.World;
 	import Parity.Announcement;
 #endif
@@ -24,9 +25,10 @@ export struct Gain_Gold_Coin : Rule
 		
 		world.playerbase[world.active_player].gold_coin += amount_of_gold_coin;
 		
-		std::string_view active_player_name = to_string(world.active_player);
-		std::string bygone_text = std::vformat("Gave {} [Gold Coin] to {}.", std::make_format_args(amount_of_gold_coin, active_player_name));
-		world.announce.bygone(bygone_text);
+		world.announce.bygone(std::format(
+			"Gave {} [Gold Coin] to {}.",
+			amount_of_gold_coin, to_string(world.active_player)
+		));
 	}
 };
 
@@ -37,9 +39,12 @@ export struct Gain_Permanent_Power_Point : Rule
 	void execute(Overworld &world) override {
 		amount_of_permanent_power *= world.useFortuneBoardMultiplier();
 		
-		std::string_view active_player_name = to_string(world.active_player);
-		std::string bygone_text = std::vformat("Gave {} [permanent Power Point] to {}.", std::make_format_args(amount_of_permanent_power, active_player_name));
-		world.announce.bygone(bygone_text);
+		world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;
+		
+		world.announce.bygone(std::format(
+			"Gave {} permanent Power point to {}.",
+			amount_of_permanent_power, to_string(world.active_player)
+		));
 	}
 };
 
@@ -48,9 +53,10 @@ export struct Double_Fortune_Board_Multiplier : Rule
 	void execute(Overworld &world) override {
 		world.fortune_board_multiplier *= 2;
 		
-		std::string_view active_player_name = to_string(world.active_player);
-		std::string bygone_text = std::vformat("Doubled the Fortune Board multiplier for {}.", std::make_format_args(active_player_name));
-		world.announce.bygone(bygone_text);
+		world.announce.bygone(std::format(
+			"Doubled Fortune Board multiplier to {}.",
+			world.fortune_board_multiplier
+		));
 	}
 }; 
 
@@ -97,22 +103,31 @@ export struct Roll_For_Random_Board : Rule
 	void execute(Overworld &world) override {
 		world.die_roll_for_fortune_board = static_cast<DieRoll>((std::rand() % 6) + 1);
 		
-		// std::string die_number = std::to_string(static_cast<int>(world.die_roll_for_fortune_board));
-		// world.announce.bygone(std::vformat("Rolled [{}] on the die.", std::make_format_args(die_number)));
+		world.announce.bygone(std::format(
+			"Rolled [{}] on the die.",
+			static_cast<int>(world.die_roll_for_fortune_board)
+		));
 	}
 };
 
 export struct Lucky_Board : Rule
 {
 	void execute(Overworld &world) override {
-		std::string_view active_player_name = to_string(world.active_player);
-		std::string action_text = std::vformat("{} rolls the Lucky Board once.", std::make_format_args(active_player_name));
-		world.announce.action(action_text);
+		world.announce.action(std::format(
+			"{} rolls the Lucky Board once.",
+			to_string(world.active_player)
+		));
 		
 		world.event<Roll_For_Random_Board>();
 		world.event<Apply_Lucky_Board_Result>();
 	} // Logic to roll on the board
 };
+
+int Overworld::useFortuneBoardMultiplier() {
+		int current_multiplier = fortune_board_multiplier;
+		fortune_board_multiplier = 1; // Reset after use
+		return current_multiplier;
+	}
 
 } // namespace Parity
 

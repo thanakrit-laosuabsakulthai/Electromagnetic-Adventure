@@ -106,6 +106,10 @@ public:
 	void bygone(const std::string& content_of_bygone) {
 		printClauseConsequentialItalic(content_of_bygone);
 	}
+	
+	void subtitle(const std::string& content_of_subtitle) {
+		printClauseSubtitle(content_of_subtitle);
+	}
 };
 
 } // namespace Parity
