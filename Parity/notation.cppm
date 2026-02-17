@@ -165,21 +165,33 @@ export inline std::string word_synthesis(ApparentQuality quality, ApparentColor 
 	}
 }
 
-export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry) {
+export inline std::string appearancy(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry) {
 	std::string quality_color_word = word_synthesis(quality, color);
 	std::string_view shape_space_notation = to_sapce_notation(geometry);
 	
 	return std::vformat(shape_space_notation, std::make_format_args(quality_color_word));
 }
 
-export inline std::string zone_notation_synthesis(Zone zone, std::string content_prepend_zone) {
+export inline std::string zonoity(Zone zone, std::string content_prepend_zone) {
 	std::string_view zone_notation = to_zone_notation(zone);
 	return std::vformat(zone_notation, std::make_format_args(content_prepend_zone));
 }
 
+export inline std::string chronoity(Path path, std::string content_prepend_warp) {
+	using enum Path;
+	switch (path) {
+		case WarpPath:
+		case ArrowWarpPath:
+		case ArrowRestrictedWarpPath:
+			return content_prepend_warp + " warp";
+		default:
+			return content_prepend_warp;
+	}
+}
+
 export inline std::string braket_notation_synthesis(ApparentGeometry geometry, std::string content_inside_braket) {
-	std::string_view braket_pattern = to_braket_notation(geometry);
-	return std::vformat(braket_pattern, std::make_format_args(content_inside_braket));
+	std::string_view braket_notation = to_braket_notation(geometry);
+	return std::vformat(braket_notation, std::make_format_args(content_inside_braket));
 }
 
 //  ⟨Pink Diamond Space ¦ Safe Zone⟩
@@ -188,8 +200,8 @@ export void print_all_landmark_notations() {
 	for (const auto &[landmark, posession] : Atlas) {
 		std::string landmark_name = std::string(to_string(landmark));
 		
-		std::string apparent_word = word_synthesis(posession.apparentQuality, posession.apparentColor, posession.apparentGeometry);
-		std::string apparent_zone_word = zone_notation_synthesis(posession.zone, apparent_word);
+		std::string apparent_word = appearancy(posession.apparentQuality, posession.apparentColor, posession.apparentGeometry);
+		std::string apparent_zone_word = zonoity(posession.zone, apparent_word);
 		std::string full_notation = braket_notation_synthesis(posession.apparentGeometry, apparent_zone_word);
 		std::print("{}: {}\n", landmark_name, full_notation);
 	}

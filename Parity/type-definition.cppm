@@ -67,7 +67,9 @@ export class Overworld
 	Geography atlas;
 	// +++ expedition-embark +++
 	Expedition expedition;
-	std::string lexicon_synthesis_A();
+	std::string appearanzonality(Landmark target_landmark);
+	std::string appearancity(Landmark target_landmark);
+	std::string pathochronality(Pathway target_pathway);
 	
 	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board;
@@ -101,6 +103,10 @@ export struct Gain_Gold_Coin : Rule {
 export struct Gain_Permanent_Power_Point : Rule {
 	int amount_of_permanent_power;
 	Gain_Permanent_Power_Point(int amount);
+	void execute(Overworld &world) override;
+};
+
+export struct Move_Again_One_Space : Rule {
 	void execute(Overworld &world) override;
 };
 
@@ -232,24 +238,22 @@ export inline std::string_view to_braket_notation(ApparentGeometry geometry);
 export inline std::string_view to_sapce_notation(ApparentGeometry geometry);
 export inline std::string_view to_zone_notation(Zone zone);
 export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color);
-export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry);
-export inline std::string zone_notation_synthesis(Zone zone, std::string content_prepend_zone);
+export inline std::string appearancy(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry);
+export inline std::string zonoity(Zone zone, std::string content_prepend_zone);
+export inline std::string chronoity(Path path, std::string content_prepend_warp);
 export inline std::string braket_notation_synthesis(ApparentGeometry geometry, std::string content_inside_braket);
 
 export void print_all_landmark_notations();
 
 // +++------>>> announcement.cppm <<<------+++
 
-enum class AnnouncementClause {
-	Subtitle,
-	ConsequentialAction,
-	ConsequentialResult,
-	ConsequenctalBullet,
-	ConsequentialIndentation,
-	ConsequentialItalic,
+export enum class MediaClause {
+	Media,
+	MediaBullet,
+	MediaChoicebox,
 };
 
-enum class FormattingNotation {
+export enum class FormattingNotation {
 	Plain,
 	Bold,
 	Italic,
@@ -257,28 +261,64 @@ enum class FormattingNotation {
 	Cyan,
 };
 
-inline std::string_view to_notation(FormattingNotation notation);
-inline std::string bold(const std::string content);
-inline std::string italic(const std::string content);
-inline std::string cyan(const std::string content);
-inline std::string italic_cyan(const std::string content);
+export inline std::string_view to_notation(FormattingNotation notation);
+export inline std::string bold(const std::string content);
+export inline std::string italic(const std::string content);
+export inline std::string cyan(const std::string content);
+export inline std::string italic_cyan(const std::string content);
 
-class Announcement {
+export class Announcement {
 public:
-	AnnouncementClause clause;
+	MediaClause clause;
 	int consequential_ordinal = 0;
+	
+	std::string_view getMediaNotation();
+	void media(const std::string& content_append_media);
+	void chat(const std::string& content_append_chat);
+	
+	std::string getActionLexicon();
+	std::string getResultLexicon();
+	
 	void action(const std::string& content_append_action);
 	void result(const std::string& content_append_result);
 	void bygone(const std::string& content_of_bygone);
 	void subtitle(const std::string& content_of_subtitle);
+	void choice(const std::string& content_of_choice);
+	void ask(const std::string& content_of_ask);
+	void redact(); // Delete the most recent announcement
+	void reject(); // Reject the most recent user query
 };
 
 // +++------>>> expedition.cppm <<<------+++
 
-struct Expedition
-{
-	Landmark landmark_of_beginning = Landmark::DiamondOfCattail;
+export struct OmniDirection {
+	MultiDirection multidirection;
+	void add(Direction direction);
+	void clear();
+	bool has(Direction direction);
+	MultiDirection vector();
 };
+
+export struct Expedition
+{
+	Landmark landmark_of_beginning;
+	Landmark landmark_of_destination;
+	Direction chosen_direction;
+	OmniDirection choice_of_direction;
+	PlayerLocation municipality;
+};
+
+export inline std::string_view to_dialect(Direction direction);
+export inline Direction from_dialect(const std::string& dialect);
+export enum class Multiplicity {
+	One,
+	Many
+};
+export inline std::string_view to_bracket_notation(Multiplicity multiplicity);
+export inline std::string dialect_synthesis(MultiDirection multidirection);
+export inline std::string braket_notation_synthesis(MultiDirection multidirection);
+
+export using MultiDirection = std::vector<Direction>;
 
 export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
 
@@ -286,6 +326,28 @@ export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
 
 export struct Embark : Rule {
 	void execute(Overworld &world) override;
+	void media_of_embark(Overworld &world);
 };
+
+
+export struct Choice_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+	
+	void query();
+	void invalid();
+	bool validate_choice(Direction chosen_direction);
+	bool validate_dialect(const std::string& player_input);
+	Direction get_player_choice();
+};
+export struct Travel : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Arrival : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Move_One_Space : Rule {
+	void execute(Overworld &world) override;
+};
+
 
 } // namespace Parity

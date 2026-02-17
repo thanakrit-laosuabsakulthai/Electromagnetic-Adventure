@@ -34,7 +34,9 @@ export class Overworld
 	Geography atlas = Atlas;
 	// +++ expedition-embark +++
 	Expedition expedition;
-	std::string lexicon_synthesis_A();
+	std::string appearanzonality(Landmark target_landmark);
+	std::string appearancity(Landmark target_landmark);
+	std::string pathochronality(Pathway target_pathway);
 	
 	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board = DieRoll::One;

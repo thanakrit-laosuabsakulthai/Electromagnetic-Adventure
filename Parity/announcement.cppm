@@ -13,13 +13,10 @@ export module Parity.Announcement;
 export namespace Parity
 {
 
-export enum class AnnouncementClause {
-	Subtitle,
-	ConsequentialAction,
-	ConsequentialResult,
-	ConsequenctalBullet,
-	ConsequentialIndentation,
-	ConsequentialItalic,
+export enum class MediaClause {
+	Media,
+	MediaBullet,
+	MediaChoicebox,
 };
 
 export enum class FormattingNotation {
@@ -67,48 +64,74 @@ export inline std::string italic_cyan(const std::string content) {
 
 export class Announcement {
 public:
-	AnnouncementClause clause;
+	MediaClause clause = MediaClause::Media;
 	int consequential_ordinal = 0;
 	
+	std::string_view getMediaNotation() {
+		static const std::map<MediaClause, std::string_view> mediaClauseToNotation = {
+			{MediaClause::Media, "{}"},
+			{MediaClause::MediaBullet, "• {}"},
+			{MediaClause::MediaChoicebox, "\t[_] {}"}
+		};
+		
+		return mediaClauseToNotation.at(clause);
+	}
+	
+	void media(const std::string& content_append_media) {
+		std::string_view media_notation = getMediaNotation();
+		std::string formatted_media = std::vformat(media_notation, std::make_format_args(content_append_media));
+		std::print("{}\n", formatted_media);
+	}
+	
+	void chat(const std::string& content_append_chat) {
+		std::string_view media_notation = getMediaNotation();
+		std::string formatted_media = std::vformat(media_notation, std::make_format_args(content_append_chat));
+		std::print("{}", formatted_media);
+	}
+	
 	std::string getActionLexicon() {
-		return bold(std::vformat("» Action {}:", std::make_format_args(consequential_ordinal)));
+		return bold(std::format("» Action {}:", consequential_ordinal));
 	}
 	
 	std::string getResultLexicon() {
-		return bold(std::vformat("« Result {}:", std::make_format_args(consequential_ordinal)));
-	}
-	
-	static void printClauseSubtitle(const std::string& subtitle) {
-		std::print("{}\n", subtitle);
-	}
-	
-	void printClauseConsequentialAction(const std::string& content_append_action) {
-		std::print("{} {}\n", getActionLexicon(), content_append_action);
-	}
-	
-	void printClauseConsequentialResult(const std::string& content_append_result) {
-		std::print("{} {}\n", getResultLexicon(), content_append_result);
-	}
-	
-	void printClauseConsequentialItalic(const std::string& content_of_italic) {
-		std::print("{}\n", italic_cyan(content_of_italic));
+		return bold(std::format("« Result {}:", consequential_ordinal));
 	}
 	
 	void action(const std::string& content_append_action) {
 		consequential_ordinal++;
-		printClauseConsequentialAction(content_append_action);
+		clause = MediaClause::MediaBullet;
+		media(std::format("{} {}", getActionLexicon(), content_append_action));
 	}
 	
 	void result(const std::string& content_append_result) {
-		printClauseConsequentialResult(content_append_result);
+		media(std::format("{} {}", getResultLexicon(), content_append_result));
 	}
 	
 	void bygone(const std::string& content_of_bygone) {
-		printClauseConsequentialItalic(content_of_bygone);
+		media(italic_cyan(content_of_bygone));
 	}
 	
 	void subtitle(const std::string& content_of_subtitle) {
-		printClauseSubtitle(content_of_subtitle);
+		media(content_of_subtitle);
+	}
+	
+	void ask(const std::string& content_of_ask) {
+		clause = MediaClause::MediaBullet;
+		chat(bold(content_of_ask));
+	}
+	
+	void choice(const std::string& content_of_choice) {
+		clause = MediaClause::MediaChoicebox;
+		media(content_of_choice);
+	}
+	
+	void redact() { // Delete the most recent announcement
+		std::print("\033[1A\033[2K"); // Move cursor up and clear the line
+	}
+	
+	void reject() { // Reject the most recent user query
+		std::print("\033[1A\033[2K"); // Move cursor up and clear the line
+		std::print("\033[2K"); 
 	}
 };
 

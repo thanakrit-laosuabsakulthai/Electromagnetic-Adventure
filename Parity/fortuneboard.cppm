@@ -11,6 +11,7 @@ export module Parity.FortuneBoard;
 	import Parity.Biology;
 	import Parity.Physiology;
 	import Parity.World;
+	import Parity.Embark;
 	import Parity.Announcement;
 #endif
 export namespace Parity
@@ -58,7 +59,22 @@ export struct Double_Fortune_Board_Multiplier : Rule
 			world.fortune_board_multiplier
 		));
 	}
-}; 
+};
+
+export struct Move_Again_One_Space : Rule
+{
+	void execute(Overworld &world) override {
+		int amount_of_move = 1 * world.useFortuneBoardMultiplier();
+		world.announce.bygone(std::format(
+			"Move again {} space{} (optional).",
+			amount_of_move, amount_of_move > 1 ? "s" : ""
+		));
+		
+		for (int i = 0; i < amount_of_move; ++i) {
+			world.event<Move_One_Space>();
+		}
+	}
+};
 
 struct Lucky_Board; // Forward declaration
 
@@ -81,6 +97,7 @@ export struct Apply_Lucky_Board_Result : Rule
 			break;
 		case Three:
 			world.announce.result("Move again 1 space (optional).");
+			world.event<Move_Again_One_Space>();
 			break;
 		case Four:
 			world.announce.result("Gain 1 Gold Coin.");
