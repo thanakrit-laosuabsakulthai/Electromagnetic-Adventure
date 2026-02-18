@@ -288,6 +288,12 @@ export Geography Atlas = {
 	} }
 };
 
+
+export inline bool is_arrow_path(const Path& path) {
+	using enum Path;
+	return path == ArrowPath || path == ArrowWarpPath || path == ArrowRestrictedPath || path == ArrowRestrictedWarpPath;
+}
+
 } // End of namespace Parity
 
 /* 

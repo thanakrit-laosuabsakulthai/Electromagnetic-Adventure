@@ -70,9 +70,7 @@ export struct Move_Again_One_Space : Rule
 			amount_of_move, amount_of_move > 1 ? "s" : ""
 		));
 		
-		for (int i = 0; i < amount_of_move; ++i) {
-			world.event<Move_One_Space>();
-		}
+		world.event<Move_One_Space_Optional>(amount_of_move);
 	}
 };
 

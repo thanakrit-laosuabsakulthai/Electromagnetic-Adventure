@@ -29,13 +29,12 @@ int main()
 	
 	Parity::print_all_landmark_notations(); // Testing for now
 	
-	world.event<Move_One_Space>();
-	
-	world.event<Lucky_Board>();
+	world.event<Move_One_Space_Optional>(15); // Trigger the optional move event with 15 optional moves
 	
 	do {
 		world.event<Lucky_Board>();
 	} while (world.event_queue.size() < 10); // Ensure at least 5 events are queued
+	
 	world.main_loop();
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 
 		to_string(world.active_player),

@@ -67,6 +67,7 @@ export class Overworld
 	Geography atlas;
 	// +++ expedition-embark +++
 	Expedition expedition;
+	Dialect encylopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);
@@ -224,6 +225,8 @@ export using Geography = std::map<Landmark, LandmarkPosession>;
 
 export Geography Atlas;
 
+export inline bool is_arrow_path(const Path& path);
+
 // +++------>>> notation.cppm <<<------+++
 
 export inline std::string_view to_string(Landmark landmark);
@@ -250,7 +253,7 @@ export void print_all_landmark_notations();
 export enum class MediaClause {
 	Media,
 	MediaBullet,
-	MediaChoicebox,
+	MediaIndent,
 };
 
 export enum class FormattingNotation {
@@ -266,11 +269,13 @@ export inline std::string bold(const std::string content);
 export inline std::string italic(const std::string content);
 export inline std::string cyan(const std::string content);
 export inline std::string italic_cyan(const std::string content);
+export inline std::string bold_cyan(const std::string content);
 
 export class Announcement {
 public:
 	MediaClause clause;
-	int consequential_ordinal = 0;
+	int consequential_ordinal;
+	int choice_ordinal;
 	
 	std::string_view getMediaNotation();
 	void media(const std::string& content_append_media);
@@ -278,15 +283,18 @@ public:
 	
 	std::string getActionLexicon();
 	std::string getResultLexicon();
+	std::string getChoiceLexicon();
 	
 	void action(const std::string& content_append_action);
 	void result(const std::string& content_append_result);
 	void bygone(const std::string& content_of_bygone);
 	void subtitle(const std::string& content_of_subtitle);
 	void choice(const std::string& content_of_choice);
+	void beginChoice();
 	void ask(const std::string& content_of_ask);
 	void redact(); // Delete the most recent announcement
 	void reject(); // Reject the most recent user query
+	std::string listen(); // Listen for user input
 };
 
 // +++------>>> expedition.cppm <<<------+++
@@ -305,8 +313,24 @@ export struct Expedition
 	Landmark landmark_of_destination;
 	Direction chosen_direction;
 	OmniDirection choice_of_direction;
+	bool is_journey_optional;
+	bool is_journey_declined;
 	PlayerLocation municipality;
 };
+
+export struct Dialect {
+	std::string_view above;
+	std::string_view below;
+	std::string_view left;
+	std::string_view right;
+	std::string_view above_left;
+	std::string_view above_right;
+	std::string_view below_left;
+	std::string_view below_right;
+	std::string_view decline_journey;
+};
+
+export constexpr Dialect Encylopedia;
 
 export inline std::string_view to_dialect(Direction direction);
 export inline Direction from_dialect(const std::string& dialect);
@@ -317,6 +341,7 @@ export enum class Multiplicity {
 export inline std::string_view to_bracket_notation(Multiplicity multiplicity);
 export inline std::string dialect_synthesis(MultiDirection multidirection);
 export inline std::string braket_notation_synthesis(MultiDirection multidirection);
+export inline std::string bag_notation_synthesis(std::string &content_inside_bag);
 
 export using MultiDirection = std::vector<Direction>;
 
@@ -326,18 +351,27 @@ export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
 
 export struct Embark : Rule {
 	void execute(Overworld &world) override;
-	void media_of_embark(Overworld &world);
 };
-
+export struct Media_Of_Embark : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
 
 export struct Choice_Of_Passage : Rule {
 	void execute(Overworld &world) override;
-	
+};
+
+export struct Decision_Of_Passage : Rule {
+	Overworld *terra = nullptr;
+	std::string player_choice;
+	void execute(Overworld &world) override;
 	void query();
 	void invalid();
 	bool validate_choice(Direction chosen_direction);
 	bool validate_dialect(const std::string& player_input);
-	Direction get_player_choice();
+	void get_player_choice();
 };
 export struct Travel : Rule {
 	void execute(Overworld &world) override;
@@ -345,7 +379,23 @@ export struct Travel : Rule {
 export struct Arrival : Rule {
 	void execute(Overworld &world) override;
 };
+
+export struct Decline_Journey : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+export struct Media_Of_Journey : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Move_One_Space : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Move_One_Space_Optional : Rule {
+	int amount_of_optional_move;
+	Move_One_Space_Optional(int amount);
 	void execute(Overworld &world) override;
 };
 

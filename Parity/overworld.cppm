@@ -34,6 +34,7 @@ export class Overworld
 	Geography atlas = Atlas;
 	// +++ expedition-embark +++
 	Expedition expedition;
+	Dialect encylopedia = Encylopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);

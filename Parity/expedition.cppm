@@ -47,20 +47,36 @@ export struct Expedition
 	Landmark landmark_of_destination = Landmark::DiamondOfCattail;
 	Direction chosen_direction;
 	OmniDirection choice_of_direction;
+	bool is_journey_optional = false;
+	bool is_journey_declined = false;
 	PlayerLocation municipality = {{PlayerIdentity::AmethystApprentice, Landmark::DiamondOfCattail}};
 };
+
+export struct Dialect {
+	std::string_view above = "w";
+	std::string_view below = "s";
+	std::string_view left = "a";
+	std::string_view right = "d";
+	std::string_view above_left = "wa";
+	std::string_view above_right = "wd";
+	std::string_view below_left = "sa";
+	std::string_view below_right = "sd";
+	std::string_view decline_journey = "x";
+};
+
+export inline constexpr Dialect Encylopedia{};
 
 export inline std::string_view to_dialect(Direction direction) {
 	using enum Direction;
 	static const std::map<Direction, std::string_view> directionToDialect = {
-		{Above, "w"},
-		{Below, "s"},
-		{Left, "a"},
-		{Right, "d"},
-		{AboveLeft, "wa"},
-		{AboveRight, "wd"},
-		{BelowLeft, "sa"},
-		{BelowRight, "sd"}
+		{Above, Encylopedia.above},
+		{Below, Encylopedia.below},
+		{Left, Encylopedia.left},
+		{Right, Encylopedia.right},
+		{AboveLeft, Encylopedia.above_left},
+		{AboveRight, Encylopedia.above_right},
+		{BelowLeft, Encylopedia.below_left},
+		{BelowRight, Encylopedia.below_right}
 	};
 	
 	return directionToDialect.at(direction);
@@ -68,15 +84,15 @@ export inline std::string_view to_dialect(Direction direction) {
 
 export inline Direction from_dialect(const std::string& dialect) {
 	using enum Direction;
-	static const std::map<std::string, Direction> dialectToDirection = {
-		{"w", Above},
-		{"s", Below},
-		{"a", Left},
-		{"d", Right},
-		{"wa", AboveLeft},
-		{"wd", AboveRight},
-		{"sa", BelowLeft},
-		{"sd", BelowRight}
+	static const std::map<std::string_view, Direction> dialectToDirection = {
+		{Encylopedia.above, Above},
+		{Encylopedia.below, Below},
+		{Encylopedia.left, Left},
+		{Encylopedia.right, Right},
+		{Encylopedia.above_left, AboveLeft},
+		{Encylopedia.above_right, AboveRight},
+		{Encylopedia.below_left, BelowLeft},
+		{Encylopedia.below_right, BelowRight}
 	};
 	
 	return dialectToDirection.at(dialect);
@@ -113,6 +129,13 @@ export inline std::string braket_notation_synthesis(MultiDirection multidirectio
 	std::string multidirection_word = " " + dialect_synthesis(multidirection) + " ";
 	std::string_view bracket_notation = to_bracket_notation(Multiplicity::One);
 	return std::vformat(bracket_notation, std::make_format_args(multidirection_word));
+}
+
+export inline std::string bag_notation_synthesis(std::string content_inside_bag) {
+	content_inside_bag = " " + content_inside_bag + " ";
+	
+	std::string_view bag_notation = to_bracket_notation(Multiplicity::One);
+	return std::vformat(bag_notation, std::make_format_args(content_inside_bag));
 }
 
 } // namespace Parity

@@ -5,6 +5,7 @@ export module Parity.Announcement;
 	#include <format>
 	#include <print>
 	#include <map>
+	#include <iostream>
 	#include "type-definition.cppm"
 #else
 	import std; // Standard library import
@@ -16,7 +17,7 @@ export namespace Parity
 export enum class MediaClause {
 	Media,
 	MediaBullet,
-	MediaChoicebox,
+	MediaIndent,
 };
 
 export enum class FormattingNotation {
@@ -62,16 +63,21 @@ export inline std::string italic_cyan(const std::string content) {
 	return italic(cyan(content));
 }
 
+export inline std::string bold_cyan(const std::string content) {
+	return bold(cyan(content));
+}
+
 export class Announcement {
 public:
 	MediaClause clause = MediaClause::Media;
 	int consequential_ordinal = 0;
+	int choice_ordinal = 0;
 	
 	std::string_view getMediaNotation() {
 		static const std::map<MediaClause, std::string_view> mediaClauseToNotation = {
 			{MediaClause::Media, "{}"},
 			{MediaClause::MediaBullet, "• {}"},
-			{MediaClause::MediaChoicebox, "\t[_] {}"}
+			{MediaClause::MediaIndent, "\t{}"}
 		};
 		
 		return mediaClauseToNotation.at(clause);
@@ -95,6 +101,10 @@ public:
 	
 	std::string getResultLexicon() {
 		return bold(std::format("« Result {}:", consequential_ordinal));
+	}
+	
+	std::string getChoiceLexicon() {
+		return bold_cyan(std::format("[{}]", choice_ordinal));
 	}
 	
 	void action(const std::string& content_append_action) {
@@ -121,8 +131,13 @@ public:
 	}
 	
 	void choice(const std::string& content_of_choice) {
-		clause = MediaClause::MediaChoicebox;
-		media(content_of_choice);
+		clause = MediaClause::MediaIndent;
+		choice_ordinal++;
+		media(std::format("{} {}", getChoiceLexicon(), content_of_choice));
+	}
+	
+	void beginChoice() {
+		choice_ordinal = 0;
 	}
 	
 	void redact() { // Delete the most recent announcement
@@ -132,6 +147,12 @@ public:
 	void reject() { // Reject the most recent user query
 		std::print("\033[1A\033[2K"); // Move cursor up and clear the line
 		std::print("\033[2K"); 
+	}
+	
+	std::string listen() {
+		std::string player_input;
+		std::getline(std::cin, player_input);
+		return player_input;
 	}
 };
 
