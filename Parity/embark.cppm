@@ -50,7 +50,7 @@ export struct Media_Of_Passage : Rule {
 export struct Embark : Rule {
 	void execute(Overworld &world) override {
 		
-		world.expedition.landmark_of_beginning = world.expedition.municipality[world.active_player];
+		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
 		world.event<Media_Of_Embark>();
 	}
 };
@@ -159,7 +159,7 @@ export struct Decision_Of_Passage : Rule {
 
 export struct Travel : Rule {
 	void execute(Overworld &world) override {
-		world.expedition.landmark_of_beginning = world.expedition.municipality[world.active_player];
+		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
 		
 		Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
 		Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
@@ -183,7 +183,7 @@ export struct Arrival : Rule {
 			world.getActivePlayerName(),
 			bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination))
 		));
-		world.expedition.municipality[world.active_player] = world.expedition.landmark_of_destination;
+		world.expedition.municipality.teleport(world.active_player, world.expedition.landmark_of_destination);
 	}
 };
 
@@ -200,7 +200,7 @@ export struct Decline_Journey : Rule {
 export struct Media_Of_Journey : Rule {
 	void execute(Overworld &world) override {
 		// display the warning only if a path is marked with an arrow.
-		Landmark &landmark_of_expeditionist = world.expedition.municipality[world.active_player];
+		Landmark landmark_of_expeditionist = world.getLandmarkOfActivePlayer();
 		Passageway &passageway_of_expeditionist = world.atlas[landmark_of_expeditionist].passageway;
 		
 		std::string content_of_media = "Move 1 space.";
@@ -293,12 +293,15 @@ std::string Overworld::appearancity(Landmark target_landmark) {
 }
 
 std::string Overworld::pathochronality(Pathway target_pathway) {
-	Overworld &world = *this;
-	
+
 	std::string direction_word = std::string(to_string(target_pathway.direction));
 	std::string pathochronality_word = chronoity(target_pathway.pathType, direction_word);
 	
 	return pathochronality_word;
+}
+
+Landmark Overworld::getLandmarkOfActivePlayer() {
+	return expedition.municipality.getLandmarkOf(active_player);
 }
 
 } // namespace Parity

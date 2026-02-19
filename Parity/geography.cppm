@@ -142,8 +142,8 @@ export Geography Atlas = {
 		ApparentColor::Orange,
 		ApparentGeometry::Rectangle,
 		Passageway {
-			{Path::WalkPath, Landmark::ContestedCorruption, Direction::Left},
-			{Path::WalkPath, Landmark::DiamondOfCattail, Direction::Right}
+			{Path::WalkPath, Landmark::ContestedCorruption, Direction::Right},
+			{Path::WalkPath, Landmark::DiamondOfCattail, Direction::Left}
 		}
 	} },
 	{ Landmark::OpticalAurum, {

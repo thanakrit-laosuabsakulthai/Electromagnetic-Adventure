@@ -29,6 +29,7 @@ int main()
 	
 	Parity::print_all_landmark_notations(); // Testing for now
 	
+	world.event<Welcome_Adventurer>();
 	world.event<Move_One_Space_Optional>(15); // Trigger the optional move event with 15 optional moves
 	
 	do {

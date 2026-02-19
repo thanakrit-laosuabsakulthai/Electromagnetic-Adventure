@@ -67,6 +67,10 @@ export inline std::string bold_cyan(const std::string content) {
 	return bold(cyan(content));
 }
 
+export inline std::string bold_italic_cyan(const std::string content) {
+	return bold(italic(cyan(content)));
+}
+
 export class Announcement {
 public:
 	MediaClause clause = MediaClause::Media;

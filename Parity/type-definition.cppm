@@ -4,6 +4,7 @@
 #include <deque>
 #include <memory>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -44,11 +45,18 @@ export struct PlayerPosession {
 	std::unordered_set<OpticalEffect> active_optical_effect;
 };
 
-export using Humanity = std::unordered_map<PlayerIdentity, PlayerPosession>;
+export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
+export using Humanity = std::set<PlayerIdentity>;
 
 // +++------>>> physiology.cppm <<<------+++
 
 export inline std::string_view to_string(PlayerIdentity identity);
+export struct Welcome_Adventurer : Rule {
+	int amount_of_adventurer;
+	
+	Welcome_Adventurer(int amount);
+	void execute(Overworld &world) override;
+};
 
 // +++------>>> overworld.cppm <<<------+++
 
@@ -67,6 +75,7 @@ export class Overworld
 	Geography atlas;
 	// +++ expedition-embark +++
 	Expedition expedition;
+	Landmark getLandmarkOfActivePlayer();
 	Dialect encylopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
@@ -78,7 +87,8 @@ export class Overworld
 	int useFortuneBoardMultiplier();
 	
 	// +++  biology-physiology +++
-	Humanity playerbase;
+	Treasury playerbase;
+	Humanity humanity;
 	PlayerIdentity active_player;
 	std::string_view getActivePlayerName();
 	
@@ -270,6 +280,7 @@ export inline std::string italic(const std::string content);
 export inline std::string cyan(const std::string content);
 export inline std::string italic_cyan(const std::string content);
 export inline std::string bold_cyan(const std::string content);
+export inline std::string bold_italic_cyan(const std::string content);
 
 export class Announcement {
 public:
@@ -299,6 +310,21 @@ public:
 
 // +++------>>> expedition.cppm <<<------+++
 
+export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
+export using PlayerLocator = std::unordered_map<Landmark, Humanity>;
+
+export struct Municipality {
+	PlayerLocation player_location;
+	PlayerLocator player_locator;
+	
+	void teleport(PlayerIdentity target_player, Landmark landmark_of_destination);
+	
+	Landmark getLandmarkOf(PlayerIdentity player) const;
+	Humanity getHumanityAt(Landmark landmark) const;
+	void addPlayer(PlayerIdentity player, Landmark landmark);
+	Municipality();
+};
+
 export struct OmniDirection {
 	MultiDirection multidirection;
 	void add(Direction direction);
@@ -315,7 +341,7 @@ export struct Expedition
 	OmniDirection choice_of_direction;
 	bool is_journey_optional;
 	bool is_journey_declined;
-	PlayerLocation municipality;
+	Municipality municipality;
 };
 
 export struct Dialect {
@@ -344,8 +370,6 @@ export inline std::string braket_notation_synthesis(MultiDirection multidirectio
 export inline std::string bag_notation_synthesis(std::string &content_inside_bag);
 
 export using MultiDirection = std::vector<Direction>;
-
-export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
 
 // +++------>>> embark.cppm <<<------+++
 
@@ -384,7 +408,6 @@ export struct Decline_Journey : Rule {
 	void execute(Overworld &world) override;
 };
 
-
 export struct Media_Of_Journey : Rule {
 	void execute(Overworld &world) override;
 };
@@ -399,5 +422,10 @@ export struct Move_One_Space_Optional : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Apply_Optional_Journey : Rule {
+	int amount_of_optional_move;
+	Apply_Optional_Journey(int amount);
+	void execute(Overworld &world) override;
+};
 
 } // namespace Parity

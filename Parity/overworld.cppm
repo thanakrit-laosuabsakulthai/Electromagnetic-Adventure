@@ -34,6 +34,7 @@ export class Overworld
 	Geography atlas = Atlas;
 	// +++ expedition-embark +++
 	Expedition expedition;
+	Landmark getLandmarkOfActivePlayer();
 	Dialect encylopedia = Encylopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
@@ -45,8 +46,9 @@ export class Overworld
 	int useFortuneBoardMultiplier();
 	
 	// +++  biology-physiology +++
-	Humanity playerbase = {{PlayerIdentity::AmethystApprentice, {}}};
-	PlayerIdentity active_player = PlayerIdentity::AmethystApprentice;
+	Treasury playerbase;
+	Humanity humanity;
+	PlayerIdentity active_player;
 	std::string_view getActivePlayerName();
 	
 	

@@ -3,6 +3,7 @@ export module Parity.Expedition;
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <unordered_map>
 	#include <unordered_set>
+	#include <set>
 	#include <vector>
 	#include <string>
 	#include <format>
@@ -18,6 +19,36 @@ export module Parity.Expedition;
 export namespace Parity {
 
 export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
+export using PlayerLocator = std::unordered_map<Landmark, Humanity>;
+
+export struct Municipality {
+	PlayerLocation player_location;
+	PlayerLocator player_locator;
+	
+	void teleport(PlayerIdentity target_player, Landmark landmark_of_destination) {
+		Landmark landmark_of_beginning = player_location[target_player];
+		
+		// Update player_location
+		player_location[target_player] = landmark_of_destination;
+		// Update player_locator
+		player_locator[landmark_of_beginning].erase(target_player);
+		player_locator[landmark_of_destination].insert(target_player);
+	}
+	
+	Landmark getLandmarkOf(PlayerIdentity player) const {
+		return player_location.at(player);
+	}
+	
+	Humanity getHumanityAt(Landmark landmark) const {
+		return player_locator.at(landmark);
+	}
+	
+	void addPlayer(PlayerIdentity player, Landmark landmark) {
+		player_location[player] = landmark;
+		player_locator[landmark].insert(player);
+	}
+};
+
 export using MultiDirection = std::vector<Direction>;
 
 
@@ -49,7 +80,7 @@ export struct Expedition
 	OmniDirection choice_of_direction;
 	bool is_journey_optional = false;
 	bool is_journey_declined = false;
-	PlayerLocation municipality = {{PlayerIdentity::AmethystApprentice, Landmark::DiamondOfCattail}};
+	Municipality municipality;
 };
 
 export struct Dialect {

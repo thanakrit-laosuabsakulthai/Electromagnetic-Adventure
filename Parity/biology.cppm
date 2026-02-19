@@ -3,6 +3,8 @@ export module Parity.Biology;
 #if defined(__INTELLISENSE__)
 	#include <unordered_set>
 	#include <map>
+	#include <set>
+	#include <vector>
 	#include <string>
 #else
 	import std; // Standard library import
@@ -55,6 +57,7 @@ export struct PlayerPosession {
 	std::unordered_set<OpticalEffect> active_optical_effect;
 };
 
-export using Humanity = std::map<PlayerIdentity, PlayerPosession>;
+export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
+export using Humanity = std::set<PlayerIdentity>;
 
 } // namespace Parity
