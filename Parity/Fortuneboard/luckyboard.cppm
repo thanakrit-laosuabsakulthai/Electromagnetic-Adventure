@@ -1,19 +1,21 @@
-export module Parity.FortuneBoard;
+export module Parity.LuckyBoard;
 
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <print>
 	#include <format>
 	#include <string>
-	#include "type-definition.cppm"
+	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.DieRoll;
+	import Parity.FortuneBoard;
 	import Parity.Biology;
 	import Parity.Physiology;
 	import Parity.World;
 	import Parity.Embark;
 	import Parity.Announcement;
 #endif
+
 export namespace Parity
 {
 
@@ -22,7 +24,7 @@ export struct Gain_Gold_Coin : Rule
 	int amount_of_gold_coin;
 	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
 	void execute(Overworld &world) override {
-		amount_of_gold_coin *= world.useFortuneBoardMultiplier();
+		amount_of_gold_coin *= world.useLuckyBoardMultiplier();
 		
 		world.playerbase[world.active_player].gold_coin += amount_of_gold_coin;
 		
@@ -38,7 +40,7 @@ export struct Gain_Permanent_Power_Point : Rule
 	int amount_of_permanent_power;
 	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}
 	void execute(Overworld &world) override {
-		amount_of_permanent_power *= world.useFortuneBoardMultiplier();
+		amount_of_permanent_power *= world.useLuckyBoardMultiplier();
 		
 		world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;
 		
@@ -49,14 +51,14 @@ export struct Gain_Permanent_Power_Point : Rule
 	}
 };
 
-export struct Double_Fortune_Board_Multiplier : Rule
+export struct Double_Lucky_Board_Multiplier : Rule
 {
 	void execute(Overworld &world) override {
-		world.fortune_board_multiplier *= 2;
+		world.lucky_board_multiplier *= 2;
 		
 		world.announce.bygone(std::format(
 			"Doubled Fortune Board multiplier to {}.",
-			world.fortune_board_multiplier
+			world.lucky_board_multiplier
 		));
 	}
 };
@@ -64,7 +66,7 @@ export struct Double_Fortune_Board_Multiplier : Rule
 export struct Move_Again_One_Space : Rule
 {
 	void execute(Overworld &world) override {
-		int amount_of_move = 1 * world.useFortuneBoardMultiplier();
+		int amount_of_move = 1 * world.useLuckyBoardMultiplier();
 		world.announce.bygone(std::format(
 			"Move again {} space{} (optional).",
 			amount_of_move, amount_of_move > 1 ? "s" : ""
@@ -73,8 +75,6 @@ export struct Move_Again_One_Space : Rule
 		world.event<Move_One_Space_Optional>(amount_of_move);
 	}
 };
-
-struct Lucky_Board; // Forward declaration
 
 export struct Apply_Lucky_Board_Result : Rule
 {
@@ -87,10 +87,11 @@ export struct Apply_Lucky_Board_Result : Rule
 		switch (roll) {
 		case One:
 			world.announce.result("Trigger the Event Board once.");
+			world.event<Event_Board>();
 			break;
 		case Two:
 			world.announce.result("Trigger the Lucky Board again, but the result is doubled.");
-			world.event<Double_Fortune_Board_Multiplier>();
+			world.event<Double_Lucky_Board_Multiplier>();
 			world.event<Lucky_Board>();
 			break;
 		case Three:
@@ -113,34 +114,20 @@ export struct Apply_Lucky_Board_Result : Rule
 	}
 };
 
-export struct Roll_For_Random_Board : Rule
-{
-	void execute(Overworld &world) override {
-		world.die_roll_for_fortune_board = static_cast<DieRoll>((std::rand() % 6) + 1);
-		
-		world.announce.bygone(std::format(
-			"Rolled [{}] on the die.",
-			static_cast<int>(world.die_roll_for_fortune_board)
-		));
-	}
-};
+void Lucky_Board::execute(Overworld &world) {
+	world.announce.action(std::format(
+		"{} rolls the Lucky Board once.",
+		to_string(world.active_player)
+	));
+	
+	world.event<Roll_For_Random_Board>();
+	world.event<Apply_Lucky_Board_Result>();
+} // Logic to roll on the board
 
-export struct Lucky_Board : Rule
-{
-	void execute(Overworld &world) override {
-		world.announce.action(std::format(
-			"{} rolls the Lucky Board once.",
-			to_string(world.active_player)
-		));
-		
-		world.event<Roll_For_Random_Board>();
-		world.event<Apply_Lucky_Board_Result>();
-	} // Logic to roll on the board
-};
 
-int Overworld::useFortuneBoardMultiplier() {
-		int current_multiplier = fortune_board_multiplier;
-		fortune_board_multiplier = 1; // Reset after use
+int Overworld::useLuckyBoardMultiplier() {
+		int current_multiplier = lucky_board_multiplier;
+		lucky_board_multiplier = 1; // Reset after use
 		return current_multiplier;
 	}
 

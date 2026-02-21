@@ -78,6 +78,23 @@ export struct Next_Adventurer_Turn : Rule {
 	void execute(Overworld &world) override;
 };
 
+// +++------>>> necrology.cppm <<<------+++
+
+
+export enum class DemonForm {
+	ElectricMinion,
+	MagneticDemon,
+	MagneticMageDemon,
+	ElectromagneticDemonBoss
+};
+
+export inline std::string_view to_string(DemonForm demon_form);
+
+export using DemonSeriality = int;
+export using DemonPossession = std::map<DemonSeriality, DemonForm>;
+export using Demonity = std::set<DemonSeriality>;
+
+
 // +++------>>> overworld.cppm <<<------+++
 
 export struct Rule { 
@@ -96,15 +113,15 @@ export class Overworld
 	// +++ expedition-embark +++
 	Expedition expedition;
 	Landmark getLandmarkOfActivePlayer();
-	Dialect encylopedia;
+	Dialect encyclopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);
 	
 	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board;
-	int fortune_board_multiplier;
-	int useFortuneBoardMultiplier();
+	int lucky_board_multiplier;
+	int useLuckyBoardMultiplier();
 	
 	// +++  biology-physiology +++
 	Treasury playerbase;
@@ -127,6 +144,12 @@ export class Overworld
 
 // +++------>>> fortuneboard.cppm <<<------+++
 
+export struct Roll_For_Random_Board : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> luckyboard.cppm <<<------+++
+
 export struct Gain_Gold_Coin : Rule {
 	int amount_of_gold_coin;
 	Gain_Gold_Coin(int amount);
@@ -148,11 +171,40 @@ export struct Apply_Lucky_Board_Result : Rule {
 	void applyLuckyBoardResult(Overworld &world, DieRoll roll);
 };
 
-export struct Roll_For_Random_Board : Rule {
+export struct Lucky_Board : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Lucky_Board : Rule {
+// +++------>>> eventboard.cppm <<<------+++
+
+export struct All_Players_Gain_Gold_Coin : Rule
+{
+	int amount_of_gold_coin;
+	All_Players_Gain_Gold_Coin(int amount);
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Event_Board_Result : Rule
+{
+	void execute(Overworld &world) override;
+	void applyEventBoardResult(Overworld &world, DieRoll roll);
+};
+
+export struct Event_Board : Rule
+{
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> unluckyboard.cppm <<<------+++
+
+export struct Apply_Unlucky_Board_Result : Rule
+{
+	void execute(Overworld &world) override;
+	void applyUnluckyBoardResult(Overworld &world, DieRoll roll);
+};
+
+export struct Unlucky_Board : Rule
+{
 	void execute(Overworld &world) override;
 };
 
@@ -236,6 +288,8 @@ export enum class Direction {
 	BelowRight
 };
 
+export using MultiDirection = std::vector<Direction>;
+
 export struct Pathway {
 	Path pathType;
 	Landmark destination;
@@ -271,15 +325,17 @@ export inline std::string_view to_string(Direction direction);
 export inline std::string_view to_string(Path path);
 
 export inline std::string_view to_braket_notation(ApparentGeometry geometry);
-export inline std::string_view to_sapce_notation(ApparentGeometry geometry);
+export inline std::string_view to_space_notation(ApparentGeometry geometry);
 export inline std::string_view to_zone_notation(Zone zone);
-export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color);
+export inline std::string chromaticon(ApparentQuality quality, ApparentColor color);
 export inline std::string appearancy(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry);
 export inline std::string zonoity(Zone zone, std::string content_prepend_zone);
 export inline std::string chronoity(Path path, std::string content_prepend_warp);
-export inline std::string braket_notation_synthesis(ApparentGeometry geometry, std::string content_inside_braket);
+export inline std::string archeometrinoity(ApparentGeometry geometry, std::string content_inside_braket);
 
 export void print_all_landmark_notations();
+
+export inline std::string dialect_synthesis(MultiDirection multidirection);
 
 // +++------>>> announcement.cppm <<<------+++
 
@@ -343,8 +399,8 @@ public:
 
 // +++------>>> expedition.cppm <<<------+++
 
-export using PlayerLocation = std::unordered_map<PlayerIdentity, Landmark>;
-export using PlayerLocator = std::unordered_map<Landmark, Humanity>;
+export using PlayerLocation = std::map<PlayerIdentity, Landmark>;
+export using PlayerLocator = std::map<Landmark, Humanity>;
 
 export struct Municipality {
 	PlayerLocation player_location;
@@ -355,7 +411,6 @@ export struct Municipality {
 	Landmark getLandmarkOf(PlayerIdentity player) const;
 	Humanity getHumanityAt(Landmark landmark) const;
 	void addPlayer(PlayerIdentity player, Landmark landmark);
-	Municipality();
 };
 
 export struct OmniDirection {
@@ -364,6 +419,22 @@ export struct OmniDirection {
 	void clear();
 	bool has(Direction direction);
 	MultiDirection vector();
+};
+
+export using DemonLocation = std::map<DemonSeriality, Landmark>;
+export using DemonLocator = std::map<Landmark, Demonity>;
+
+export struct AntiDivinity {
+	DemonLocation demon_location;
+	DemonLocator demon_locator;
+	
+	void teleport(DemonSeriality target_demon, Landmark landmark_of_destination);
+	
+	Landmark getLandmarkOf(DemonSeriality demon) const;
+	Demonity getDemonityAt(Landmark landmark) const;
+	
+	void addDemon(DemonSeriality demon, Landmark landmark);
+	void removeDemon(DemonSeriality demon);
 };
 
 export struct Expedition
@@ -375,7 +446,10 @@ export struct Expedition
 	bool is_journey_optional;
 	bool is_journey_declined;
 	Municipality municipality;
+	AntiDivinity antidivinity;
 };
+
+// +++------>>> encyclopedia.cppm <<<------+++
 
 export struct Dialect {
 	std::string_view above;
@@ -389,7 +463,7 @@ export struct Dialect {
 	std::string_view decline_journey;
 };
 
-export constexpr Dialect Encylopedia;
+export constexpr Dialect Encyclopedia;
 
 export inline std::string_view to_dialect(Direction direction);
 export inline Direction from_dialect(const std::string& dialect);
@@ -398,11 +472,7 @@ export enum class Multiplicity {
 	Many
 };
 export inline std::string_view to_bracket_notation(Multiplicity multiplicity);
-export inline std::string dialect_synthesis(MultiDirection multidirection);
-export inline std::string braket_notation_synthesis(MultiDirection multidirection);
 export inline std::string bag_notation_synthesis(std::string &content_inside_bag);
-
-export using MultiDirection = std::vector<Direction>;
 
 // +++------>>> embark.cppm <<<------+++
 
@@ -460,5 +530,6 @@ export struct Apply_Optional_Journey : Rule {
 	Apply_Optional_Journey(int amount);
 	void execute(Overworld &world) override;
 };
+
 
 } // namespace Parity

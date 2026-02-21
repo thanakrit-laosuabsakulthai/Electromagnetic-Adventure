@@ -5,10 +5,11 @@ export module Parity.Notation;
 	#include <string_view>
 	#include <format>
 	#include <print>
-	#include "type-definition.cppm"
+	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.Geography;
+	import Parity.Encyclopedia;
 #endif
 
 export namespace Parity
@@ -133,7 +134,7 @@ export inline std::string_view to_braket_notation(ApparentGeometry geometry) {
 	return geometryToBraketNotation.at(geometry);
 }
 
-export inline std::string_view to_sapce_notation(ApparentGeometry geometry) {
+export inline std::string_view to_space_notation(ApparentGeometry geometry) {
 	using enum ApparentGeometry;
 	static const std::map<ApparentGeometry, std::string_view> geometryToSpaceNotation = {
 		{Square, "{} Square Space"},
@@ -157,7 +158,7 @@ export inline std::string_view to_zone_notation(Zone zone) {
 	return zoneToNotation.at(zone);
 }
 
-export inline std::string word_synthesis(ApparentQuality quality, ApparentColor color) {
+export inline std::string chromaticon(ApparentQuality quality, ApparentColor color) {
 	if (quality == ApparentQuality::Color) {
 		return std::string(to_string(color));
 	} else {
@@ -166,8 +167,8 @@ export inline std::string word_synthesis(ApparentQuality quality, ApparentColor 
 }
 
 export inline std::string appearancy(ApparentQuality quality, ApparentColor color, ApparentGeometry geometry) {
-	std::string quality_color_word = word_synthesis(quality, color);
-	std::string_view shape_space_notation = to_sapce_notation(geometry);
+	std::string quality_color_word = chromaticon(quality, color);
+	std::string_view shape_space_notation = to_space_notation(geometry);
 	
 	return std::vformat(shape_space_notation, std::make_format_args(quality_color_word));
 }
@@ -189,12 +190,12 @@ export inline std::string chronoity(Path path, std::string content_prepend_warp)
 	}
 }
 
-export inline std::string braket_notation_synthesis(ApparentGeometry geometry, std::string content_inside_braket) {
+export inline std::string archeometrinoity(ApparentGeometry geometry, std::string content_inside_braket) {
 	std::string_view braket_notation = to_braket_notation(geometry);
 	return std::vformat(braket_notation, std::make_format_args(content_inside_braket));
 }
 
-//  ⟨Pink Diamond Space ¦ Safe Zone⟩
+// ⟨Pink Diamond Space ¦ Safe Zone⟩
 
 export void print_all_landmark_notations() {
 	for (const auto &[landmark, posession] : Atlas) {
@@ -202,10 +203,54 @@ export void print_all_landmark_notations() {
 		
 		std::string apparent_word = appearancy(posession.apparentQuality, posession.apparentColor, posession.apparentGeometry);
 		std::string apparent_zone_word = zonoity(posession.zone, apparent_word);
-		std::string full_notation = braket_notation_synthesis(posession.apparentGeometry, apparent_zone_word);
+		std::string full_notation = archeometrinoity(posession.apparentGeometry, apparent_zone_word);
 		std::print("{}: {}\n", landmark_name, full_notation);
 	}
 	std::print("\n");
+}
+
+export inline std::string_view to_dialect(Direction direction) {
+	using enum Direction;
+	static const std::map<Direction, std::string_view> directionToDialect = {
+		{Above, Encyclopedia.above},
+		{Below, Encyclopedia.below},
+		{Left, Encyclopedia.left},
+		{Right, Encyclopedia.right},
+		{AboveLeft, Encyclopedia.above_left},
+		{AboveRight, Encyclopedia.above_right},
+		{BelowLeft, Encyclopedia.below_left},
+		{BelowRight, Encyclopedia.below_right}
+	};
+	
+	return directionToDialect.at(direction);
+}
+
+export inline Direction from_dialect(const std::string& dialect) {
+	using enum Direction;
+	static const std::map<std::string_view, Direction> dialectToDirection = {
+		{Encyclopedia.above, Above},
+		{Encyclopedia.below, Below},
+		{Encyclopedia.left, Left},
+		{Encyclopedia.right, Right},
+		{Encyclopedia.above_left, AboveLeft},
+		{Encyclopedia.above_right, AboveRight},
+		{Encyclopedia.below_left, BelowLeft},
+		{Encyclopedia.below_right, BelowRight}
+	};
+	
+	return dialectToDirection.at(dialect);
+}
+
+export inline std::string dialect_synthesis(MultiDirection multidirection) {
+	std::string multidirection_word;
+	for (const auto& direction : multidirection) {
+		multidirection_word += std::string(to_dialect(direction));
+		if (&direction != &multidirection.back()) {
+			multidirection_word += " ";
+		}
+	}
+	
+	return multidirection_word;
 }
 
 } // End of namespace Parity

@@ -13,6 +13,7 @@ export module Parity.World;
 	import Parity.Geography;
 	import Parity.Expedition;
 	import Parity.Announcement;
+	import Parity.Encyclopedia;
 #endif
 
 
@@ -35,15 +36,15 @@ export class Overworld
 	// +++ expedition-embark +++
 	Expedition expedition;
 	Landmark getLandmarkOfActivePlayer();
-	Dialect encylopedia = Encylopedia;
+	const Dialect encyclopedia = Encyclopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);
 	
 	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board = DieRoll::One;
-	int fortune_board_multiplier = 1;
-	int useFortuneBoardMultiplier();
+	int lucky_board_multiplier = 1;
+	int useLuckyBoardMultiplier();
 	
 	// +++  biology-physiology +++
 	Treasury playerbase;
@@ -52,7 +53,6 @@ export class Overworld
 	std::string_view getActivePlayerName();
 	void firstAdventurer();
 	void nextAdventurer();
-	
 	
 	/// +++ rule-event +++
 	int amount_of_new_event = 0;

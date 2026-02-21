@@ -38,6 +38,8 @@ int main()
 	
 	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
 	world.event<Move_One_Space_Optional>(1); // Trigger the optional move event with 1 optional move
+	world.event<Lucky_Board>(); // Trigger the lucky board event
+	world.event<Event_Board>(); // Trigger the event board event
 	
 	/* do {
 		world.event<Lucky_Board>();

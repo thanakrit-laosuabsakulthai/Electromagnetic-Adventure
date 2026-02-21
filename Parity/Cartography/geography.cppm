@@ -93,6 +93,8 @@ export enum class Direction {
 	BelowRight
 };
 
+export using MultiDirection = std::vector<Direction>;
+
 export struct Pathway {
 	Path pathType;
 	Landmark destination;

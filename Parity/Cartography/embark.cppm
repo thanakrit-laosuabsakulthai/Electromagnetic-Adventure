@@ -5,13 +5,15 @@ export module Parity.Embark;
 	#include <format>
 	#include <print>
 	#include <iostream>
-	#include "type-definition.cppm"
+	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.Geography;
 	import Parity.World;
 	import Parity.Announcement;
 	import Parity.Notation;
+	import Parity.Encyclopedia;
+	import Parity.Expedition;
 #endif
 
 export namespace Parity {
@@ -24,6 +26,16 @@ export struct Media_Of_Embark : Rule {
 		world.announce.subtitle(std::format("Moving from {} to...", lexicon_of_beginning));
 	}
 };
+
+// Set the landmark of beginning as the current location of the active player
+export struct Embark : Rule {
+	void execute(Overworld &world) override {
+		
+		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
+		world.event<Media_Of_Embark>();
+	}
+};
+
 
 export struct Media_Of_Passage : Rule {
 	void execute(Overworld &world) override {
@@ -51,18 +63,6 @@ export struct Media_Of_Passage : Rule {
 		}
 	}
 };
-
-export struct Embark : Rule {
-	void execute(Overworld &world) override {
-		
-		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
-		world.event<Media_Of_Embark>();
-	}
-};
-
-/* 
-- **» Action 1:** Move 1 space. If the path is marked with an arrow, players cannot move against the arrow's direction.
-*/
 
 export struct Choice_Of_Passage : Rule {
 	void execute(Overworld &world) override {
@@ -92,7 +92,7 @@ export struct Decision_Of_Passage : Rule {
 		get_player_choice();
 		
 		if (world.expedition.is_journey_optional &&
-			player_choice == world.encylopedia.decline_journey
+			player_choice == world.encyclopedia.decline_journey
 		) {
 			world.expedition.is_journey_declined = true;
 		} else {
@@ -110,7 +110,7 @@ export struct Decision_Of_Passage : Rule {
 		std::string choice_of_dialect = dialect_synthesis(world.expedition.choice_of_direction.vector());
 		
 		if (world.expedition.is_journey_optional) {
-			choice_of_dialect += " " + std::string(world.encylopedia.decline_journey);
+			choice_of_dialect += " " + std::string(world.encyclopedia.decline_journey);
 		}
 		
 		std::string content_of_query = bag_notation_synthesis(choice_of_dialect);
@@ -132,7 +132,7 @@ export struct Decision_Of_Passage : Rule {
 		Overworld &world = *terra;
 		
 		if (world.expedition.is_journey_optional &&
-			player_input == world.encylopedia.decline_journey
+			player_input == world.encyclopedia.decline_journey
 		) {
 			return true; // It is a valid choice to decline the journey
 		}
@@ -239,7 +239,6 @@ export struct Move_One_Space : Rule {
 
 // Forward declaration
 
-struct Decide_Optional_Journey;
 struct Apply_Optional_Journey;
 
 export struct Move_One_Space_Optional : Rule {
@@ -277,6 +276,10 @@ export struct Apply_Optional_Journey : Rule {
 	}
 };
 
+Landmark Overworld::getLandmarkOfActivePlayer() {
+	return expedition.municipality.getLandmarkOf(active_player);
+}
+
 // ---+++ overworld methods +++---
 
 std::string Overworld::appearanzonality(Landmark target_landmark) {
@@ -286,7 +289,7 @@ std::string Overworld::appearanzonality(Landmark target_landmark) {
 	
 	std::string apparency_word = appearancy(posession.apparentQuality, posession.apparentColor, posession.apparentGeometry);
 	std::string zonoity_word = zonoity(posession.zone, apparency_word);
-	std::string appearanzonality_word = braket_notation_synthesis(posession.apparentGeometry, zonoity_word);
+	std::string appearanzonality_word = archeometrinoity(posession.apparentGeometry, zonoity_word);
 	
 	return appearanzonality_word;
 }
@@ -307,10 +310,6 @@ std::string Overworld::pathochronality(Pathway target_pathway) {
 	std::string pathochronality_word = chronoity(target_pathway.pathType, direction_word);
 	
 	return pathochronality_word;
-}
-
-Landmark Overworld::getLandmarkOfActivePlayer() {
-	return expedition.municipality.getLandmarkOf(active_player);
 }
 
 } // namespace Parity
