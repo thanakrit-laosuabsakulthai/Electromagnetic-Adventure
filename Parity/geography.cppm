@@ -178,7 +178,7 @@ export Geography Atlas = {
 		Passageway {
 			{Path::WalkPath, Landmark::NorthernHorizon, Direction::Right},
 			{Path::WalkPath, Landmark::OpticalMarketplace, Direction::Left},
-			{Path::ArrowWarpPath, Landmark::ContestedCorruption, Direction::Above}
+			{Path::ArrowRestrictedWarpPath, Landmark::ContestedCorruption, Direction::Above}
 		}
 	} },
 	{ Landmark::ContestedCorruption, {
@@ -190,7 +190,7 @@ export Geography Atlas = {
 		Passageway {
 			{Path::WalkPath, Landmark::SparseForestland, Direction::Right},
 			{Path::WalkPath, Landmark::GoldenCattail, Direction::Left},
-			{Path::ArrowRestrictedWarpPath, Landmark::OpticalCorruption, Direction::Below}
+			{Path::ArrowWarpPath, Landmark::OpticalCorruption, Direction::Below}
 		}
 	} },
 	{ Landmark::SparseForestland, {
@@ -292,6 +292,11 @@ export Geography Atlas = {
 export inline bool is_arrow_path(const Path& path) {
 	using enum Path;
 	return path == ArrowPath || path == ArrowWarpPath || path == ArrowRestrictedPath || path == ArrowRestrictedWarpPath;
+}
+
+export inline bool is_restricted_path(const Path& path) {
+	using enum Path;
+	return path == ArrowRestrictedPath || path == ArrowRestrictedWarpPath;
 }
 
 } // End of namespace Parity

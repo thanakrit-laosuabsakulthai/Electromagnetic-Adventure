@@ -50,6 +50,8 @@ export class Overworld
 	Humanity humanity;
 	PlayerIdentity active_player;
 	std::string_view getActivePlayerName();
+	void firstAdventurer();
+	void nextAdventurer();
 	
 	
 	/// +++ rule-event +++

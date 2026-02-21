@@ -29,12 +29,20 @@ int main()
 	
 	Parity::print_all_landmark_notations(); // Testing for now
 	
-	world.event<Welcome_Adventurer>();
-	world.event<Move_One_Space_Optional>(15); // Trigger the optional move event with 15 optional moves
+	world.event<Welcome_Adventurer>(2); // Start the game with 2 adventurers
+	world.event<First_Adventurer_Turn>(); // Start the first adventurer's turn
+	world.event<Move_One_Space_Optional>(3); // Trigger the optional move event with 3 optional moves
 	
-	do {
+	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
+	world.event<Move_One_Space_Optional>(2); // Trigger the optional move event with 2 optional moves
+	
+	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
+	world.event<Move_One_Space_Optional>(1); // Trigger the optional move event with 1 optional move
+	
+	/* do {
 		world.event<Lucky_Board>();
 	} while (world.event_queue.size() < 10); // Ensure at least 5 events are queued
+	*/
 	
 	world.main_loop();
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 

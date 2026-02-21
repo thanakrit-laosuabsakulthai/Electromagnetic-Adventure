@@ -25,6 +25,7 @@ export enum class FormattingNotation {
 	Bold,
 	Italic,
 	Underline,
+	Strikethrough,
 	Cyan
 };
 
@@ -36,27 +37,35 @@ export inline std::string_view to_notation(FormattingNotation notation) {
 		{Bold, "\033[1m{}\033[0m"},
 		{Italic, "\033[3m{}\033[0m"},
 		{Underline, "\033[4m{}\033[0m"},
+		{Strikethrough, "\033[9m{}\033[0m"},
 		{Cyan, "\033[36m{}\033[0m"}
 	};
 	return formattingLexiconToString.at(notation);
 }
 
+export inline std::string format_with_notation(FormattingNotation notation, const std::string& content) {
+	std::string_view notation_template = to_notation(notation);
+	return std::vformat(notation_template, std::make_format_args(content));
+}
+
 export inline std::string bold(const std::string content) {
-	std::string_view bold_notation = to_notation(FormattingNotation::Bold);
-	
-	return std::vformat(bold_notation, std::make_format_args(content));
+	return format_with_notation(FormattingNotation::Bold, content);
 }
 
 export inline std::string italic(const std::string content) {
-	std::string_view italic_notation = to_notation(FormattingNotation::Italic);
-	
-	return std::vformat(italic_notation, std::make_format_args(content));
+	return format_with_notation(FormattingNotation::Italic, content);
+}
+
+export inline std::string underline(const std::string content) {
+	return format_with_notation(FormattingNotation::Underline, content);
+}
+
+export inline std::string strikethrough(const std::string content) {
+	return format_with_notation(FormattingNotation::Strikethrough, content);
 }
 
 export inline std::string cyan(const std::string content) {
-	std::string_view cyan_notation = to_notation(FormattingNotation::Cyan);
-	
-	return std::vformat(cyan_notation, std::make_format_args(content));
+	return format_with_notation(FormattingNotation::Cyan, content);
 }
 
 export inline std::string italic_cyan(const std::string content) {
@@ -111,6 +120,10 @@ public:
 		return bold_cyan(std::format("[{}]", choice_ordinal));
 	}
 	
+	std::string getForbidLexicon() {
+		return bold_cyan("[-]");
+	}
+	
 	void action(const std::string& content_append_action) {
 		consequential_ordinal++;
 		clause = MediaClause::MediaBullet;
@@ -129,6 +142,23 @@ public:
 		media(content_of_subtitle);
 	}
 	
+	void caption(const std::string& content_of_caption) {
+		clause = MediaClause::Media;
+		media(content_of_caption);
+	}
+	
+	void linebreak() {
+		clause = MediaClause::Media;
+		std::print("\n");
+	}
+	
+	void horizon(const std::string& content_of_horizon) {
+		clause = MediaClause::Media;
+		linebreak();
+		media(content_of_horizon);
+		linebreak();
+	}
+	
 	void ask(const std::string& content_of_ask) {
 		clause = MediaClause::MediaBullet;
 		chat(bold(content_of_ask));
@@ -138,6 +168,11 @@ public:
 		clause = MediaClause::MediaIndent;
 		choice_ordinal++;
 		media(std::format("{} {}", getChoiceLexicon(), content_of_choice));
+	}
+	
+	void forbid(const std::string& content_of_forbid) {
+		clause = MediaClause::MediaIndent;
+		media(std::format("{} {}", getForbidLexicon(), strikethrough(content_of_forbid)));
 	}
 	
 	void beginChoice() {

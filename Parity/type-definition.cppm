@@ -58,6 +58,26 @@ export struct Welcome_Adventurer : Rule {
 	void execute(Overworld &world) override;
 };
 
+export template <typename Element_Of_Set>
+	inline Element_Of_Set getNextElement(const std::set<Element_Of_Set>& target_set, Element_Of_Set current_element);
+
+// string repetition for emdash because emdash is a multicharacter string in UTF-8
+export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
+export inline std::string get_ornament_notation(int amount_of_emdash);
+
+export struct Media_Of_Adventurer : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Adventurer_Separator : Rule {
+	void execute(Overworld &world) override;
+};
+export struct First_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Next_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override;
+};
+
 // +++------>>> overworld.cppm <<<------+++
 
 export struct Rule { 
@@ -91,6 +111,8 @@ export class Overworld
 	Humanity humanity;
 	PlayerIdentity active_player;
 	std::string_view getActivePlayerName();
+	void firstAdventurer();
+	void nextAdventurer();
 	
 	// +++ rule-event +++
 	int amount_of_new_event;
@@ -236,6 +258,7 @@ export using Geography = std::map<Landmark, LandmarkPosession>;
 export Geography Atlas;
 
 export inline bool is_arrow_path(const Path& path);
+export inline bool is_restricted_path(const Path& path);
 
 // +++------>>> notation.cppm <<<------+++
 
@@ -271,12 +294,16 @@ export enum class FormattingNotation {
 	Bold,
 	Italic,
 	Underline,
+	Strikethrough,
 	Cyan,
 };
 
 export inline std::string_view to_notation(FormattingNotation notation);
+export inline std::string format_with_notation(FormattingNotation notation, const std::string& content);
 export inline std::string bold(const std::string content);
 export inline std::string italic(const std::string content);
+export inline std::string underline(const std::string content);
+export inline std::string strikethrough(const std::string content);
 export inline std::string cyan(const std::string content);
 export inline std::string italic_cyan(const std::string content);
 export inline std::string bold_cyan(const std::string content);
@@ -295,12 +322,18 @@ public:
 	std::string getActionLexicon();
 	std::string getResultLexicon();
 	std::string getChoiceLexicon();
+	std::string getForbidLexicon();
 	
 	void action(const std::string& content_append_action);
 	void result(const std::string& content_append_result);
 	void bygone(const std::string& content_of_bygone);
 	void subtitle(const std::string& content_of_subtitle);
+	void caption(const std::string& content_of_caption);
+	void linebreak();
+	void horizon(const std::string& content_of_horizon);
+	
 	void choice(const std::string& content_of_choice);
+	void forbid(const std::string& content_of_forbid);
 	void beginChoice();
 	void ask(const std::string& content_of_ask);
 	void redact(); // Delete the most recent announcement

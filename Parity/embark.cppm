@@ -38,7 +38,12 @@ export struct Media_Of_Passage : Rule {
 			std::string pathochronality_of_destination = world.pathochronality(pathway);
 			
 			std::string lexicon_of_destination = std::format("{} {}", appranzonality_of_destination, pathochronality_of_destination);
-			world.announce.choice(lexicon_of_destination);
+			
+			if (is_restricted_path(pathway.pathType)) {
+				world.announce.forbid(lexicon_of_destination);
+			} else {
+				world.announce.choice(lexicon_of_destination);
+			}
 		}
 		
 		if(world.expedition.is_journey_optional) {
@@ -67,6 +72,10 @@ export struct Choice_Of_Passage : Rule {
 		
 		world.expedition.choice_of_direction.clear();
 		for (const auto& pathway : passageway_of_beginning) {
+			if (is_restricted_path(pathway.pathType)) {
+				continue; // Skip restricted paths when adding choices
+			}
+			
 			world.expedition.choice_of_direction.add(pathway.direction);
 		}
 	}
