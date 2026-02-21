@@ -22,4 +22,6 @@ target_sources(Parity PRIVATE
     Cartography/expedition.cppm
     Cartography/embark.cppm
     Cartography/encyclopedia.cppm
+    Cartography/journey.cppm
+    Cartography/accoutrement.cppm
  )

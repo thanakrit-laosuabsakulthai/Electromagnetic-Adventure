@@ -20,6 +20,8 @@ export module Parity;
 	#include "Cartography/expedition.cppm"
 	#include "Cartography/embark.cppm"
 	#include "Cartography/encyclopedia.cppm"
+	#include "Cartography/journey.cppm"
+	#include "Cartography/accoutrement.cppm"
 #else
 	export import Parity.World;
 	export import Parity.Announcement;
@@ -40,4 +42,6 @@ export module Parity;
 	export import Parity.Expedition;
 	export import Parity.Embark;
 	export import Parity.Encyclopedia;
+	export import Parity.Journey;
+	export import Parity.Accoutrement;
 #endif

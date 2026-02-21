@@ -10,91 +10,6 @@
 
 export namespace Parity {
 
-export enum class DieRoll : int
-{
-	One = 1,
-	Two,
-	Three,
-	Four,
-	Five,
-	Six
-};
-
-// +++------>>> biology.cppm <<<------+++
-
-export enum class PlayerIdentity {
-	AmethystApprentice,
-	SapphireSummoner,
-	EmeraldEnchantress,
-	OpalinOracle
-};
-
-export enum class OpticalEffect {
-	Advantage,
-	Weakness,
-	Repulsion,
-	Chromatic,
-	Collimation
-};
-
-export struct PlayerPosession {
-	int gold_coin;
-	int permanent_power_point;
-	int vitality_heart;
-	int vitality_maximum_heart;
-	std::unordered_set<OpticalEffect> active_optical_effect;
-};
-
-export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
-export using Humanity = std::set<PlayerIdentity>;
-
-// +++------>>> physiology.cppm <<<------+++
-
-export inline std::string_view to_string(PlayerIdentity identity);
-export struct Welcome_Adventurer : Rule {
-	int amount_of_adventurer;
-	
-	Welcome_Adventurer(int amount);
-	void execute(Overworld &world) override;
-};
-
-export template <typename Element_Of_Set>
-	inline Element_Of_Set getNextElement(const std::set<Element_Of_Set>& target_set, Element_Of_Set current_element);
-
-// string repetition for emdash because emdash is a multicharacter string in UTF-8
-export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
-export inline std::string get_ornament_notation(int amount_of_emdash);
-
-export struct Media_Of_Adventurer : Rule {
-	void execute(Overworld &world) override;
-};
-export struct Media_Of_Adventurer_Separator : Rule {
-	void execute(Overworld &world) override;
-};
-export struct First_Adventurer_Turn : Rule {
-	void execute(Overworld &world) override;
-};
-export struct Next_Adventurer_Turn : Rule {
-	void execute(Overworld &world) override;
-};
-
-// +++------>>> necrology.cppm <<<------+++
-
-
-export enum class DemonForm {
-	ElectricMinion,
-	MagneticDemon,
-	MagneticMageDemon,
-	ElectromagneticDemonBoss
-};
-
-export inline std::string_view to_string(DemonForm demon_form);
-
-export using DemonSeriality = int;
-export using DemonPossession = std::map<DemonSeriality, DemonForm>;
-export using Demonity = std::set<DemonSeriality>;
-
-
 // +++------>>> overworld.cppm <<<------+++
 
 export struct Rule { 
@@ -140,6 +55,90 @@ export class Overworld
 	
 	template <typename Extent_of_Rule, typename... Argument_of_Rule>
 	void event(Argument_of_Rule&&... custom_arguments);
+};
+
+// +++------>>> announcement.cppm <<<------+++
+
+export enum class MediaClause {
+	Media,
+	MediaBullet,
+	MediaIndent,
+};
+
+export enum class FormattingNotation {
+	Plain,
+	Bold,
+	Italic,
+	Underline,
+	Strikethrough,
+	Cyan,
+};
+
+export inline std::string_view to_notation(FormattingNotation notation);
+export inline std::string format_with_notation(FormattingNotation notation, const std::string& content);
+export inline std::string bold(const std::string content);
+export inline std::string italic(const std::string content);
+export inline std::string underline(const std::string content);
+export inline std::string strikethrough(const std::string content);
+export inline std::string cyan(const std::string content);
+export inline std::string italic_cyan(const std::string content);
+export inline std::string bold_cyan(const std::string content);
+export inline std::string bold_italic_cyan(const std::string content);
+
+export class Announcement {
+public:
+	MediaClause clause;
+	int consequential_ordinal;
+	int choice_ordinal;
+	
+	std::string_view getMediaNotation();
+	void media(const std::string& content_append_media);
+	void chat(const std::string& content_append_chat);
+	
+	std::string getActionLexicon();
+	std::string getResultLexicon();
+	std::string getChoiceLexicon();
+	std::string getForbidLexicon();
+	
+	void action(const std::string& content_append_action);
+	void result(const std::string& content_append_result);
+	void bygone(const std::string& content_of_bygone);
+	void subtitle(const std::string& content_of_subtitle);
+	void caption(const std::string& content_of_caption);
+	void linebreak();
+	void horizon(const std::string& content_of_horizon);
+	
+	void choice(const std::string& content_of_choice);
+	void forbid(const std::string& content_of_forbid);
+	void beginChoice();
+	void ask(const std::string& content_of_ask);
+	void redact(); // Delete the most recent announcement
+	void reject(); // Reject the most recent user query
+	std::string listen(); // Listen for user input
+};
+
+
+
+
+
+
+
+// ##××××-------->>> ./Fortuneboard <<<--------××××##
+//
+//
+//
+//
+
+// +++------>>> dieroll.cppm <<<------+++
+
+export enum class DieRoll : int
+{
+	One = 1,
+	Two,
+	Three,
+	Four,
+	Five,
+	Six
 };
 
 // +++------>>> fortuneboard.cppm <<<------+++
@@ -207,6 +206,107 @@ export struct Unlucky_Board : Rule
 {
 	void execute(Overworld &world) override;
 };
+
+
+
+
+
+
+// ##××××-------->>> ./Divinity <<<--------××××##
+//
+//
+//
+//
+
+// +++------>>> biology.cppm <<<------+++
+
+export enum class PlayerIdentity {
+	AmethystApprentice,
+	SapphireSummoner,
+	EmeraldEnchantress,
+	OpalinOracle
+};
+
+export enum class OpticalEffect {
+	Advantage,
+	Weakness,
+	Repulsion,
+	Chromatic,
+	Collimation
+};
+
+export struct PlayerPosession {
+	int gold_coin;
+	int permanent_power_point;
+	int vitality_heart;
+	int vitality_maximum_heart;
+	std::unordered_set<OpticalEffect> active_optical_effect;
+};
+
+export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
+export using Humanity = std::set<PlayerIdentity>;
+
+// +++------>>> physiology.cppm <<<------+++
+
+export inline std::string_view to_string(PlayerIdentity identity);
+export struct Welcome_Adventurer : Rule {
+	int amount_of_adventurer;
+	
+	Welcome_Adventurer(int amount);
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> adventurer.cppm <<<------+++
+
+export template <typename Element_Of_Set>
+	inline Element_Of_Set getNextElement(const std::set<Element_Of_Set>& target_set, Element_Of_Set current_element);
+
+// string repetition for emdash because emdash is a multicharacter string in UTF-8
+export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
+export inline std::string get_ornament_notation(int amount_of_emdash);
+
+export struct Media_Of_Adventurer : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Adventurer_Separator : Rule {
+	void execute(Overworld &world) override;
+};
+export struct First_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Next_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> necrology.cppm <<<------+++
+
+
+export enum class DemonForm {
+	ElectricMinion,
+	MagneticDemon,
+	MagneticMageDemon,
+	ElectromagneticDemonBoss
+};
+
+export inline std::string_view to_string(DemonForm demon_form);
+
+export using DemonSeriality = int;
+export using DemonPossession = std::map<DemonSeriality, DemonForm>;
+export using Demonity = std::set<DemonSeriality>;
+
+
+
+
+
+
+
+
+// ###××××-------->>> ./Cartography <<<--------××××##
+//
+//
+//
+//
+//
 
 // +++------>>> geography.cppm <<<------+++
 
@@ -337,65 +437,12 @@ export void print_all_landmark_notations();
 
 export inline std::string dialect_synthesis(MultiDirection multidirection);
 
-// +++------>>> announcement.cppm <<<------+++
 
-export enum class MediaClause {
-	Media,
-	MediaBullet,
-	MediaIndent,
-};
 
-export enum class FormattingNotation {
-	Plain,
-	Bold,
-	Italic,
-	Underline,
-	Strikethrough,
-	Cyan,
-};
 
-export inline std::string_view to_notation(FormattingNotation notation);
-export inline std::string format_with_notation(FormattingNotation notation, const std::string& content);
-export inline std::string bold(const std::string content);
-export inline std::string italic(const std::string content);
-export inline std::string underline(const std::string content);
-export inline std::string strikethrough(const std::string content);
-export inline std::string cyan(const std::string content);
-export inline std::string italic_cyan(const std::string content);
-export inline std::string bold_cyan(const std::string content);
-export inline std::string bold_italic_cyan(const std::string content);
 
-export class Announcement {
-public:
-	MediaClause clause;
-	int consequential_ordinal;
-	int choice_ordinal;
-	
-	std::string_view getMediaNotation();
-	void media(const std::string& content_append_media);
-	void chat(const std::string& content_append_chat);
-	
-	std::string getActionLexicon();
-	std::string getResultLexicon();
-	std::string getChoiceLexicon();
-	std::string getForbidLexicon();
-	
-	void action(const std::string& content_append_action);
-	void result(const std::string& content_append_result);
-	void bygone(const std::string& content_of_bygone);
-	void subtitle(const std::string& content_of_subtitle);
-	void caption(const std::string& content_of_caption);
-	void linebreak();
-	void horizon(const std::string& content_of_horizon);
-	
-	void choice(const std::string& content_of_choice);
-	void forbid(const std::string& content_of_forbid);
-	void beginChoice();
-	void ask(const std::string& content_of_ask);
-	void redact(); // Delete the most recent announcement
-	void reject(); // Reject the most recent user query
-	std::string listen(); // Listen for user input
-};
+
+
 
 // +++------>>> expedition.cppm <<<------+++
 
@@ -449,6 +496,9 @@ export struct Expedition
 	AntiDivinity antidivinity;
 };
 
+
+
+
 // +++------>>> encyclopedia.cppm <<<------+++
 
 export struct Dialect {
@@ -473,6 +523,9 @@ export enum class Multiplicity {
 };
 export inline std::string_view to_bracket_notation(Multiplicity multiplicity);
 export inline std::string bag_notation_synthesis(std::string &content_inside_bag);
+
+
+
 
 // +++------>>> embark.cppm <<<------+++
 
@@ -514,6 +567,10 @@ export struct Decline_Journey : Rule {
 export struct Media_Of_Journey : Rule {
 	void execute(Overworld &world) override;
 };
+
+
+
+// +++------>>> journey.cppm <<<------+++
 
 export struct Move_One_Space : Rule {
 	void execute(Overworld &world) override;

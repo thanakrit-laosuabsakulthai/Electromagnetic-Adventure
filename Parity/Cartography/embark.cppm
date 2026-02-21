@@ -64,6 +64,7 @@ export struct Media_Of_Passage : Rule {
 	}
 };
 
+// Populate the choice_of_direction based on the passageway of the landmark of beginning
 export struct Choice_Of_Passage : Rule {
 	void execute(Overworld &world) override {
 		Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
@@ -81,6 +82,7 @@ export struct Choice_Of_Passage : Rule {
 	}
 };
 
+// Handle the player input, write to expedition: chosen_direction and is_journey_declined
 export struct Decision_Of_Passage : Rule {
 	
 	Overworld *terra = nullptr;
@@ -166,6 +168,7 @@ export struct Decision_Of_Passage : Rule {
 	}
 };
 
+// Write the landmark_of_destination based on the chosen_direction and the passageway of the landmark of beginning
 export struct Travel : Rule {
 	void execute(Overworld &world) override {
 		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
@@ -185,6 +188,7 @@ export struct Travel : Rule {
 	}
 };
 
+// Using the municipality to teleport the active player to the landmark of destination
 export struct Arrival : Rule {
 	void execute(Overworld &world) override {
 		world.announce.result(std::format(
@@ -224,92 +228,5 @@ export struct Media_Of_Journey : Rule {
 		world.announce.action(content_of_media);
 	}
 };
-
-export struct Move_One_Space : Rule {
-	void execute(Overworld &world) override {
-		world.expedition.is_journey_optional = false; // This move is not optional
-		world.event<Media_Of_Journey>();
-		world.event<Embark>();
-		world.event<Choice_Of_Passage>();
-		world.event<Decision_Of_Passage>();
-		world.event<Travel>();
-		world.event<Arrival>();
-	}
-};
-
-// Forward declaration
-
-struct Apply_Optional_Journey;
-
-export struct Move_One_Space_Optional : Rule {
-	int amount_of_optional_move;
-	Move_One_Space_Optional(int amount = 1) : amount_of_optional_move(amount) {}
-	
-	void execute(Overworld &world) override {
-		
-		if (amount_of_optional_move > 0) {
-			world.expedition.is_journey_optional = true;
-			world.event<Media_Of_Journey>();
-			world.event<Embark>();
-			world.event<Choice_Of_Passage>();
-			world.event<Decision_Of_Passage>();
-			world.event<Apply_Optional_Journey>(amount_of_optional_move);
-		}
-	}
-};
-
-export struct Apply_Optional_Journey : Rule {
-	int amount_of_optional_move;
-	Apply_Optional_Journey(int amount) : amount_of_optional_move(amount) {}
-	
-	void execute(Overworld &world) override {
-		if (world.expedition.is_journey_declined) {
-			world.event<Decline_Journey>();
-		} else {
-			world.event<Travel>();
-			world.event<Arrival>();
-			// If there are more optional moves left, ask the player if they want to move again
-			if (amount_of_optional_move > 1) {
-				world.event<Move_One_Space_Optional>(amount_of_optional_move - 1);
-			}
-		}
-	}
-};
-
-Landmark Overworld::getLandmarkOfActivePlayer() {
-	return expedition.municipality.getLandmarkOf(active_player);
-}
-
-// ---+++ overworld methods +++---
-
-std::string Overworld::appearanzonality(Landmark target_landmark) {
-	Overworld &world = *this; // For clarity
-	
-	LandmarkPosession posession = world.atlas[target_landmark];
-	
-	std::string apparency_word = appearancy(posession.apparentQuality, posession.apparentColor, posession.apparentGeometry);
-	std::string zonoity_word = zonoity(posession.zone, apparency_word);
-	std::string appearanzonality_word = archeometrinoity(posession.apparentGeometry, zonoity_word);
-	
-	return appearanzonality_word;
-}
-
-std::string Overworld::appearancity(Landmark target_landmark) {
-	Overworld &world = *this; // For clarity
-	
-	LandmarkPosession posession = world.atlas[target_landmark];
-	
-	std::string apparency_word = appearancy(posession.apparentQuality, posession.apparentColor, posession.apparentGeometry);
-	
-	return apparency_word;
-}
-
-std::string Overworld::pathochronality(Pathway target_pathway) {
-
-	std::string direction_word = std::string(to_string(target_pathway.direction));
-	std::string pathochronality_word = chronoity(target_pathway.pathType, direction_word);
-	
-	return pathochronality_word;
-}
 
 } // namespace Parity

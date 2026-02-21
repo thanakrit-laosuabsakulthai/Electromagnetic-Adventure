@@ -12,7 +12,7 @@ export module Parity.LuckyBoard;
 	import Parity.Biology;
 	import Parity.Physiology;
 	import Parity.World;
-	import Parity.Embark;
+	import Parity.Journey;
 	import Parity.Announcement;
 #endif
 
