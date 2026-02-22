@@ -42,6 +42,8 @@ export class Overworld
 	Treasury playerbase;
 	Humanity humanity;
 	PlayerIdentity active_player;
+	int player_count;
+	int maximum_player_count;
 	std::string_view getActivePlayerName();
 	void firstAdventurer();
 	void nextAdventurer();
@@ -63,6 +65,7 @@ export enum class MediaClause {
 	Media,
 	MediaBullet,
 	MediaIndent,
+	MediaCatalog,
 };
 
 export enum class FormattingNotation {
@@ -105,12 +108,16 @@ public:
 	void bygone(const std::string& content_of_bygone);
 	void subtitle(const std::string& content_of_subtitle);
 	void caption(const std::string& content_of_caption);
+	void linger(const std::string& content_of_linger);
+	
 	void linebreak();
 	void horizon(const std::string& content_of_horizon);
 	
 	void choice(const std::string& content_of_choice);
 	void forbid(const std::string& content_of_forbid);
+	void catalog(const std::string& content_of_catalog);
 	void beginChoice();
+	
 	void ask(const std::string& content_of_ask);
 	void redact(); // Delete the most recent announcement
 	void reject(); // Reject the most recent user query
@@ -196,6 +203,13 @@ export struct Event_Board : Rule
 
 // +++------>>> unluckyboard.cppm <<<------+++
 
+export struct Lose_Gold_Coin : Rule
+{
+	int amount_of_gold;
+	Lose_Gold_Coin(int amount) : amount_of_gold(amount) {}
+	void execute(Overworld &world) override;
+};
+
 export struct Apply_Unlucky_Board_Result : Rule
 {
 	void execute(Overworld &world) override;
@@ -209,6 +223,58 @@ export struct Unlucky_Board : Rule
 
 
 
+
+// ##××××-------->>> ./Opticular <<<--------××××##
+//
+//
+//
+//
+
+// +++------>>> optoelectronic.cppm <<<------+++
+
+
+export enum class OpticalEffect {
+	Advantage,
+	Weakness,
+	Repulsion,
+	Chromatic,
+	Collimation
+};
+
+export enum class Optics {
+	RadioWaves,
+	MicroWaves,
+	InfraredWaves,
+	LightWaves,
+	UltravioletWaves,
+	XRays,
+	GammaRays
+};
+
+export using Iridescent = std::set<OpticalEffect>;
+export using Inventory = std::set<Optics>;
+export using MarketValuation = std::map<Optics, int>;
+export MarketValuation Marketplace;
+
+// +++------>>> opticalnotation.cppm <<<------+++
+
+
+export inline std::string_view to_string(Optics optical_item);
+export inline std::string_view to_description(Optics optical_item);
+enum class ApparentColor; // forward declaration for some reason
+export using Chromaticon = std::map<ApparentColor, std::string_view>;
+export inline const Chromaticon LightWaveExtensionDescriptions;
+export inline std::string_view to_light_wave_description(ApparentColor gradient_color);
+
+// +++------>>> marketplace.cppm <<<------+++
+
+export struct Media_Of_Marketplace : Rule {
+	Overworld *terra = nullptr;
+	
+	void execute(Overworld &world) override;
+	void display_market();
+	void display_player_possesion_hint();
+};
 
 
 
@@ -227,20 +293,14 @@ export enum class PlayerIdentity {
 	OpalinOracle
 };
 
-export enum class OpticalEffect {
-	Advantage,
-	Weakness,
-	Repulsion,
-	Chromatic,
-	Collimation
-};
-
 export struct PlayerPosession {
-	int gold_coin;
-	int permanent_power_point;
-	int vitality_heart;
-	int vitality_maximum_heart;
-	std::unordered_set<OpticalEffect> active_optical_effect;
+	int gold_coin = 0;
+	int permanent_power_point = 1;
+	int vitality_heart = 5;
+	int vitality_maximum_heart = 5;
+	std::set<OpticalEffect> active_optical_effect;
+	std::set<Optics> inventory;
+	int inventory_capacity = 4;
 };
 
 export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
@@ -255,6 +315,25 @@ export struct Welcome_Adventurer : Rule {
 	Welcome_Adventurer(int amount);
 	void execute(Overworld &world) override;
 };
+
+export struct Respawn : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+
+export struct Vitality_Death : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+
+export struct Vitality_Hurt : Rule {
+	int amount_of_damage;
+	
+	Vitality_Hurt(int damage) : amount_of_damage(damage) {}
+	void execute(Overworld &world) override;
+};
+
+
 
 // +++------>>> adventurer.cppm <<<------+++
 
@@ -293,6 +372,25 @@ export inline std::string_view to_string(DemonForm demon_form);
 export using DemonSeriality = int;
 export using DemonPossession = std::map<DemonSeriality, DemonForm>;
 export using Demonity = std::set<DemonSeriality>;
+
+// +++------>>> forgather.cppm <<<------+++
+
+export struct Forgather_of_Adventurer : Rule {
+	
+	Overworld *terra;
+	int player_choice;
+	
+	void execute(Overworld &world) override;
+	
+	void query();
+	bool validate_choice(int choice);
+	bool validate_dialect(std::string &player_input);
+	void get_player_choice_();
+};
+
+
+
+
 
 
 
@@ -489,6 +587,7 @@ export struct Expedition
 	Landmark landmark_of_beginning;
 	Landmark landmark_of_destination;
 	Direction chosen_direction;
+	std::string player_choice_dialect;
 	OmniDirection choice_of_direction;
 	bool is_journey_optional;
 	bool is_journey_declined;
@@ -511,6 +610,7 @@ export struct Dialect {
 	std::string_view below_left;
 	std::string_view below_right;
 	std::string_view decline_journey;
+	std::string_view decline_shop;
 };
 
 export constexpr Dialect Encyclopedia;
@@ -523,14 +623,13 @@ export enum class Multiplicity {
 };
 export inline std::string_view to_bracket_notation(Multiplicity multiplicity);
 export inline std::string bag_notation_synthesis(std::string &content_inside_bag);
+export inline std::string archangel_notation_synthesis(std::string &content_inside_archangel);
 
+// +++------>>> accoutrement.cppm <<<------+++
 
-
-
-// +++------>>> embark.cppm <<<------+++
-
-export struct Embark : Rule {
-	void execute(Overworld &world) override;
+export struct Query_Of_Passage : Rule {
+	void execute(Overworld &world) override {
+	}
 };
 export struct Media_Of_Embark : Rule {
 	void execute(Overworld &world) override;
@@ -538,21 +637,21 @@ export struct Media_Of_Embark : Rule {
 export struct Media_Of_Passage : Rule {
 	void execute(Overworld &world) override;
 };
+export struct Media_Of_Journey : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> embark.cppm <<<------+++
+
+export struct Embark : Rule {
+	void execute(Overworld &world) override;
+};
+
 
 export struct Choice_Of_Passage : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Decision_Of_Passage : Rule {
-	Overworld *terra = nullptr;
-	std::string player_choice;
-	void execute(Overworld &world) override;
-	void query();
-	void invalid();
-	bool validate_choice(Direction chosen_direction);
-	bool validate_dialect(const std::string& player_input);
-	void get_player_choice();
-};
 export struct Travel : Rule {
 	void execute(Overworld &world) override;
 };
@@ -564,11 +663,29 @@ export struct Decline_Journey : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Media_Of_Journey : Rule {
-	void execute(Overworld &world) override;
+// +++------>>> passagedecision.cppm <<<------+++
+
+export struct Listen_Passage_Dialect : Rule {
+	void execute(Overworld &world) override {
+	}
 };
 
+export struct Resolve_Passage_Dialect : Rule {
+	void execute(Overworld &world) override {
+	}
+};
 
+export struct Apply_Passage_Dialect : Rule {
+	
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	bool validate_choice(Direction chosen_direction);
+	bool validate_dialect(const std::string& player_input);
+};
+
+export struct Decision_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
 
 // +++------>>> journey.cppm <<<------+++
 

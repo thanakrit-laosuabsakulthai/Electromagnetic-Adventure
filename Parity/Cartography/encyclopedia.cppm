@@ -22,6 +22,7 @@ export struct Dialect {
 	std::string_view below_left = "sa";
 	std::string_view below_right = "sd";
 	std::string_view decline_journey = "x";
+	std::string_view decline_shop = "x";
 };
 
 export inline constexpr Dialect Encyclopedia{};
@@ -46,6 +47,13 @@ export inline std::string bag_notation_synthesis(std::string &content_inside_bag
 	
 	std::string_view bag_notation = to_bracket_notation(Multiplicity::One);
 	return std::vformat(bag_notation, std::make_format_args(content_inside_bag));
+}
+
+export inline std::string archangel_notation_synthesis(std::string &content_inside_archangel) {
+	content_inside_archangel = " " + content_inside_archangel + " ";
+	
+	std::string_view archangel_notation = to_bracket_notation(Multiplicity::Many);
+	return std::vformat(archangel_notation, std::make_format_args(content_inside_archangel));
 }
 
 } // namespace Parity

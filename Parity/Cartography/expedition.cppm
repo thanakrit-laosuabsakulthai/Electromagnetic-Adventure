@@ -120,6 +120,7 @@ export struct Expedition
 {
 	Landmark landmark_of_beginning = Landmark::DiamondOfCattail;
 	Landmark landmark_of_destination = Landmark::DiamondOfCattail;
+	std::string player_choice_dialect;
 	Direction chosen_direction;
 	OmniDirection choice_of_direction;
 	bool is_journey_optional = false;

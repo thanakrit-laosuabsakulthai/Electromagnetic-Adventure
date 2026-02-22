@@ -18,6 +18,7 @@ export enum class MediaClause {
 	Media,
 	MediaBullet,
 	MediaIndent,
+	MediaCatalog,
 };
 
 export enum class FormattingNotation {
@@ -90,7 +91,8 @@ public:
 		static const std::map<MediaClause, std::string_view> mediaClauseToNotation = {
 			{MediaClause::Media, "{}"},
 			{MediaClause::MediaBullet, "• {}"},
-			{MediaClause::MediaIndent, "\t{}"}
+			{MediaClause::MediaIndent, "\t{}"},
+			{MediaClause::MediaCatalog, "\t\t• {}"}
 		};
 		
 		return mediaClauseToNotation.at(clause);
@@ -124,6 +126,10 @@ public:
 		return bold_cyan("[-]");
 	}
 	
+	std::string getAskNotation() {
+		return bold("» Choice {}: ");
+	}
+	
 	void action(const std::string& content_append_action) {
 		consequential_ordinal++;
 		clause = MediaClause::MediaBullet;
@@ -147,6 +153,11 @@ public:
 		media(content_of_caption);
 	}
 	
+	void linger(const std::string& content_of_linger) {
+		clause = MediaClause::MediaBullet;
+		media(content_of_linger);
+	}
+	
 	void linebreak() {
 		clause = MediaClause::Media;
 		std::print("\n");
@@ -161,7 +172,7 @@ public:
 	
 	void ask(const std::string& content_of_ask) {
 		clause = MediaClause::MediaBullet;
-		chat(bold(content_of_ask));
+		chat(std::vformat(getAskNotation(), std::make_format_args(content_of_ask)));
 	}
 	
 	void choice(const std::string& content_of_choice) {
@@ -179,13 +190,18 @@ public:
 		choice_ordinal = 0;
 	}
 	
+	void catalog(const std::string& content_of_catalog) {
+		clause = MediaClause::MediaCatalog;
+		media(content_of_catalog);
+	}
+	
 	void redact() { // Delete the most recent announcement
 		std::print("\033[1A\033[2K"); // Move cursor up and clear the line
 	}
 	
 	void reject() { // Reject the most recent user query
 		std::print("\033[1A\033[2K"); // Move cursor up and clear the line
-		std::print("\033[2K"); 
+		//std::print("\033[2K"); 
 	}
 	
 	std::string listen() {

@@ -50,6 +50,8 @@ export class Overworld
 	Treasury playerbase;
 	Humanity humanity;
 	PlayerIdentity active_player;
+	int player_count = 1;
+	int maximum_player_count = 4;
 	std::string_view getActivePlayerName();
 	void firstAdventurer();
 	void nextAdventurer();

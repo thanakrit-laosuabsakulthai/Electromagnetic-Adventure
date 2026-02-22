@@ -16,6 +16,7 @@ target_sources(Parity PRIVATE
     Divinity/necrology.cppm
     Divinity/biology.cppm
     Divinity/adventurer.cppm
+    Divinity/forgather.cppm
     
     Cartography/geography.cppm
     Cartography/notation.cppm
@@ -24,4 +25,9 @@ target_sources(Parity PRIVATE
     Cartography/encyclopedia.cppm
     Cartography/journey.cppm
     Cartography/accoutrement.cppm
+    Cartography/passagedecision.cppm
+    
+    Opticular/optoelectronic.cppm
+    Opticular/opticalnotation.cppm
+    Opticular/marketplace.cppm
  )

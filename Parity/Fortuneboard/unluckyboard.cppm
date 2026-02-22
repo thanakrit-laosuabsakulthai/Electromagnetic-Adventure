@@ -10,12 +10,30 @@ export module Parity.UnluckyBoard;
 	import Parity.DieRoll;
 	import Parity.FortuneBoard;
 	import Parity.Physiology;
+	import Parity.Biology;
 	import Parity.World;
 	import Parity.Announcement;
 #endif
 
 export namespace Parity
 {
+export struct Lose_Gold_Coin : Rule
+{
+	int amount_of_gold;
+	
+	Lose_Gold_Coin(int amount) : amount_of_gold(amount) {}
+	void execute(Overworld &world) override {
+		PlayerPosession &possession = world.playerbase[world.active_player];
+		int gold_loss = std::min(amount_of_gold, possession.gold_coin); // Ensure we don't go below zero
+		possession.gold_coin -= gold_loss;
+		
+		world.announce.result(std::format(
+			"Clear {} [Gold Coin] from {}.",
+			gold_loss,
+			world.getActivePlayerName()
+		));
+	}
+};
 
 export struct Apply_Unlucky_Board_Result : Rule
 {
@@ -37,12 +55,15 @@ export struct Apply_Unlucky_Board_Result : Rule
 			break;
 		case Four:
 			world.announce.result("Lose 1 Heart.");
+			world.event<Vitality_Hurt>(1);
 			break;
 		case Five:
 			world.announce.result("Lose 1 Gold Coin.");
+			world.event<Lose_Gold_Coin>(1);
 			break;
 		case Six:
 			world.announce.result("Lose 3 Gold Coins.");
+			world.event<Lose_Gold_Coin>(3);
 			break;
 		}
 	}

@@ -3,7 +3,7 @@ export module Parity.Adventurer;
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <string>
 	#include <format>
-	#include "type-definition.cppm"
+	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
 	import Parity.World;
@@ -19,10 +19,13 @@ export namespace Parity
 export struct Welcome_Adventurer : Rule {
 	int amount_of_adventurer;
 	
-	Welcome_Adventurer(int amount = 1) : amount_of_adventurer(amount) {}
+	Welcome_Adventurer(int amount = 0) : amount_of_adventurer(amount) {}
 	void execute(Overworld &world) override {
+		if (amount_of_adventurer == 0) {
+			amount_of_adventurer = world.player_count; // Use player_count if amount is not provided
+		}
 		if (amount_of_adventurer < 1) {
-			return;
+			amount_of_adventurer = 1; // Ensure at least one adventurer
 		} else if (amount_of_adventurer > 4) {
 			amount_of_adventurer = 4; // Cap the number of adventurers to 4
 		}
@@ -35,10 +38,8 @@ export struct Welcome_Adventurer : Rule {
 			
 			std::string player_name = std::string(to_string(new_player));
 			std::string content_of_announcement = std::format("{} {}", bold_italic_cyan(player_name), italic_cyan("joined the game."));
-			world.announce.subtitle(content_of_announcement);
+			world.announce.caption(content_of_announcement);
 		}
-		
-		world.active_player = PlayerIdentity::AmethystApprentice; // Set the first player as the active player
 	}
 };
 

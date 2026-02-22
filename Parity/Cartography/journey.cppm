@@ -11,6 +11,8 @@ export module Parity.Journey;
 	import Parity.Geography;
 	import Parity.World;
 	import Parity.Expedition;
+	import Parity.Accoutrement;
+	import Parity.PassageDecision;
 	import Parity.Embark;
 #endif
 

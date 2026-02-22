@@ -47,6 +47,7 @@ export struct Apply_Event_Board_Result : Rule
 			break;
 		case Two:
 			world.announce.result("Trigger the Unlucky Board once.");
+			world.event<Unlucky_Board>();
 			break;
 		case Three:
 			world.announce.result("Trigger the Lucky Board once.");

@@ -29,17 +29,22 @@ int main()
 	
 	Parity::print_all_landmark_notations(); // Testing for now
 	
-	world.event<Welcome_Adventurer>(2); // Start the game with 2 adventurers
+	// world.event<Welcome_Adventurer>(2); // Start the game with 2 adventurers
+	world.event<Forgather_of_Adventurer>(); // Start the game with player choice of adventurers
 	world.event<First_Adventurer_Turn>(); // Start the first adventurer's turn
-	world.event<Move_One_Space_Optional>(3); // Trigger the optional move event with 3 optional moves
 	
+	world.event<Move_One_Space_Optional>(3); // Trigger the optional move event with 3 optional moves
+	/* 
 	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
 	world.event<Move_One_Space_Optional>(2); // Trigger the optional move event with 2 optional moves
 	
 	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
 	world.event<Move_One_Space_Optional>(1); // Trigger the optional move event with 1 optional move
+	world.event<Vitality_Hurt>(5); // Inflict 5 damage to the active player
 	world.event<Lucky_Board>(); // Trigger the lucky board event
-	world.event<Event_Board>(); // Trigger the event board event
+	world.event<Event_Board>(); // Trigger the event board event */
+	
+	world.event<Media_Of_Marketplace>(); // Trigger the marketplace media event
 	
 	/* do {
 		world.event<Lucky_Board>();

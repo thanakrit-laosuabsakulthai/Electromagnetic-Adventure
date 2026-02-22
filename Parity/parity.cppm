@@ -14,6 +14,7 @@ export module Parity;
 	#include "Divinity/necrology.cppm"
 	#include "Divinity/biology.cppm"
 	#include "Divinity/adventurer.cppm"
+	#include "Divinity/forgather.cppm"
 
 	#include "Cartography/geography.cppm"
 	#include "Cartography/notation.cppm"
@@ -22,6 +23,12 @@ export module Parity;
 	#include "Cartography/encyclopedia.cppm"
 	#include "Cartography/journey.cppm"
 	#include "Cartography/accoutrement.cppm"
+	#include "Cartography/passagedecision.cppm"
+	
+	#include "Opticular/optoelectronic.cppm"
+	#include "Opticular/opticalnotation.cppm"
+	#include "Opticular/marketplace.cppm"
+	
 #else
 	export import Parity.World;
 	export import Parity.Announcement;
@@ -36,6 +43,7 @@ export module Parity;
 	export import Parity.Necrology;
 	export import Parity.Biology;
 	export import Parity.Adventurer;
+	export import Parity.Forgather;
 	
 	export import Parity.Geography;
 	export import Parity.Notation;
@@ -44,4 +52,9 @@ export module Parity;
 	export import Parity.Encyclopedia;
 	export import Parity.Journey;
 	export import Parity.Accoutrement;
+	export import Parity.PassageDecision;
+	
+	export import Parity.Optoelectronic;
+	export import Parity.OpticalNotation;
+	export import Parity.Marketplace;
 #endif
