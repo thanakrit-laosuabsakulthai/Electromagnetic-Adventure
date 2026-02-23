@@ -172,7 +172,7 @@ export struct Take_Gold_Coin : Rule
 		int gold_loss = std::min(amount_of_gold, possession.gold_coin); // Ensure we don't go below zero
 		possession.gold_coin -= gold_loss;
 		
-		world.announce.result(std::format(
+		world.announce.bygone(std::format(
 			"Cleared {} [Gold Coin] from {}.",
 			gold_loss,
 			world.getActivePlayerName()

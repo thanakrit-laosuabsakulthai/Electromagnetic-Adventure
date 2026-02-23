@@ -33,36 +33,52 @@ export struct All_Players_Gain_Gold_Coin : Rule
 	}
 };
 
+export struct Media_Of_Event_Board : Rule {
+	void execute(Overworld &world) override {
+		world.announce.subtitle("Roll 1 die and apply the result...");
+		world.announce.beginChoice();
+		
+		for (const auto& media : outcomes) {
+			world.announce.choice(media);
+		}
+	}
+	
+	static inline const std::vector<std::string> outcomes = {
+		"Trigger the Demon Board once.",
+		"Trigger the Unlucky Board once.",
+		"Trigger the Lucky Board once.",
+		"Purchase 1 item from the Shop (pay cost as normal).",
+		"All players gain 1 Gold Coin.",
+		"Roll a die to receive 1 free random item from the Shop."
+	};
+};
+
 export struct Apply_Event_Board_Result : Rule
 {
 	void execute(Overworld &world) override {
 		applyEventBoardResult(world, world.die_roll_for_fortune_board);
 	}
 	void applyEventBoardResult(Overworld &world, DieRoll roll) {
-		// Logic to apply the result of the lucky board based on the die roll
+		world.announce.result(Media_Of_Event_Board::outcomes[static_cast<int>(roll) - 1]);
+		
 		using enum DieRoll;
 		switch (roll) {
 		case One:
-			world.announce.result("Trigger the Demon Board once.");
+			world.event<Demon_Board>();
 			break;
 		case Two:
-			world.announce.result("Trigger the Unlucky Board once.");
 			world.event<Unlucky_Board>();
 			break;
 		case Three:
-			world.announce.result("Trigger the Lucky Board once.");
 			world.event<Lucky_Board>();
 			break;
 		case Four:
-			world.announce.result("Purchase 1 item from the Shop (pay cost as normal).");
 			// Logic to allow the player to purchase an item from the shop
 			break;
 		case Five:
-			world.announce.result("All players gain 1 Gold Coin.");
 			world.event<All_Players_Gain_Gold_Coin>(1);
 			break;
 		case Six:
-			world.announce.result("Roll a die to receive 1 free random item from the Shop (Gamma Rays is unobtainable from this result).");
 			// Logic to roll a die and give the player a free random item from the shop
 			break;
 		}
@@ -75,6 +91,7 @@ void Event_Board::execute(Overworld &world) {
 		to_string(world.active_player)
 	));
 	
+	world.event<Media_Of_Event_Board>();
 	world.event<Roll_For_Random_Board>();
 	world.event<Apply_Event_Board_Result>();
 }

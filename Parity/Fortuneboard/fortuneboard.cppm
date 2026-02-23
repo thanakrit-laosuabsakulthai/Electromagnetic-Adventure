@@ -42,4 +42,9 @@ export struct Unlucky_Board : Rule
 	void execute(Overworld &world) override;
 };
 
+export struct Demon_Board : Rule
+{
+	void execute(Overworld &world) override;
+};
+
 } // namespace Parity

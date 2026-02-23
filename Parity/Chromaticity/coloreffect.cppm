@@ -45,10 +45,18 @@ ApparentColor Overworld::getColorUnderActivePlayer() {
 	
 };
 
+export inline std::string activation_synthesis(ApparentColor color) {
+	return std::format(
+		"Activate {}{} effect.",
+		to_string(color),
+		is_gradient_color(color) ? "" : " color"
+	);
+}
+
 export struct Pink_Color_Effect : Rule {
 	void execute(Overworld &world) override {
 		world.event<Vitality_Heal>(1);
-		world.announce.result("Healed 1 Heart");
+		world.announce.result("Heal 1 Heart (unless already at maximum Hearts)");
 	}
 };
 
@@ -80,6 +88,13 @@ export struct Red_Color_Effect : Rule {
 	}
 };
 
+export struct Purple_Color_Effect : Rule {
+	void execute(Overworld &world) override {
+		world.event<Demon_Board>();
+		world.announce.result("Trigger the Demon Board once");
+	}
+};
+
 export struct Roll_For_Chromaticity : Rule {
 	void execute(Overworld &world) override {
 		world.die_roll_for_chromaticity = static_cast<DieRoll>((std::rand() % 6) + 1);
@@ -90,9 +105,34 @@ export struct Roll_For_Chromaticity : Rule {
 	}
 };
 
+export struct Media_Of_Pink_Orange_Yellow_Gradient : Rule {
+	void execute(Overworld &world) override {
+		world.announce.linger("Roll 1 die and apply the result...");	
+		world.announce.beginChoice();
+		
+		for (int i = 0; i < outcomes.size(); ++i) {
+			world.announce.range(outcomes[i], reach);
+		}
+	}
+	
+	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
+	
+	static inline const std::vector<std::string> outcomes = {
+		"Yellow space effect.",
+		"Orange space effect.",
+		"Pink space effect."
+	};
+};
+
 export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 	void execute(Overworld &world) override {
 		using enum DieRoll;
+		
+		int outcome_index = (static_cast<int>(world.die_roll_for_chromaticity) - 1) / Media_Of_Pink_Orange_Yellow_Gradient::reach;
+		world.announce.linger(std::format(
+			"Activate {}",
+			Media_Of_Pink_Orange_Yellow_Gradient::outcomes[outcome_index]
+		));
 		
 		switch (world.die_roll_for_chromaticity) {
 		case One:
@@ -113,8 +153,60 @@ export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 
 export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 	void execute(Overworld &world) override {
+		world.event<Media_Of_Pink_Orange_Yellow_Gradient>();
 		world.event<Roll_For_Chromaticity>();
 		world.event<Apply_Pink_Orange_Yellow_Gradient_Result>();
+	}
+};
+
+export struct Media_Of_Red_Purple_Gradient : Rule {
+	void execute(Overworld &world) override {
+		world.announce.linger("Roll 1 die and apply the result...");	
+		world.announce.beginChoice();
+		
+		for (int i = 0; i < outcomes.size(); ++i) {
+			world.announce.range(outcomes[i], reach);
+		}
+	}
+	
+	static constexpr int reach = 3; // Each outcome corresponds to 3 die results (e.g., 1-3, 4-6)
+	
+	static inline const std::vector<std::string> outcomes = {
+		"Purple space effect.",
+		"Red space effect."
+	};
+};
+
+export struct Apply_Red_Purple_Gradient_Result : Rule {
+	void execute(Overworld &world) override {
+		using enum DieRoll;
+		
+		int outcome_index = (static_cast<int>(world.die_roll_for_chromaticity) - 1) / Media_Of_Red_Purple_Gradient::reach;
+		world.announce.linger(std::format(
+			"Activate {}",
+			Media_Of_Red_Purple_Gradient::outcomes[outcome_index]
+		));
+		
+		switch (world.die_roll_for_chromaticity) {
+		case One:
+		case Two:
+		case Three:
+			world.event<Purple_Color_Effect>();
+			break;
+		case Four:
+		case Five:
+		case Six:
+			world.event<Red_Color_Effect>();
+			break;
+		}
+	}
+};
+
+export struct Red_Purple_Gradient_Effect : Rule {
+	void execute(Overworld &world) override {
+		world.event<Media_Of_Red_Purple_Gradient>();
+		world.event<Roll_For_Chromaticity>();
+		world.event<Apply_Red_Purple_Gradient_Result>();
 	}
 };
 
@@ -122,11 +214,7 @@ export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 void Activate_Color_Effect::execute(Overworld &world) {
 	ApparentColor color_under_active_player = world.getColorUnderActivePlayer();
 	
-	world.announce.action(std::format("Activate {}{} effect.",
-		to_string(color_under_active_player),
-		is_gradient_color(color_under_active_player) ? "" : " color"
-	));
-		
+	world.announce.action(activation_synthesis(color_under_active_player));
 	
 	using enum ApparentColor;
 	switch (color_under_active_player) {
@@ -145,13 +233,20 @@ void Activate_Color_Effect::execute(Overworld &world) {
 		case Red:
 			world.event<Red_Color_Effect>();
 			break;
+		case Purple:
+			world.event<Purple_Color_Effect>();
+			break;
 		case PinkOrangeYellowGradient:
 			world.event<Pink_Orange_Yellow_Gradient_Effect>();
+			break;
+		case RedPurpleGradient:
+			world.event<Red_Purple_Gradient_Effect>();
 			break;
 		default:
 			world.announce.result("Nothing happens.");
 			break;
 	}
 }
+
 
 }

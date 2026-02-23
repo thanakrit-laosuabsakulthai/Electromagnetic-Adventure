@@ -11,6 +11,7 @@ target_sources(Parity PRIVATE
     Fortuneboard/luckyboard.cppm
     Fortuneboard/eventboard.cppm
     Fortuneboard/unluckyboard.cppm
+    Fortuneboard/demonboard.cppm
     
     Divinity/physiology.cppm
     Divinity/necrology.cppm

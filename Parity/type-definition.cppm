@@ -106,6 +106,7 @@ public:
 	std::string getResultLexicon();
 	std::string getChoiceLexicon();
 	std::string getForbidLexicon();
+	std::string getRangeLexicon(int reach);
 	
 	void action(const std::string& content_append_action);
 	void result(const std::string& content_append_result);
@@ -119,6 +120,7 @@ public:
 	
 	void choice(const std::string& content_of_choice);
 	void forbid(const std::string& content_of_forbid);
+	void range(const std::string& content_of_range, int reach);
 	void catalog(const std::string& content_of_catalog);
 	void beginChoice();
 	
@@ -210,8 +212,16 @@ export struct Yellow_Color_Effect : Rule {
 export struct Red_Color_Effect : Rule {
 	void execute(Overworld &world) override;
 };
+export struct Purple_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+};
 export struct Roll_For_Chromaticity : Rule {
 	void execute(Overworld &world) override;
+};
+export struct Media_Of_Pink_Orange_Yellow_Gradient : Rule {
+	void execute(Overworld &world) override;
+	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
+	static inline const std::vector<std::string> outcomes;
 };
 export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 	void execute(Overworld &world) override;
@@ -219,8 +229,14 @@ export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 	void execute(Overworld &world) override;
 };
+export struct Apply_Red_Purple_Gradient_Result : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Red_Purple_Gradient_Effect : Rule {
+	void execute(Overworld &world) override;
+};
 
-
+export inline std::string activation_synthesis(ApparentColor color);
 
 // ##××××-------->>> ./Divinity <<<--------××××##
 //
@@ -276,7 +292,6 @@ export struct Vitality_Hurt : Rule {
 	Vitality_Hurt(int damage) : amount_of_damage(damage) {}
 	void execute(Overworld &world) override;
 };
-
 export struct Vitality_Heal : Rule {
 	int amount_of_healing;
 	
@@ -284,20 +299,17 @@ export struct Vitality_Heal : Rule {
 	void execute(Overworld &world) override {
 	}
 };
-
 export struct Gain_Gold_Coin : Rule
 {
 	int amount_of_gold_coin;
 	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
 	void execute(Overworld &world) override;
 };
-
 export struct Gain_Permanent_Power_Point : Rule {
 	int amount_of_permanent_power;
 	Gain_Permanent_Power_Point(int amount);
 	void execute(Overworld &world) override;
 };
-
 export struct Take_Gold_Coin : Rule
 {
 	int amount_of_gold;
@@ -707,6 +719,11 @@ export struct Roll_For_Random_Board : Rule {
 
 // +++------>>> luckyboard.cppm <<<------+++
 
+export struct Media_Of_Lucky_Board : Rule {
+	void execute(Overworld &world) override;
+	static inline const std::vector<std::string> outcomes;
+};
+
 export struct Move_Again_One_Space : Rule {
 	void execute(Overworld &world) override;
 };
@@ -728,6 +745,11 @@ export struct All_Players_Gain_Gold_Coin : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Media_Of_Event_Board : Rule {
+	void execute(Overworld &world) override;
+	static inline const std::vector<std::string> outcomes;
+};
+
 export struct Apply_Event_Board_Result : Rule {
 	void execute(Overworld &world) override;
 	void applyEventBoardResult(Overworld &world, DieRoll roll);
@@ -739,6 +761,11 @@ export struct Event_Board : Rule {
 
 // +++------>>> unluckyboard.cppm <<<------+++
 
+export struct Media_Of_Unlucky_Board : Rule {
+	void execute(Overworld &world) override;
+	static inline const std::vector<std::string> outcomes;
+};
+
 export struct Apply_Unlucky_Board_Result : Rule {
 	void execute(Overworld &world) override;
 	void applyUnluckyBoardResult(Overworld &world, DieRoll roll);
@@ -748,7 +775,22 @@ export struct Unlucky_Board : Rule {
 	void execute(Overworld &world) override;
 };
 
+// +++------>>> demonboard.cppm <<<------+++
 
+export struct Media_Of_Demon_Board : Rule {
+	void execute(Overworld &world) override;
+	static inline const std::vector<std::string> outcomes;
+};
+
+export struct Apply_Demon_Board_Result : Rule {
+	void execute(Overworld &world) override;
+	void applyDemonBoardResult(Overworld &world, DieRoll roll);
+};
+
+export struct Demon_Board : Rule
+{
+	void execute(Overworld &world) override;
+};
 
 
 

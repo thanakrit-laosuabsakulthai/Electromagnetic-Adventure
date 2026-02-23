@@ -9,6 +9,7 @@ export module Parity;
 	#include "Fortuneboard/luckyboard.cppm"
 	#include "Fortuneboard/eventboard.cppm"
 	#include "Fortuneboard/unluckyboard.cppm"
+	#include "Fortuneboard/demonboard.cppm"
 
 	#include "Divinity/physiology.cppm"
 	#include "Divinity/necrology.cppm"
@@ -42,6 +43,7 @@ export module Parity;
 	export import Parity.LuckyBoard;
 	export import Parity.EventBoard;
 	export import Parity.UnluckyBoard;
+	export import Parity.DemonBoard;
 	
 	export import Parity.Physiology;
 	export import Parity.Necrology;

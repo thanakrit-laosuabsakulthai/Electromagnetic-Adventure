@@ -126,6 +126,14 @@ public:
 		return bold_cyan("[-]");
 	}
 	
+	std::string getRangeLexicon(int reach) {
+		if (reach <= 1) {
+			return getChoiceLexicon();
+		} else {
+			return bold_cyan(std::format("[{}-{}]", choice_ordinal - reach + 1, choice_ordinal));
+		}
+	}
+	
 	std::string getAskNotation() {
 		return bold("» Choice {}: ");
 	}
@@ -137,6 +145,7 @@ public:
 	}
 	
 	void result(const std::string& content_append_result) {
+		clause = MediaClause::MediaBullet;
 		media(std::format("{} {}", getResultLexicon(), content_append_result));
 	}
 	
@@ -184,6 +193,12 @@ public:
 	void forbid(const std::string& content_of_forbid) {
 		clause = MediaClause::MediaIndent;
 		media(std::format("{} {}", getForbidLexicon(), strikethrough(content_of_forbid)));
+	}
+	
+	void range(const std::string& content_of_range, int reach) {
+		clause = MediaClause::MediaIndent;
+		choice_ordinal += reach;
+		media(std::format("{} {}", getRangeLexicon(reach), content_of_range));
 	}
 	
 	void beginChoice() {
