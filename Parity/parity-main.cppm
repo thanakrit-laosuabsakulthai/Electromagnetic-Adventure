@@ -34,7 +34,7 @@ int main()
 	world.event<First_Adventurer_Turn>(); // Start the first adventurer's turn
 	
 	world.event<Move_One_Space_Optional>(3); // Trigger the optional move event with 3 optional moves
-	/* 
+	
 	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
 	world.event<Move_One_Space_Optional>(2); // Trigger the optional move event with 2 optional moves
 	

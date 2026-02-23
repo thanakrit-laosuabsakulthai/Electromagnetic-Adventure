@@ -301,6 +301,11 @@ export inline bool is_restricted_path(const Path& path) {
 	return path == ArrowRestrictedPath || path == ArrowRestrictedWarpPath;
 }
 
+export inline bool is_gradient_color(const ApparentColor& color) {
+	using enum ApparentColor;
+	return color == PinkOrangeYellowGradient || color == RedPurpleGradient || color == WhiteGrayGradient;
+}
+
 } // End of namespace Parity
 
 /* 

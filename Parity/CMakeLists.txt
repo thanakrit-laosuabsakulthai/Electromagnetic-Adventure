@@ -30,4 +30,7 @@ target_sources(Parity PRIVATE
     Opticular/optoelectronic.cppm
     Opticular/opticalnotation.cppm
     Opticular/marketplace.cppm
+    
+    Chromaticity/chromaticity.cppm
+    Chromaticity/coloreffect.cppm
  )

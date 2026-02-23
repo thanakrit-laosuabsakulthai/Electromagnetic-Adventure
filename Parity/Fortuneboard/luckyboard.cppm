@@ -19,38 +19,6 @@ export module Parity.LuckyBoard;
 export namespace Parity
 {
 
-export struct Gain_Gold_Coin : Rule
-{
-	int amount_of_gold_coin;
-	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
-	void execute(Overworld &world) override {
-		amount_of_gold_coin *= world.useLuckyBoardMultiplier();
-		
-		world.playerbase[world.active_player].gold_coin += amount_of_gold_coin;
-		
-		world.announce.bygone(std::format(
-			"Gave {} [Gold Coin] to {}.",
-			amount_of_gold_coin, to_string(world.active_player)
-		));
-	}
-};
-
-export struct Gain_Permanent_Power_Point : Rule
-{
-	int amount_of_permanent_power;
-	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}
-	void execute(Overworld &world) override {
-		amount_of_permanent_power *= world.useLuckyBoardMultiplier();
-		
-		world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;
-		
-		world.announce.bygone(std::format(
-			"Gave {} permanent Power point to {}.",
-			amount_of_permanent_power, to_string(world.active_player)
-		));
-	}
-};
-
 export struct Double_Lucky_Board_Multiplier : Rule
 {
 	void execute(Overworld &world) override {
@@ -87,7 +55,9 @@ export struct Apply_Lucky_Board_Result : Rule
 		switch (roll) {
 		case One:
 			world.announce.result("Trigger the Event Board once.");
-			world.event<Event_Board>();
+			for (int i = 0; i < world.useLuckyBoardMultiplier(); ++i) {
+				world.event<Event_Board>();
+			}
 			break;
 		case Two:
 			world.announce.result("Trigger the Lucky Board again, but the result is doubled.");
@@ -100,15 +70,15 @@ export struct Apply_Lucky_Board_Result : Rule
 			break;
 		case Four:
 			world.announce.result("Gain 1 Gold Coin.");
-			world.event<Gain_Gold_Coin>(1);
+			world.event<Gain_Gold_Coin>(1 * world.useLuckyBoardMultiplier());
 			break;
 		case Five:
 			world.announce.result("Gain 1 permanent Power point.");
-			world.event<Gain_Permanent_Power_Point>(1);
+			world.event<Gain_Permanent_Power_Point>(1 * world.useLuckyBoardMultiplier());
 			break;
 		case Six:
 			world.announce.result("Gain 5 Gold Coins.");
-			world.event<Gain_Gold_Coin>(5);
+			world.event<Gain_Gold_Coin>(5 * world.useLuckyBoardMultiplier());
 			break;
 		}
 	}

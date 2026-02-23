@@ -38,6 +38,10 @@ export class Overworld
 	int lucky_board_multiplier;
 	int useLuckyBoardMultiplier();
 	
+	// +++ chromaticity +++
+	DieRoll die_roll_for_chromaticity;
+	ApparentColor getColorUnderActivePlayer();
+	
 	// +++  biology-physiology +++
 	Treasury playerbase;
 	Humanity humanity;
@@ -130,99 +134,6 @@ public:
 
 
 
-// ##××××-------->>> ./Fortuneboard <<<--------××××##
-//
-//
-//
-//
-
-// +++------>>> dieroll.cppm <<<------+++
-
-export enum class DieRoll : int
-{
-	One = 1,
-	Two,
-	Three,
-	Four,
-	Five,
-	Six
-};
-
-// +++------>>> fortuneboard.cppm <<<------+++
-
-export struct Roll_For_Random_Board : Rule {
-	void execute(Overworld &world) override;
-};
-
-// +++------>>> luckyboard.cppm <<<------+++
-
-export struct Gain_Gold_Coin : Rule {
-	int amount_of_gold_coin;
-	Gain_Gold_Coin(int amount);
-	void execute(Overworld &world) override;
-};
-
-export struct Gain_Permanent_Power_Point : Rule {
-	int amount_of_permanent_power;
-	Gain_Permanent_Power_Point(int amount);
-	void execute(Overworld &world) override;
-};
-
-export struct Move_Again_One_Space : Rule {
-	void execute(Overworld &world) override;
-};
-
-export struct Apply_Lucky_Board_Result : Rule {
-	void execute(Overworld &world) override;
-	void applyLuckyBoardResult(Overworld &world, DieRoll roll);
-};
-
-export struct Lucky_Board : Rule {
-	void execute(Overworld &world) override;
-};
-
-// +++------>>> eventboard.cppm <<<------+++
-
-export struct All_Players_Gain_Gold_Coin : Rule
-{
-	int amount_of_gold_coin;
-	All_Players_Gain_Gold_Coin(int amount);
-	void execute(Overworld &world) override;
-};
-
-export struct Apply_Event_Board_Result : Rule
-{
-	void execute(Overworld &world) override;
-	void applyEventBoardResult(Overworld &world, DieRoll roll);
-};
-
-export struct Event_Board : Rule
-{
-	void execute(Overworld &world) override;
-};
-
-// +++------>>> unluckyboard.cppm <<<------+++
-
-export struct Lose_Gold_Coin : Rule
-{
-	int amount_of_gold;
-	Lose_Gold_Coin(int amount) : amount_of_gold(amount) {}
-	void execute(Overworld &world) override;
-};
-
-export struct Apply_Unlucky_Board_Result : Rule
-{
-	void execute(Overworld &world) override;
-	void applyUnluckyBoardResult(Overworld &world, DieRoll roll);
-};
-
-export struct Unlucky_Board : Rule
-{
-	void execute(Overworld &world) override;
-};
-
-
-
 
 // ##××××-------->>> ./Opticular <<<--------××××##
 //
@@ -274,6 +185,39 @@ export struct Media_Of_Marketplace : Rule {
 	void execute(Overworld &world) override;
 	void display_market();
 	void display_player_possesion_hint();
+};
+
+// +++------>>> chromaticity.cppm <<<------+++
+
+export struct Activate_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+	
+	ApparentColor getColorUnderActivePlayer(Overworld &world);
+};
+
+export struct Pink_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Green_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Orange_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Yellow_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Red_Color_Effect : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Roll_For_Chromaticity : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
+	void execute(Overworld &world) override;
 };
 
 
@@ -333,7 +277,34 @@ export struct Vitality_Hurt : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Vitality_Heal : Rule {
+	int amount_of_healing;
+	
+	Vitality_Heal(int healing) : amount_of_healing(healing) {}
+	void execute(Overworld &world) override {
+	}
+};
 
+export struct Gain_Gold_Coin : Rule
+{
+	int amount_of_gold_coin;
+	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Gain_Permanent_Power_Point : Rule {
+	int amount_of_permanent_power;
+	Gain_Permanent_Power_Point(int amount);
+	void execute(Overworld &world) override;
+};
+
+export struct Take_Gold_Coin : Rule
+{
+	int amount_of_gold;
+	
+	Take_Gold_Coin(int amount) : amount_of_gold(amount) {}
+	void execute(Overworld &world) override;
+};
 
 // +++------>>> adventurer.cppm <<<------+++
 
@@ -511,6 +482,7 @@ export Geography Atlas;
 
 export inline bool is_arrow_path(const Path& path);
 export inline bool is_restricted_path(const Path& path);
+export inline bool is_gradient_color(const ApparentColor& color);
 
 // +++------>>> notation.cppm <<<------+++
 
@@ -704,6 +676,80 @@ export struct Apply_Optional_Journey : Rule {
 	Apply_Optional_Journey(int amount);
 	void execute(Overworld &world) override;
 };
+
+
+
+
+
+// ##××××-------->>> ./Fortuneboard <<<--------××××##
+//
+//
+//
+//
+
+// +++------>>> dieroll.cppm <<<------+++
+
+export enum class DieRoll : int
+{
+	One = 1,
+	Two,
+	Three,
+	Four,
+	Five,
+	Six
+};
+
+// +++------>>> fortuneboard.cppm <<<------+++
+
+export struct Roll_For_Random_Board : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> luckyboard.cppm <<<------+++
+
+export struct Move_Again_One_Space : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Lucky_Board_Result : Rule {
+	void execute(Overworld &world) override;
+	void applyLuckyBoardResult(Overworld &world, DieRoll roll);
+};
+
+export struct Lucky_Board : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> eventboard.cppm <<<------+++
+
+export struct All_Players_Gain_Gold_Coin : Rule {
+	int amount_of_gold_coin;
+	All_Players_Gain_Gold_Coin(int amount);
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Event_Board_Result : Rule {
+	void execute(Overworld &world) override;
+	void applyEventBoardResult(Overworld &world, DieRoll roll);
+};
+
+export struct Event_Board : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> unluckyboard.cppm <<<------+++
+
+export struct Apply_Unlucky_Board_Result : Rule {
+	void execute(Overworld &world) override;
+	void applyUnluckyBoardResult(Overworld &world, DieRoll roll);
+};
+
+export struct Unlucky_Board : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+
 
 
 } // namespace Parity

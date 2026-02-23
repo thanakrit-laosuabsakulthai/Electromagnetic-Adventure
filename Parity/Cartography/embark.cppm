@@ -15,6 +15,7 @@ export module Parity.Embark;
 	import Parity.Encyclopedia;
 	import Parity.Expedition;
 	import Parity.Accoutrement;
+	import Parity.Chromaticity;
 #endif
 
 export namespace Parity {
@@ -76,6 +77,7 @@ export struct Arrival : Rule {
 		));
 		
 		world.expedition.municipality.teleport(world.active_player, world.expedition.landmark_of_destination);
+		world.event<Activate_Color_Effect>(); // In chromaticity.cppm
 	}
 };
 

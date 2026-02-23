@@ -104,6 +104,80 @@ export struct Vitality_Hurt : Rule {
 	}
 };
 
+export struct Vitality_Heal : Rule {
+	int amount_of_healing;
+	
+	Vitality_Heal(int healing) : amount_of_healing(healing) {}
+	void execute(Overworld &world) override {
+		
+		PlayerPosession &possession = world.playerbase[world.active_player];
+		
+		int maximum_healing = possession.vitality_maximum_heart - possession.vitality_heart;
+		int actual_healing = std::min(amount_of_healing, maximum_healing); // Ensure we don't exceed maximum hearts
+		possession.vitality_heart += actual_healing;
+		
+		if (actual_healing == 0) {
+			world.announce.bygone(std::format(
+				"{} was already at maximum hearts. Nothing happened.",
+				to_string(world.active_player)
+			));
+			return;
+		}
+		
+		
+		world.announce.bygone(std::format(
+			"Injected healing of {} vitality heart{} to {}.",
+			actual_healing,
+			actual_healing > 1 ? "s" : "",
+			to_string(world.active_player)
+		));
+	}
+};
 
+export struct Gain_Gold_Coin : Rule
+{
+	int amount_of_gold_coin;
+	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
+	void execute(Overworld &world) override {
+		world.playerbase[world.active_player].gold_coin += amount_of_gold_coin;
+		
+		world.announce.bygone(std::format(
+			"Gave {} [Gold Coin] to {}.",
+			amount_of_gold_coin, to_string(world.active_player)
+		));
+	}
+};
+
+export struct Gain_Permanent_Power_Point : Rule
+{
+	int amount_of_permanent_power;
+	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}
+	void execute(Overworld &world) override {
+		world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;
+		
+		world.announce.bygone(std::format(
+			"Gave {} [Permanent Power] to {}.",
+			amount_of_permanent_power, to_string(world.active_player)
+		));
+	}
+};
+
+export struct Take_Gold_Coin : Rule
+{
+	int amount_of_gold;
+	
+	Take_Gold_Coin(int amount) : amount_of_gold(amount) {}
+	void execute(Overworld &world) override {
+		PlayerPosession &possession = world.playerbase[world.active_player];
+		int gold_loss = std::min(amount_of_gold, possession.gold_coin); // Ensure we don't go below zero
+		possession.gold_coin -= gold_loss;
+		
+		world.announce.result(std::format(
+			"Cleared {} [Gold Coin] from {}.",
+			gold_loss,
+			world.getActivePlayerName()
+		));
+	}
+};
 
 } // namespace Parity

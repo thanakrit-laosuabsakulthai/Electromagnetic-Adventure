@@ -46,6 +46,10 @@ export class Overworld
 	int lucky_board_multiplier = 1;
 	int useLuckyBoardMultiplier();
 	
+	// +++ chromaticity +++
+	DieRoll die_roll_for_chromaticity = DieRoll::One;
+	ApparentColor getColorUnderActivePlayer();
+	
 	// +++  biology-physiology +++
 	Treasury playerbase;
 	Humanity humanity;
