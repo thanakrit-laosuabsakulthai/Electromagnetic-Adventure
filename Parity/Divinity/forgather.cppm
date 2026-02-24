@@ -26,7 +26,7 @@ export struct Forgather_of_Adventurer : Rule {
 		terra = &world;
 		
 		world.announce.caption("Choose the number of adventurers in the game.");
-		get_player_choice_();
+		get_player_choice();
 		
 		world.announce.redact(); // Remove the caption after getting the player's choice
 		world.player_count = player_choice;
@@ -36,7 +36,7 @@ export struct Forgather_of_Adventurer : Rule {
 	void query();
 	bool validate_choice(int choice);
 	bool validate_dialect(std::string &player_input);
-	void get_player_choice_();
+	void get_player_choice();
 };
 
 void Forgather_of_Adventurer::query() {
@@ -71,7 +71,7 @@ bool Forgather_of_Adventurer::validate_choice(int choice) {
 	return choice >= 1 && choice <= world.maximum_player_count;
 }
 
-void Forgather_of_Adventurer::get_player_choice_() {
+void Forgather_of_Adventurer::get_player_choice() {
 	Overworld &world = *terra;
 	
 	std::string player_input;
@@ -90,24 +90,6 @@ void Forgather_of_Adventurer::get_player_choice_() {
 	
 	player_choice = std::stoi(player_input);
 }
-
-
-
-/* 
-export struct Query_Of_Passage : Rule {
-	void execute(Overworld &world) override {
-		std::string query_dialect = dialect_synthesis(world.expedition.choice_of_direction.vector());
-		
-		if (world.expedition.is_journey_optional) {
-			query_dialect += " " + std::string(world.encyclopedia.decline_journey);
-		}
-		
-		std::string content_of_query = bag_notation_synthesis(query_dialect);
-		
-		world.announce.ask(std::format("» Choice {} : ", content_of_query));
-	}
-};
-*/
 
 
 } // namespace Parity

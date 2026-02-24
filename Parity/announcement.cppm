@@ -19,6 +19,7 @@ export enum class MediaClause {
 	MediaBullet,
 	MediaIndent,
 	MediaCatalog,
+	MediaOverhang,
 };
 
 export enum class FormattingNotation {
@@ -86,13 +87,15 @@ public:
 	MediaClause clause = MediaClause::Media;
 	int consequential_ordinal = 0;
 	int choice_ordinal = 0;
+	int analog_ordinal = 0;
 	
 	std::string_view getMediaNotation() {
 		static const std::map<MediaClause, std::string_view> mediaClauseToNotation = {
 			{MediaClause::Media, "{}"},
 			{MediaClause::MediaBullet, "• {}"},
 			{MediaClause::MediaIndent, "\t{}"},
-			{MediaClause::MediaCatalog, "\t\t• {}"}
+			{MediaClause::MediaCatalog, "\t\t• {}"},
+			{MediaClause::MediaOverhang, "\t• {}"}
 		};
 		
 		return mediaClauseToNotation.at(clause);
@@ -132,6 +135,10 @@ public:
 		} else {
 			return bold_cyan(std::format("[{}-{}]", choice_ordinal - reach + 1, choice_ordinal));
 		}
+	}
+	
+	std::string getAnalogLexicon() {
+		return bold(std::format("{}.", analog_ordinal));
 	}
 	
 	std::string getAskNotation() {
@@ -208,6 +215,27 @@ public:
 	void catalog(const std::string& content_of_catalog) {
 		clause = MediaClause::MediaCatalog;
 		media(content_of_catalog);
+	}
+	
+	void overhang(const std::string& content_of_overhang) {
+		clause = MediaClause::MediaOverhang;
+		media(content_of_overhang);
+	}
+	
+	void beginAnalog() {
+		analog_ordinal = 0;
+	}
+	
+	void analog(const std::string& content_of_analog) {
+		clause = MediaClause::MediaIndent;
+		analog_ordinal++;
+		media(std::format("{} {}", getAnalogLexicon(), content_of_analog));
+	}
+	
+	void analogical(const std::string& content_of_analogical) {
+		clause = MediaClause::MediaIndent;
+		analog_ordinal++;
+		media(std::format("{} {}", cyan(getAnalogLexicon()), content_of_analogical));
 	}
 	
 	void redact() { // Delete the most recent announcement

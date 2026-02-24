@@ -14,6 +14,7 @@ export module Parity.ColorEffect;
 	import Parity.Physiology;
 	import Parity.FortuneBoard;
 	import Parity.Chromaticity;
+	import Parity.Marketplace;
 	
 #endif
 
@@ -63,35 +64,54 @@ export struct Pink_Color_Effect : Rule {
 export struct Green_Color_Effect : Rule {
 	void execute(Overworld &world) override {
 		world.event<Lucky_Board>();
-		world.announce.result("Trigger the Lucky Board once");
+		world.announce.result(std::format(
+			"Trigger the {} once",
+			bold_cyan("Lucky Board")
+		));
 	}
 };
 
 export struct Orange_Color_Effect : Rule {
 	void execute(Overworld &world) override {
 		world.event<Event_Board>();
-		world.announce.result("Trigger the Event Board once");
+		world.announce.result(std::format(
+			"Trigger the {} once",
+			bold_cyan("Event Board")
+		));
 	}
 };
 
 export struct Yellow_Color_Effect : Rule {
 	void execute(Overworld &world) override {
 		world.event<Gain_Gold_Coin>(1);
-		world.announce.result("Gain 1 Gold Coin, and you may purchase items from the Shop Board");
+		world.event<Open_Shop>();
+		
+		/* world.announce.result("Gain 1 Gold Coin, and you may purchase items from the Shop Board"); */
+		world.announce.result(std::format(
+			"Gain {}, and you may purchase items from the {}",
+			bold_cyan("1 Gold Coin"),
+			bold_cyan("Shop Board")
+		));
 	}
 };
 
 export struct Red_Color_Effect : Rule {
 	void execute(Overworld &world) override {
 		world.event<Unlucky_Board>();
-		world.announce.result("Trigger the Unlucky Board once");
+		world.announce.result(std::format(
+			"Trigger the {} once",
+			bold_cyan("Unlucky Board")
+		));
 	}
 };
 
 export struct Purple_Color_Effect : Rule {
 	void execute(Overworld &world) override {
 		world.event<Demon_Board>();
-		world.announce.result("Trigger the Demon Board once");
+		world.announce.result(std::format(
+			"Trigger the {} once",
+			bold_cyan("Demon Board")
+		));
 	}
 };
 

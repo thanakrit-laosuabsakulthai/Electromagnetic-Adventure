@@ -12,6 +12,7 @@ export module Parity.Physiology;
 	import Parity.Expedition;
 	import Parity.Journey;
 	import Parity.World;
+	import Parity.OpticalNotation;
 #endif
 
 export namespace Parity
@@ -175,6 +176,28 @@ export struct Take_Gold_Coin : Rule
 		world.announce.bygone(std::format(
 			"Cleared {} [Gold Coin] from {}.",
 			gold_loss,
+			world.getActivePlayerName()
+		));
+	}
+};
+
+export struct Gain_Optical_Item : Rule
+{
+	Optics optical_item;
+	int quantity;
+	
+	Gain_Optical_Item(Optics item, int quantity) : optical_item(item), quantity(quantity) {}
+	void execute(Overworld &world) override {
+		// doesn't check for inventory capacity
+		PlayerPosession &possession = world.playerbase[world.active_player];
+		for (int i = 0; i < quantity; ++i) {
+			possession.inventory.insert(optical_item);
+		}
+		
+		world.announce.bygone(std::format(
+			"Gave {} [{}] to {}.",
+			quantity,
+			to_string(optical_item),
 			world.getActivePlayerName()
 		));
 	}

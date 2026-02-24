@@ -29,6 +29,8 @@ export module Parity;
 	#include "Opticular/optoelectronic.cppm"
 	#include "Opticular/opticalnotation.cppm"
 	#include "Opticular/marketplace.cppm"
+	#include "Opticular/marketmedia.cppm"
+	#include "Opticular/purchasement.cppm"
 	
 	#include "Chromaticity/chromaticity.cppm"
 	#include "Chromaticity/coloreffect.cppm"
@@ -63,6 +65,8 @@ export module Parity;
 	export import Parity.Optoelectronic;
 	export import Parity.OpticalNotation;
 	export import Parity.Marketplace;
+	export import Parity.MarketMedia;
+	export import Parity.Purchasement;
 	
 	export import Parity.Chromaticity;
 	export import Parity.ColorEffect;

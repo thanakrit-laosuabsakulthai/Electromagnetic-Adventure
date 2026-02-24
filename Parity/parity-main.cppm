@@ -2,6 +2,8 @@
 	#include <memory>
 	#include <print>
 	#include "type-definition.cppm"
+	
+	#include <set>
 #else
 	import Parity;
 	import std; // Standard library import
@@ -32,7 +34,11 @@ int main()
 	// world.event<Welcome_Adventurer>(2); // Start the game with 2 adventurers
 	world.event<Forgather_of_Adventurer>(); // Start the game with player choice of adventurers
 	world.event<First_Adventurer_Turn>(); // Start the first adventurer's turn
-	
+	world.event<Gain_Gold_Coin>(60); // Give the active player 6 Gold Coins for testing
+	world.expedition.landmark_of_destination = Landmark::OpticalMarketplace; // Teleport the active player to the marketplace for testing
+	world.event<Arrival>(); // Trigger the arrival event to announce the current location and its effects
+	world.event<Arrival>(); // Trigger the arrival event again to test multiple arrivals in a turn	
+	/*
 	world.event<Move_One_Space_Optional>(3); // Trigger the optional move event with 3 optional moves
 	
 	world.event<Next_Adventurer_Turn>(); // Move to the next adventurer's turn
@@ -44,13 +50,11 @@ int main()
 	world.event<Lucky_Board>(); // Trigger the lucky board event
 	world.event<Event_Board>(); // Trigger the event board event */
 	
-	world.event<Media_Of_Marketplace>(); // Trigger the marketplace media event
-	
 	/* do {
 		world.event<Lucky_Board>();
 	} while (world.event_queue.size() < 10); // Ensure at least 5 events are queued
 	*/
-	
+
 	world.main_loop();
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 
 		to_string(world.active_player),
@@ -58,6 +62,7 @@ int main()
 		world.playerbase[world.active_player].permanent_power_point
 	);
 	
+	/**/
 	// print 10 empty lines
 	for (int i = 0; i < 10; ++i) {
 		std::print("\n");

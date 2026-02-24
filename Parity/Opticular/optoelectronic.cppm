@@ -30,7 +30,7 @@ export enum class Optics {
 };
 
 export using Iridescent = std::set<OpticalEffect>;
-export using Inventory = std::set<Optics>;
+export using Inventory = std::multiset<Optics>;
 export using MarketValuation = std::map<Optics, int>;
 
 export MarketValuation Marketplace = {

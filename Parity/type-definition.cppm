@@ -52,6 +52,10 @@ export class Overworld
 	void firstAdventurer();
 	void nextAdventurer();
 	
+	// +++ opticular +++
+	const MarketValuation marketplace;
+	Inventory purchasement;
+	
 	// +++ rule-event +++
 	int amount_of_new_event;
 	void relocate_new_events_to_front();
@@ -70,6 +74,7 @@ export enum class MediaClause {
 	MediaBullet,
 	MediaIndent,
 	MediaCatalog,
+	MediaOverhang
 };
 
 export enum class FormattingNotation {
@@ -97,6 +102,7 @@ public:
 	MediaClause clause;
 	int consequential_ordinal;
 	int choice_ordinal;
+	int analog_ordinal;
 	
 	std::string_view getMediaNotation();
 	void media(const std::string& content_append_media);
@@ -106,6 +112,7 @@ public:
 	std::string getResultLexicon();
 	std::string getChoiceLexicon();
 	std::string getForbidLexicon();
+	std::string getAnalogLexicon();
 	std::string getRangeLexicon(int reach);
 	
 	void action(const std::string& content_append_action);
@@ -122,7 +129,12 @@ public:
 	void forbid(const std::string& content_of_forbid);
 	void range(const std::string& content_of_range, int reach);
 	void catalog(const std::string& content_of_catalog);
+	void overhang(const std::string& content_of_overhang);
+	void analog(const std::string& content_of_analog);
+	void analogical(const std::string& content_of_analogical);
 	void beginChoice();
+	void beginAnalog();
+	
 	
 	void ask(const std::string& content_of_ask);
 	void redact(); // Delete the most recent announcement
@@ -165,7 +177,7 @@ export enum class Optics {
 };
 
 export using Iridescent = std::set<OpticalEffect>;
-export using Inventory = std::set<Optics>;
+export using Inventory = std::multiset<Optics>;
 export using MarketValuation = std::map<Optics, int>;
 export MarketValuation Marketplace;
 
@@ -178,15 +190,59 @@ enum class ApparentColor; // forward declaration for some reason
 export using Chromaticon = std::map<ApparentColor, std::string_view>;
 export inline const Chromaticon LightWaveExtensionDescriptions;
 export inline std::string_view to_light_wave_description(ApparentColor gradient_color);
+export inline std::multiset<int> transcribe_numerical_dialect(std::string &numerical_dialect);
 
 // +++------>>> marketplace.cppm <<<------+++
 
+export struct Open_Shop : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Apply_Purchasement_Of_Optics : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Apply_Purchasement_Result : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Decline_Shop : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> marketmedia.cppm <<<------+++
+
 export struct Media_Of_Marketplace : Rule {
-	Overworld *terra = nullptr;
-	
 	void execute(Overworld &world) override;
 	void display_market();
 	void display_player_possesion_hint();
+};
+
+export struct Review_Of_Purchase : Rule {
+	void execute(Overworld &world) override;
+	void display_purchasement();
+	void display_inventory();
+};
+
+// +++------>>> purchasement.cppm <<<------+++
+
+export struct Purchasement_Of_Optics : Rule {
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	Optics getOpticsFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	bool validate_choice();
+	
+	void clause_decline_shop();
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
 };
 
 // +++------>>> chromaticity.cppm <<<------+++
@@ -254,13 +310,13 @@ export enum class PlayerIdentity {
 };
 
 export struct PlayerPosession {
-	int gold_coin = 0;
-	int permanent_power_point = 1;
-	int vitality_heart = 5;
-	int vitality_maximum_heart = 5;
-	std::set<OpticalEffect> active_optical_effect;
-	std::set<Optics> inventory;
-	int inventory_capacity = 4;
+	int gold_coin;
+	int permanent_power_point;
+	int vitality_heart;
+	int vitality_maximum_heart;
+	Iridescent active_optical_effect;
+	Inventory inventory;
+	int inventory_capacity;
 };
 
 export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
@@ -318,6 +374,15 @@ export struct Take_Gold_Coin : Rule
 	void execute(Overworld &world) override;
 };
 
+export struct Gain_Optical_Item : Rule
+{
+	Optics optical_item;
+	int quantity;
+	
+	Gain_Optical_Item(Optics item, int quantity);
+	void execute(Overworld &world) override;
+};
+
 // +++------>>> adventurer.cppm <<<------+++
 
 export template <typename Element_Of_Set>
@@ -368,7 +433,7 @@ export struct Forgather_of_Adventurer : Rule {
 	void query();
 	bool validate_choice(int choice);
 	bool validate_dialect(std::string &player_input);
-	void get_player_choice_();
+	void get_player_choice();
 };
 
 

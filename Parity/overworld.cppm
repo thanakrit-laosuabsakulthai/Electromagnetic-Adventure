@@ -14,6 +14,7 @@ export module Parity.World;
 	import Parity.Expedition;
 	import Parity.Announcement;
 	import Parity.Encyclopedia;
+	import Parity.Optoelectronic;
 #endif
 
 
@@ -36,7 +37,7 @@ export class Overworld
 	// +++ expedition-embark +++
 	Expedition expedition;
 	Landmark getLandmarkOfActivePlayer();
-	const Dialect encyclopedia = Encyclopedia;
+	Dialect encyclopedia = Encyclopedia;
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);
@@ -59,6 +60,10 @@ export class Overworld
 	std::string_view getActivePlayerName();
 	void firstAdventurer();
 	void nextAdventurer();
+	
+	// +++ opticular +++
+	MarketValuation marketplace = Marketplace;
+	Inventory purchasement;
 	
 	/// +++ rule-event +++
 	int amount_of_new_event = 0;

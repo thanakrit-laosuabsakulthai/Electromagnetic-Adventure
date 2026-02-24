@@ -12,6 +12,7 @@ export module Parity.DemonBoard;
 	import Parity.Biology;
 	import Parity.World;
 	import Parity.Announcement;
+
 #endif
 
 /* 
@@ -50,7 +51,7 @@ export struct Media_Of_Demon_Board : Rule {
 		"A Magnetic Mage Demon spawns on the Purple Diamond space and moves 1 space towards a player.",
 		"A Magnetic Demon spawns on the Purple Diamond space and moves 2 spaces towards a player.",
 		"All players currently in the Demon Zone (Red area) lose 1 Heart.",
-		"Roll a die to determine which demon spawns on the Purple Diamond space and moves 3 spaces towards a player:\n    • 1-2: Electric Minion\n    • 3-4: Magnetic Demon\n    • 5-6: Magnetic Mage Demon"
+		"Roll a die to spawn a demon on the Purple Diamond space and moves 3 spaces towards a player:\n\t\t• 1-2: Electric Minion\n\t\t• 3-4: Magnetic Demon\n\t\t• 5-6: Magnetic Mage Demon"
 	};
 };
 
