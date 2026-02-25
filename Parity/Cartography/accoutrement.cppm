@@ -7,9 +7,12 @@ export module Parity.Accoutrement;
 #else
 	import std; // Standard library import
 	import Parity.World;
+	
 	import Parity.Geography;
 	import Parity.Notation;
+	
 	import Parity.Expedition;
+	import Parity.Journey;
 #endif
 
 export namespace Parity {
@@ -53,73 +56,69 @@ std::string Overworld::pathochronality(Pathway target_pathway) {
 // ---+++ embarkation rule +++---
 
 
-export struct Media_Of_Journey : Rule {
-	void execute(Overworld &world) override {
-		// display the warning only if a path is marked with an arrow.
-		Landmark landmark_of_expeditionist = world.getLandmarkOfActivePlayer();
-		Passageway &passageway_of_expeditionist = world.atlas[landmark_of_expeditionist].passageway;
-		
-		std::string content_of_media = "Move 1 space.";
-		
-		for (const auto& pathway : passageway_of_expeditionist) {
-			if (is_arrow_path(pathway.pathType)) {
-				content_of_media += " If the path is marked with an arrow, players cannot move against the arrow's direction.";
-				break; // No need to check further paths once we find an arrow path
-			}
+void Media_Of_Journey::execute(Overworld &world) {
+	// display the warning only if a path is marked with an arrow.
+	Landmark landmark_of_expeditionist = world.getLandmarkOfActivePlayer();
+	Passageway &passageway_of_expeditionist = world.atlas[landmark_of_expeditionist].passageway;
+	
+	std::string content_of_media = "Move 1 space.";
+	
+	for (const auto& pathway : passageway_of_expeditionist) {
+		if (is_arrow_path(pathway.pathType)) {
+			content_of_media += " Players cannot move against the arrow's direction.";
+			break; // No need to check further paths once we find an arrow path
 		}
-		
-		world.announce.action(content_of_media);
 	}
-};
+	
+	world.announce.action(content_of_media);
+}
 
-export struct Query_Of_Passage : Rule {
-	void execute(Overworld &world) override {
-		std::string query_dialect = dialect_synthesis(world.expedition.choice_of_direction.vector());
-		
-		if (world.expedition.is_journey_optional) {
-			query_dialect += " " + std::string(world.encyclopedia.decline_journey);
-		}
-		
-		std::string content_of_query = bag_notation_synthesis(query_dialect);
-		
-		world.announce.ask(content_of_query);
-	}
-};
 
-export struct Media_Of_Embark : Rule {
-	void execute(Overworld &world) override {
-		Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
-		
-		std::string lexicon_of_beginning = world.appearanzonality(landmark_of_beginning);
-		world.announce.subtitle(std::format("Moving from {} to...", lexicon_of_beginning));
+void Query_Of_Passage::execute(Overworld &world) {
+	std::string query_dialect = dialect_synthesis(world.expedition.choice_of_direction.vector());
+	
+	if (world.expedition.is_journey_optional) {
+		query_dialect += " " + std::string(world.encyclopedia.decline_journey);
 	}
-};
+	
+	std::string content_of_query = bag_notation_synthesis(query_dialect);
+	
+	world.announce.ask(content_of_query);
+}
 
-export struct Media_Of_Passage : Rule {
-	void execute(Overworld &world) override {
-		Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
-		Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
+
+void Media_Of_Embark::execute(Overworld &world) {
+	Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
+	
+	std::string lexicon_of_beginning = world.appearanzonality(landmark_of_beginning);
+	world.announce.subtitle(std::format("Moving from {} to...", lexicon_of_beginning));
+}
+
+
+void Media_Of_Passage::execute(Overworld &world) {
+	Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
+	Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
+	
+	world.announce.beginChoice();
+	
+	for (const auto& pathway : passageway_of_beginning) {
 		
-		world.announce.beginChoice();
+		std::string appranzonality_of_destination = world.appearanzonality(pathway.destination);
+		std::string pathochronality_of_destination = world.pathochronality(pathway);
 		
-		for (const auto& pathway : passageway_of_beginning) {
-			
-			std::string appranzonality_of_destination = world.appearanzonality(pathway.destination);
-			std::string pathochronality_of_destination = world.pathochronality(pathway);
-			
-			std::string lexicon_of_destination = std::format("{} {}", appranzonality_of_destination, pathochronality_of_destination);
-			
-			if (is_restricted_path(pathway.pathType)) {
-				world.announce.forbid(lexicon_of_destination);
-			} else {
-				world.announce.choice(lexicon_of_destination);
-			}
-		}
+		std::string lexicon_of_destination = std::format("{} {}", appranzonality_of_destination, pathochronality_of_destination);
 		
-		if(world.expedition.is_journey_optional) {
-			world.announce.choice("Ignore further movements.");
+		if (is_restricted_path(pathway.pathType)) {
+			world.announce.forbid(lexicon_of_destination);
+		} else {
+			world.announce.choice(lexicon_of_destination);
 		}
 	}
-};
+	
+	if(world.expedition.is_journey_optional) {
+		world.announce.choice("Ignore further movements.");
+	}
+}
+
 
 } // namespace Parity

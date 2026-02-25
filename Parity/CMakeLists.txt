@@ -13,12 +13,16 @@ target_sources(Parity PRIVATE
     Fortuneboard/unluckyboard.cppm
     Fortuneboard/demonboard.cppm
     
+    Divinity/psychology.cppm
     Divinity/physiology.cppm
     Divinity/necrology.cppm
     Divinity/biology.cppm
-    Divinity/adventurer.cppm
-    Divinity/forgather.cppm
     Divinity/necromancy.cppm
+    Divinity/demonmancy.cppm
+    
+    Adventure/adventurer.cppm
+    Adventure/forgather.cppm
+    Adventure/adventure.cppm
     
     Cartography/geography.cppm
     Cartography/notation.cppm
@@ -34,6 +38,7 @@ target_sources(Parity PRIVATE
     Opticular/marketplace.cppm
     Opticular/marketmedia.cppm
     Opticular/purchasement.cppm
+    Opticular/marketeer.cppm
     
     Chromaticity/chromaticity.cppm
     Chromaticity/coloreffect.cppm

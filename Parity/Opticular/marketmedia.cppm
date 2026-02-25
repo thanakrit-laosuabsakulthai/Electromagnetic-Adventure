@@ -8,90 +8,85 @@ export module Parity.MarketMedia;
 	import std; // Standard library import
 	import Parity.World;
 	import Parity.Announcement;
+	
 	import Parity.Optoelectronic;
 	import Parity.OpticalNotation;
 	import Parity.Biology;
 	import Parity.Encyclopedia;
+	
+	import Parity.Marketplace;
 #endif
 
 export namespace Parity
 {
-export struct Media_Of_Marketplace : Rule {
-	Overworld *terra = nullptr;
+void Media_Of_Marketplace::execute(Overworld &world) {
+	terra = &world; // for helper functions
 	
-	void execute(Overworld &world) override {
-		terra = &world; // for helper functions
-		
-		world.announce.action(std::format(
-			"{} may purchase items from the Shop Board.",
-			world.getActivePlayerName()
-		));
-		
-		display_market();
-		display_player_possesion_hint();
-	}
+	world.announce.action(std::format(
+		"{} may purchase items from the Shop Board.",
+		world.getActivePlayerName()
+	));
 	
-	void display_market() {
-		Overworld &world = *terra;
-		
-		world.announce.beginChoice();
-		
-		for (const auto& [optic, price] : world.marketplace) {
-			std::string optical_item_title = std::format("{} ({} Gold)", to_string(optic), price);
-			
-			world.announce.choice(optical_item_title);
-		}
-	}
-	
-	void display_player_possesion_hint() {
-		Overworld &world = *terra;
-		PlayerIdentity active_player = world.active_player;
-		const PlayerPosession& player_possession = world.playerbase.at(active_player);
-		
-		std::string gold_coin_hint = bold(
-			std::format("{} Gold Coin{}",
-				player_possession.gold_coin,
-				player_possession.gold_coin == 1 ? "" : "s"
-			)
-		);
-		
-		int amount_of_item_in_inventory = static_cast<int>(player_possession.inventory.size());
-		std::string item_in_inventory_hint = std::format("{} item{}",
-			amount_of_item_in_inventory > 0 ? std::to_string(amount_of_item_in_inventory) : "no",
-			amount_of_item_in_inventory == 1 ? "" : "s"
-		);
-		
-		int remaining_inventory_capacity = player_possession.inventory_capacity - amount_of_item_in_inventory;
-		std::string remaining_inventory_capacity_hint = std::format("{} item{}",
-			remaining_inventory_capacity,
-			remaining_inventory_capacity == 1 ? "" : "s"
-		);
-		
-		world.announce.linger(std::format("{} has {}. They have {} in inventory.",
-			world.getActivePlayerName(),
-			gold_coin_hint,
-			item_in_inventory_hint
-		));
-		
+	display_market();
+	display_player_possesion_hint();
+}
 
-		world.announce.linger(std::format("{} may purchase upto {} from the Shop.",
-			world.getActivePlayerName(),
-			remaining_inventory_capacity_hint
-		));
-		}
-};
-
-export struct Review_Of_Purchase : Rule {
-	Overworld *terra = nullptr;
-	void execute(Overworld &world) override {
-		terra = &world; // for helper functions
+void Media_Of_Marketplace::display_market() {
+	Overworld &world = *terra;
+	
+	world.announce.beginChoice();
+	
+	for (const auto& [optic, price] : world.marketplace) {
+		std::string optical_item_title = std::format("{} ({} Gold)", to_string(optic), price);
 		
-		display_purchasement();
-		display_inventory();
+		world.announce.choice(optical_item_title);
 	}
-	void display_purchasement();
-	void display_inventory();
-};
+}
+
+void Media_Of_Marketplace::display_player_possesion_hint() {
+	Overworld &world = *terra;
+	PlayerIdentity active_player = world.active_player;
+	const PlayerPosession& player_possession = world.playerbase.at(active_player);
+	
+	std::string gold_coin_hint = bold(
+		std::format("{} Gold Coin{}",
+			player_possession.gold_coin,
+			player_possession.gold_coin == 1 ? "" : "s"
+		)
+	);
+	
+	int amount_of_item_in_inventory = static_cast<int>(player_possession.inventory.size());
+	std::string item_in_inventory_hint = std::format("{} item{}",
+		amount_of_item_in_inventory > 0 ? std::to_string(amount_of_item_in_inventory) : "no",
+		amount_of_item_in_inventory == 1 ? "" : "s"
+	);
+	
+	int remaining_inventory_capacity = player_possession.inventory_capacity - amount_of_item_in_inventory;
+	std::string remaining_inventory_capacity_hint = std::format("{} item{}",
+		remaining_inventory_capacity,
+		remaining_inventory_capacity == 1 ? "" : "s"
+	);
+	
+	world.announce.linger(std::format("{} has {}. They have {} in inventory.",
+		world.getActivePlayerName(),
+		gold_coin_hint,
+		item_in_inventory_hint
+	));
+	
+
+	world.announce.linger(std::format("{} may purchase upto {} from the Shop.",
+		world.getActivePlayerName(),
+		remaining_inventory_capacity_hint
+	));
+}
+
+
+void Review_Of_Purchase::execute(Overworld &world) {
+	terra = &world; // for helper functions
+	
+	display_purchasement();
+	display_inventory();
+}
 
 void Review_Of_Purchase::display_purchasement() {
 	
@@ -189,22 +184,6 @@ void Review_Of_Purchase::display_inventory() {
 	3. ==Microwaves==
 	4. ==Radio Waves==
 	- AmethystApprentice now has ==0 Gold Coins==.
-*/
-
-/* 
-export struct Query_Of_Passage : Rule {
-	void execute(Overworld &world) override {
-		std::string query_dialect = dialect_synthesis(world.expedition.choice_of_direction.vector());
-		
-		if (world.expedition.is_journey_optional) {
-			query_dialect += " " + std::string(world.encyclopedia.decline_journey);
-		}
-		
-		std::string content_of_query = bag_notation_synthesis(query_dialect);
-		
-		world.announce.ask(content_of_query);
-	}
-};
 */
 
 } // namespace Parity

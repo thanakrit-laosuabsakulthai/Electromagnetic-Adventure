@@ -6,12 +6,13 @@ export module Parity.DemonBoard;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
-	import Parity.DieRoll;
-	import Parity.FortuneBoard;
-	import Parity.Physiology;
-	import Parity.Biology;
 	import Parity.World;
 	import Parity.Announcement;
+	import Parity.DieRoll;
+	import Parity.Biology;
+	
+	import Parity.FortuneBoard;
+	import Parity.Physiology;
 
 #endif
 
@@ -47,7 +48,7 @@ export struct Media_Of_Demon_Board : Rule {
 	
 	static inline const std::vector<std::string> outcomes = {
 		"All non-Boss demons move 1 space towards a player.",
-		"Summon Electric Minion on the Red Square space and initiates combat with players on that space.",
+		"Summon Electric Minion on the Red Square space and initiates combat.",
 		"A Magnetic Mage Demon spawns on the Purple Diamond space and moves 1 space towards a player.",
 		"A Magnetic Demon spawns on the Purple Diamond space and moves 2 spaces towards a player.",
 		"All players currently in the Demon Zone (Red area) lose 1 Heart.",

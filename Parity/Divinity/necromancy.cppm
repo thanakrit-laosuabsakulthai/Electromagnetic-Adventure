@@ -7,8 +7,9 @@ export module Parity.Necromancy;
 #else
 	import std; // Standard library import
 	import Parity.World;
-	import Parity.Expedition;
+	
 	import Parity.Necrology;
+	import Parity.Expedition;
 #endif
 
 export namespace Parity
@@ -28,29 +29,13 @@ Landmark Overworld::getLandmarkOfActiveDemon() {
 	return landmark_of_active_demon;
 }
 
+
 export struct Summon_Demon : Rule {
 	DemonForm demonform;
 	Landmark landmark_of_summoning;
 	
-	Summon_Demon(DemonForm demonform, Landmark landmark_of_summoning)
-		: demonform(demonform), landmark_of_summoning(landmark_of_summoning) {}
-		
-	void execute(Overworld &world) override {
-		
-		
-		AntiDivinity &antidivinity = world.expedition.antidivinity;
-		
-		antidivinity.addDemon(demonform, landmark_of_summoning);
-		world.active_demon_seriality = antidivinity.next_demon_seriality - 1;
-		
-		world.announce.bygone(std::format("{} spawns on the {}",
-			std::string(to_string(demonform)),
-			world.appearancity(landmark_of_summoning)
-		));
-		
-		
-	}
-	
+	Summon_Demon(DemonForm demonform, Landmark landmark_of_summoning) : demonform(demonform), landmark_of_summoning(landmark_of_summoning) {}
+	void execute(Overworld &world) override;
 };
 
 /* 

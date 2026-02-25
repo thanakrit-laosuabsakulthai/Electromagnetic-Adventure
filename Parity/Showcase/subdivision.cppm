@@ -3,14 +3,15 @@ export module Parity.Subdivision;
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include "../type-definition.cppm"
 #else
-	import Parity.Forgather;
-	import Parity.Adventurer;
+	import Parity.World;
+	
+	import Parity.Necromancy;
+	import Parity.Physiology;
+	import Parity.Marketplace;
+	import Parity.Warfare;
+	import Parity.Adventure;
 	import Parity.Journey;
 	import Parity.FortuneBoard;
-	import Parity.Marketplace;
-	import Parity.World;
-	import Parity.Physiology;
-	import Parity.Embark;
 #endif
 
 export namespace Parity
@@ -75,6 +76,17 @@ export struct Showcase_Reincarnation : Rule {
 		
 		world.event<Next_Adventurer_Turn>();
 		world.event<Vitality_Hurt>(5);
+	}
+};
+
+export struct Showcase_Warfare : Rule {
+	void execute(Overworld &world) override {
+		world.event<Welcome_Adventurer>(2);
+		world.event<First_Adventurer_Turn>();
+		
+		world.event<Summon_Demon>(DemonForm::ElectricMinion, Landmark::DiamondOfParity);
+		
+		world.event<Commencement_Of_Warfare>();
 	}
 };
 

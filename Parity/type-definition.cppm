@@ -202,6 +202,7 @@ export inline const Chromaticon LightWaveExtensionDescriptions;
 export inline std::string_view to_light_wave_description(ApparentColor gradient_color);
 export inline std::multiset<int> transcribe_numerical_dialect(std::string &numerical_dialect);
 
+
 // +++------>>> marketplace.cppm <<<------+++
 
 export struct Open_Shop : Rule {
@@ -220,12 +221,14 @@ export struct Decline_Shop : Rule {
 // +++------>>> marketmedia.cppm <<<------+++
 
 export struct Media_Of_Marketplace : Rule {
+	Overworld *terra = nullptr;
 	void execute(Overworld &world) override;
 	void display_market();
 	void display_player_possesion_hint();
 };
 
 export struct Review_Of_Purchase : Rule {
+	Overworld *terra = nullptr;
 	void execute(Overworld &world) override;
 	void display_purchasement();
 	void display_inventory();
@@ -234,6 +237,11 @@ export struct Review_Of_Purchase : Rule {
 // +++------>>> purchasement.cppm <<<------+++
 
 export struct Purchasement_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	Inventory purchasement;
+	std::multiset<int> transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
 	void execute(Overworld &world) override;
 	void fill_valid_numeral();
 	Optics getOpticsFromNumber(int number);
@@ -295,6 +303,11 @@ export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 	void execute(Overworld &world) override;
 };
+export struct Media_Of_Red_Purple_Gradient : Rule {
+	void execute(Overworld &world) override;
+	static constexpr int reach = 3; // Each outcome corresponds to 3 die results (e.g., 1-3, 4-6)
+	static inline const std::vector<std::string> outcomes;
+};
 export struct Apply_Red_Purple_Gradient_Result : Rule {
 	void execute(Overworld &world) override;
 };
@@ -335,21 +348,12 @@ export inline std::string_view to_string(PlayerIdentity identity);
 
 // +++------>>> physiology.cppm <<<------+++
 
-export struct Welcome_Adventurer : Rule {
-	int amount_of_adventurer;
-	
-	Welcome_Adventurer(int amount);
+export struct Respawn : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Respawn : Rule {
-	void execute(Overworld &world) override {
-	}
-};
-
 export struct Vitality_Death : Rule {
-	void execute(Overworld &world) override {
-	}
+	void execute(Overworld &world) override;
 };
 
 export struct Vitality_Hurt : Rule {
@@ -361,15 +365,14 @@ export struct Vitality_Hurt : Rule {
 export struct Vitality_Hurt_Humanity : Rule {
 	int amount_of_damage;
 	
-	Vitality_Hurt_Humanity(int damage);
+	Vitality_Hurt_Humanity(int damage) : amount_of_damage(damage) {}
 	void execute(Overworld &world) override;
 };
 export struct Vitality_Heal : Rule {
 	int amount_of_healing;
 	
 	Vitality_Heal(int healing) : amount_of_healing(healing) {}
-	void execute(Overworld &world) override {
-	}
+	void execute(Overworld &world) override;
 };
 export struct Gain_Gold_Coin : Rule
 {
@@ -379,7 +382,7 @@ export struct Gain_Gold_Coin : Rule
 };
 export struct Gain_Permanent_Power_Point : Rule {
 	int amount_of_permanent_power;
-	Gain_Permanent_Power_Point(int amount);
+	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}
 	void execute(Overworld &world) override;
 };
 export struct Take_Gold_Coin : Rule
@@ -395,40 +398,11 @@ export struct Gain_Optical_Item : Rule
 	Optics optical_item;
 	int quantity;
 	
-	Gain_Optical_Item(Optics item, int quantity);
+	Gain_Optical_Item(Optics item, int quantity) : optical_item(item), quantity(quantity) {}
 	void execute(Overworld &world) override;
 };
 
-// +++------>>> adventurer.cppm <<<------+++
 
-export template <typename Element_Of_Set>
-	inline Element_Of_Set getNextElement(const std::set<Element_Of_Set>& target_set, Element_Of_Set current_element);
-
-// string repetition for emdash because emdash is a multicharacter string in UTF-8
-export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
-export inline std::string get_ornament_notation(int amount_of_emdash);
-
-export struct Media_Of_Adventurer : Rule {
-	void execute(Overworld &world) override;
-};
-export struct Media_Of_Adventurer_Separator : Rule {
-	void execute(Overworld &world) override;
-};
-export struct First_Adventurer_Turn : Rule {
-	void execute(Overworld &world) override;
-};
-export struct Next_Adventurer_Turn : Rule {
-	void execute(Overworld &world) override;
-};
-
-export struct Execute_As : Rule {
-	PlayerIdentity executor;
-	Execute_As(PlayerIdentity executor_identity);
-	void execute(Overworld &world) override;
-};
-export struct Relinquish_Execution : Rule {
-	void execute(Overworld &world) override;
-};
 
 // +++------>>> necrology.cppm <<<------+++
 
@@ -467,7 +441,53 @@ export struct Summon_Demon : Rule {
 
 
 
+// ##××××-------->>> ./Adventure <<<--------××××##
+//
+//
+//
+//
+//
 
+// +++------>>> adventurer.cppm <<<------+++
+
+
+// +++------>>> adventurer.cppm <<<------+++
+
+export struct Welcome_Adventurer : Rule {
+	int amount_of_adventurer;
+	
+	Welcome_Adventurer(int amount = 0) : amount_of_adventurer(amount) {}
+	void execute(Overworld &world) override;
+};
+
+export template <typename Element_Of_Set>
+	inline Element_Of_Set getNextElement(const std::set<Element_Of_Set>& target_set, Element_Of_Set current_element);
+
+// string repetition for emdash because emdash is a multicharacter string in UTF-8
+export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
+export inline std::string get_ornament_notation(int amount_of_emdash);
+
+export struct Media_Of_Adventurer : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Adventurer_Separator : Rule {
+	void execute(Overworld &world) override;
+};
+export struct First_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Next_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Execute_As : Rule {
+	PlayerIdentity executor;
+	Execute_As(PlayerIdentity executor_identity) : executor(executor_identity) {}
+	void execute(Overworld &world) override;
+};
+export struct Relinquish_Execution : Rule {
+	void execute(Overworld &world) override;
+};
 
 
 // +++------>>> forgather.cppm <<<------+++
@@ -859,11 +879,11 @@ export inline std::string_view to_bracket_notation(Multiplicity multiplicity);
 export inline std::string bag_notation_synthesis(std::string &content_inside_bag);
 export inline std::string archangel_notation_synthesis(std::string &content_inside_archangel);
 
+//
 // +++------>>> accoutrement.cppm <<<------+++
 
 export struct Query_Of_Passage : Rule {
-	void execute(Overworld &world) override {
-	}
+	void execute(Overworld &world) override;
 };
 export struct Media_Of_Embark : Rule {
 	void execute(Overworld &world) override;
@@ -900,13 +920,11 @@ export struct Decline_Journey : Rule {
 // +++------>>> passagedecision.cppm <<<------+++
 
 export struct Listen_Passage_Dialect : Rule {
-	void execute(Overworld &world) override {
-	}
+	void execute(Overworld &world) override;
 };
 
 export struct Resolve_Passage_Dialect : Rule {
-	void execute(Overworld &world) override {
-	}
+	void execute(Overworld &world) override;
 };
 
 export struct Apply_Passage_Dialect : Rule {
@@ -929,13 +947,13 @@ export struct Move_One_Space : Rule {
 
 export struct Move_One_Space_Optional : Rule {
 	int amount_of_optional_move;
-	Move_One_Space_Optional(int amount);
+	Move_One_Space_Optional(int amount = 1) : amount_of_optional_move(amount) {}
 	void execute(Overworld &world) override;
 };
 
 export struct Apply_Optional_Journey : Rule {
 	int amount_of_optional_move;
-	Apply_Optional_Journey(int amount);
+	Apply_Optional_Journey(int amount) : amount_of_optional_move(amount) {}
 	void execute(Overworld &world) override;
 };
 
@@ -1072,7 +1090,10 @@ export struct Showcase_Reincarnation : Rule {
 	void execute(Overworld &world) override {
 	}
 };
-
+export struct Showcase_Warfare : Rule {
+	void execute(Overworld &world) override {
+	}
+};
 
 
 

@@ -7,11 +7,13 @@ export module Parity.EventBoard;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
-	import Parity.DieRoll;
-	import Parity.FortuneBoard;
-	import Parity.Physiology;
 	import Parity.World;
 	import Parity.Announcement;
+	
+	import Parity.DieRoll;
+	
+	import Parity.FortuneBoard;
+	import Parity.Physiology;
 #endif
 
 export namespace Parity

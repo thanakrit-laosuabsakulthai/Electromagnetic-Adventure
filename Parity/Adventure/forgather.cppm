@@ -8,8 +8,10 @@ export module Parity.Forgather;
 	import std; // Standard library import
 	import Parity.World;
 	import Parity.Announcement;
-	import Parity.Adventurer;
+	
 	import Parity.Encyclopedia;
+	
+	import Parity.Adventure;
 #endif
 
 // decision of how many adventurers are in the game

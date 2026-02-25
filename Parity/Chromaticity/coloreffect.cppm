@@ -11,6 +11,7 @@ export module Parity.ColorEffect;
 	
 	import Parity.Geography;
 	import Parity.Notation;
+	
 	import Parity.Physiology;
 	import Parity.FortuneBoard;
 	import Parity.Chromaticity;
@@ -54,181 +55,140 @@ export inline std::string activation_synthesis(ApparentColor color) {
 	);
 }
 
-export struct Pink_Color_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Vitality_Heal>(1);
-		world.announce.result("Heal 1 Heart (unless already at maximum Hearts)");
-	}
-};
+void Pink_Color_Effect::execute(Overworld &world) {
+	world.event<Vitality_Heal>(1);
+	world.announce.result("Heal 1 Heart (unless already at maximum Hearts)");
+}
 
-export struct Green_Color_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Lucky_Board>();
-		world.announce.result(std::format(
-			"Trigger the {} once",
-			bold_cyan("Lucky Board")
-		));
-	}
-};
+void Green_Color_Effect::execute(Overworld &world) {
+	world.event<Lucky_Board>();
+	world.announce.result(std::format(
+		"Trigger the {} once",
+		bold_cyan("Lucky Board")
+	));
+}
 
-export struct Orange_Color_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Event_Board>();
-		world.announce.result(std::format(
-			"Trigger the {} once",
-			bold_cyan("Event Board")
-		));
-	}
-};
+void Orange_Color_Effect::execute(Overworld &world) {
+	world.event<Event_Board>();
+	world.announce.result(std::format(
+		"Trigger the {} once",
+		bold_cyan("Event Board")
+	));
+}
 
-export struct Yellow_Color_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Gain_Gold_Coin>(1);
-		world.event<Open_Shop>();
-		
-		/* world.announce.result("Gain 1 Gold Coin, and you may purchase items from the Shop Board"); */
-		world.announce.result(std::format(
-			"Gain {}, and you may purchase items from the {}",
-			bold_cyan("1 Gold Coin"),
-			bold_cyan("Shop Board")
-		));
-	}
-};
-
-export struct Red_Color_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Unlucky_Board>();
-		world.announce.result(std::format(
-			"Trigger the {} once",
-			bold_cyan("Unlucky Board")
-		));
-	}
-};
-
-export struct Purple_Color_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Demon_Board>();
-		world.announce.result(std::format(
-			"Trigger the {} once",
-			bold_cyan("Demon Board")
-		));
-	}
-};
-
-export struct Roll_For_Chromaticity : Rule {
-	void execute(Overworld &world) override {
-		world.die_roll_for_chromaticity = static_cast<DieRoll>((std::rand() % 6) + 1);
-		world.announce.bygone(std::format(
-			"Rolled [{}] for Chromaticity.",
-			static_cast<int>(world.die_roll_for_chromaticity)
-		));
-	}
-};
-
-export struct Media_Of_Pink_Orange_Yellow_Gradient : Rule {
-	void execute(Overworld &world) override {
-		world.announce.linger("Roll 1 die and apply the result...");	
-		world.announce.beginChoice();
-		
-		for (int i = 0; i < outcomes.size(); ++i) {
-			world.announce.range(outcomes[i], reach);
-		}
-	}
+void Yellow_Color_Effect::execute(Overworld &world) {
+	world.event<Gain_Gold_Coin>(1);
+	world.event<Open_Shop>();
 	
-	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
+	/* world.announce.result("Gain 1 Gold Coin, and you may purchase items from the Shop Board"); */
+	world.announce.result(std::format(
+		"Gain {}, and you may purchase items from the {}",
+		bold_cyan("1 Gold Coin"),
+		bold_cyan("Shop Board")
+	));
+}
+
+void Red_Color_Effect::execute(Overworld &world) {
+	world.event<Unlucky_Board>();
+	world.announce.result(std::format(
+		"Trigger the {} once",
+		bold_cyan("Unlucky Board")
+	));
+}
+
+void Purple_Color_Effect::execute(Overworld &world) {
+	world.event<Demon_Board>();
+	world.announce.result(std::format(
+		"Trigger the {} once",
+		bold_cyan("Demon Board")
+	));
+}
+
+void Roll_For_Chromaticity::execute(Overworld &world) {
+	world.die_roll_for_chromaticity = static_cast<DieRoll>((std::rand() % 6) + 1);
+	world.announce.bygone(std::format(
+		"Rolled [{}] for Chromaticity.",
+		static_cast<int>(world.die_roll_for_chromaticity)
+	));
+}
+
+void Media_Of_Pink_Orange_Yellow_Gradient::execute(Overworld &world) {
+	world.announce.linger("Roll 1 die and apply the result...");	
+	world.announce.beginChoice();
 	
-	static inline const std::vector<std::string> outcomes = {
-		"Yellow space effect.",
-		"Orange space effect.",
-		"Pink space effect."
-	};
-};
-
-export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
-	void execute(Overworld &world) override {
-		using enum DieRoll;
-		
-		int outcome_index = (static_cast<int>(world.die_roll_for_chromaticity) - 1) / Media_Of_Pink_Orange_Yellow_Gradient::reach;
-		world.announce.linger(std::format(
-			"Activate {}",
-			Media_Of_Pink_Orange_Yellow_Gradient::outcomes[outcome_index]
-		));
-		
-		switch (world.die_roll_for_chromaticity) {
-		case One:
-		case Two:
-			world.event<Yellow_Color_Effect>();
-			break;
-		case Three:
-		case Four:
-			world.event<Orange_Color_Effect>();
-			break;
-		case Five:
-		case Six:
-			world.event<Pink_Color_Effect>();
-			break;
-		}
+	for (int i = 0; i < outcomes.size(); ++i) {
+		world.announce.range(outcomes[i], reach);
 	}
-};
+}
 
-export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Media_Of_Pink_Orange_Yellow_Gradient>();
-		world.event<Roll_For_Chromaticity>();
-		world.event<Apply_Pink_Orange_Yellow_Gradient_Result>();
-	}
-};
-
-export struct Media_Of_Red_Purple_Gradient : Rule {
-	void execute(Overworld &world) override {
-		world.announce.linger("Roll 1 die and apply the result...");	
-		world.announce.beginChoice();
-		
-		for (int i = 0; i < outcomes.size(); ++i) {
-			world.announce.range(outcomes[i], reach);
-		}
-	}
+void Apply_Pink_Orange_Yellow_Gradient_Result::execute(Overworld &world) {
+	using enum DieRoll;
 	
-	static constexpr int reach = 3; // Each outcome corresponds to 3 die results (e.g., 1-3, 4-6)
+	int outcome_index = (static_cast<int>(world.die_roll_for_chromaticity) - 1) / Media_Of_Pink_Orange_Yellow_Gradient::reach;
+	world.announce.linger(std::format(
+		"Activate {}",
+		Media_Of_Pink_Orange_Yellow_Gradient::outcomes[outcome_index]
+	));
 	
-	static inline const std::vector<std::string> outcomes = {
-		"Purple space effect.",
-		"Red space effect."
-	};
-};
-
-export struct Apply_Red_Purple_Gradient_Result : Rule {
-	void execute(Overworld &world) override {
-		using enum DieRoll;
-		
-		int outcome_index = (static_cast<int>(world.die_roll_for_chromaticity) - 1) / Media_Of_Red_Purple_Gradient::reach;
-		world.announce.linger(std::format(
-			"Activate {}",
-			Media_Of_Red_Purple_Gradient::outcomes[outcome_index]
-		));
-		
-		switch (world.die_roll_for_chromaticity) {
-		case One:
-		case Two:
-		case Three:
-			world.event<Purple_Color_Effect>();
-			break;
-		case Four:
-		case Five:
-		case Six:
-			world.event<Red_Color_Effect>();
-			break;
-		}
+	switch (world.die_roll_for_chromaticity) {
+	case One:
+	case Two:
+		world.event<Yellow_Color_Effect>();
+		break;
+	case Three:
+	case Four:
+		world.event<Orange_Color_Effect>();
+		break;
+	case Five:
+	case Six:
+		world.event<Pink_Color_Effect>();
+		break;
 	}
-};
+}
 
-export struct Red_Purple_Gradient_Effect : Rule {
-	void execute(Overworld &world) override {
-		world.event<Media_Of_Red_Purple_Gradient>();
-		world.event<Roll_For_Chromaticity>();
-		world.event<Apply_Red_Purple_Gradient_Result>();
+void Pink_Orange_Yellow_Gradient_Effect::execute(Overworld &world) {
+	world.event<Media_Of_Pink_Orange_Yellow_Gradient>();
+	world.event<Roll_For_Chromaticity>();
+	world.event<Apply_Pink_Orange_Yellow_Gradient_Result>();
+}
+
+void Media_Of_Red_Purple_Gradient::execute(Overworld &world) {
+	world.announce.linger("Roll 1 die and apply the result...");	
+	world.announce.beginChoice();
+	
+	for (int i = 0; i < outcomes.size(); ++i) {
+		world.announce.range(outcomes[i], reach);
 	}
-};
+}
+
+void Apply_Red_Purple_Gradient_Result::execute(Overworld &world) {
+	using enum DieRoll;
+	
+	int outcome_index = (static_cast<int>(world.die_roll_for_chromaticity) - 1) / Media_Of_Red_Purple_Gradient::reach;
+	world.announce.linger(std::format(
+		"Activate {}",
+		Media_Of_Red_Purple_Gradient::outcomes[outcome_index]
+	));
+	
+	switch (world.die_roll_for_chromaticity) {
+	case One:
+	case Two:
+	case Three:
+		world.event<Purple_Color_Effect>();
+		break;
+	case Four:
+	case Five:
+	case Six:
+		world.event<Red_Color_Effect>();
+		break;
+	}
+}
+
+void Red_Purple_Gradient_Effect::execute(Overworld &world) {
+	world.event<Media_Of_Red_Purple_Gradient>();
+	world.event<Roll_For_Chromaticity>();
+	world.event<Apply_Red_Purple_Gradient_Result>();
+}
 
 
 void Activate_Color_Effect::execute(Overworld &world) {

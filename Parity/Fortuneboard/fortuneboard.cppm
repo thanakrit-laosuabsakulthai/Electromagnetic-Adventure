@@ -7,9 +7,10 @@ export module Parity.FortuneBoard;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
-	import Parity.DieRoll;
 	import Parity.World;
 	import Parity.Announcement;
+	
+	import Parity.DieRoll;
 #endif
 
 export namespace Parity

@@ -8,65 +8,90 @@ export module Parity.Journey;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
-	import Parity.Geography;
 	import Parity.World;
+	
+	import Parity.Geography;
 	import Parity.Expedition;
-	import Parity.Accoutrement;
-	import Parity.PassageDecision;
-	import Parity.Embark;
 #endif
 
 export namespace Parity {
+//
+// +++------>>> accoutrement.cppm <<<------+++
 
-export struct Move_One_Space : Rule {
-	void execute(Overworld &world) override {
-		world.expedition.is_journey_optional = false; // This move is not optional
-		world.event<Media_Of_Journey>();
-		world.event<Embark>();
-		world.event<Choice_Of_Passage>();
-		world.event<Decision_Of_Passage>();
-		world.event<Travel>();
-		world.event<Arrival>();
-	}
+export struct Query_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Embark : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Journey : Rule {
+	void execute(Overworld &world) override;
 };
 
-// Forward declaration
+// +++------>>> embark.cppm <<<------+++
 
-struct Apply_Optional_Journey;
+export struct Embark : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+export struct Choice_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Travel : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Arrival : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Decline_Journey : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> passagedecision.cppm <<<------+++
+
+export struct Listen_Passage_Dialect : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Resolve_Passage_Dialect : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Passage_Dialect : Rule {
+	
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	bool validate_choice(Direction chosen_direction);
+	bool validate_dialect(const std::string& player_input);
+};
+
+export struct Decision_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> journey.cppm <<<------+++
+
+export struct Move_One_Space : Rule {
+	void execute(Overworld &world) override;
+};
 
 export struct Move_One_Space_Optional : Rule {
 	int amount_of_optional_move;
 	Move_One_Space_Optional(int amount = 1) : amount_of_optional_move(amount) {}
-	
-	void execute(Overworld &world) override {
-		
-		if (amount_of_optional_move > 0) {
-			world.expedition.is_journey_optional = true;
-			world.event<Media_Of_Journey>();
-			world.event<Embark>();
-			world.event<Choice_Of_Passage>();
-			world.event<Decision_Of_Passage>();
-			world.event<Apply_Optional_Journey>(amount_of_optional_move);
-		}
-	}
+	void execute(Overworld &world) override;
 };
 
 export struct Apply_Optional_Journey : Rule {
 	int amount_of_optional_move;
 	Apply_Optional_Journey(int amount) : amount_of_optional_move(amount) {}
-	
-	void execute(Overworld &world) override {
-		if (world.expedition.is_journey_declined) {
-			world.event<Decline_Journey>();
-		} else {
-			world.event<Travel>();
-			world.event<Arrival>();
-			// If there are more optional moves left, ask the player if they want to move again
-			if (amount_of_optional_move > 1) {
-				world.event<Move_One_Space_Optional>(amount_of_optional_move - 1);
-			}
-		}
-	}
+	void execute(Overworld &world) override;
 };
+
 
 } // namespace Parity

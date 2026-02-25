@@ -10,11 +10,12 @@ export module Parity.Expedition;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
+	
 	import Parity.Geography;
 	import Parity.Biology;
-	import Parity.Announcement;
 	import Parity.Notation;
 	import Parity.Necrology;
+	
 #endif
 
 export namespace Parity {

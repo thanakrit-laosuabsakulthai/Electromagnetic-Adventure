@@ -8,88 +8,143 @@ export module Parity.Embark;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
-	import Parity.Geography;
 	import Parity.World;
 	import Parity.Announcement;
+	
+	import Parity.Geography;
 	import Parity.Notation;
 	import Parity.Encyclopedia;
 	import Parity.Expedition;
-	import Parity.Accoutrement;
+	
 	import Parity.Chromaticity;
+	import Parity.Journey;
 #endif
 
 export namespace Parity {
 
 // Set the landmark of beginning as the current location of the active player
-export struct Embark : Rule {
-	void execute(Overworld &world) override {
-		
-		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
-		world.event<Media_Of_Embark>(); // In accountrement.cppm
-	}
-};
+void Embark::execute(Overworld &world) {
+	
+	world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
+	world.event<Media_Of_Embark>(); // In accountrement.cppm
+}
+
 
 // Populate the choice_of_direction based on the passageway of the landmark of beginning
-export struct Choice_Of_Passage : Rule {
-	void execute(Overworld &world) override {
-		world.event<Media_Of_Passage>(); // In accountrement.cppm
-		
-		Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
-		Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
-		world.expedition.choice_of_direction.clear();
-		for (const auto& pathway : passageway_of_beginning) {
-			if (is_restricted_path(pathway.pathType)) {
-				continue; // Skip restricted paths when adding choices
-			}
-			
-			world.expedition.choice_of_direction.add(pathway.direction);
+void Choice_Of_Passage::execute(Overworld &world) {
+	world.event<Media_Of_Passage>(); // In accountrement.cppm
+	
+	Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
+	Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
+	world.expedition.choice_of_direction.clear();
+	for (const auto& pathway : passageway_of_beginning) {
+		if (is_restricted_path(pathway.pathType)) {
+			continue; // Skip restricted paths when adding choices
 		}
+		
+		world.expedition.choice_of_direction.add(pathway.direction);
 	}
-};
+}
+
 
 // Write the landmark_of_destination based on the chosen_direction and the passageway of the landmark of beginning
-export struct Travel : Rule {
-	void execute(Overworld &world) override {
-		world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
-		
-		Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
-		Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
-		
-		for (const auto& pathway : passageway_of_beginning) {
-			if (pathway.direction == world.expedition.chosen_direction) {
-				world.expedition.landmark_of_destination = pathway.destination;
-				return;
-			}
+void Travel::execute(Overworld &world) {
+	world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
+	
+	Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
+	Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
+	
+	for (const auto& pathway : passageway_of_beginning) {
+		if (pathway.direction == world.expedition.chosen_direction) {
+			world.expedition.landmark_of_destination = pathway.destination;
+			return;
 		}
-		
-		// If the chosen direction is not valid, stay in the same place
-		world.expedition.landmark_of_destination = world.expedition.landmark_of_beginning;
 	}
-};
+	
+	// If the chosen direction is not valid, stay in the same place
+	world.expedition.landmark_of_destination = world.expedition.landmark_of_beginning;
+}
+
 
 // Using the municipality to teleport the active player to the landmark of destination
-export struct Arrival : Rule {
-	void execute(Overworld &world) override {
-		world.announce.result(std::format(
-			"{} chose {}",
-			world.getActivePlayerName(),
-			bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination))
-		));
-		
-		world.expedition.municipality.teleport(world.active_player, world.expedition.landmark_of_destination);
-		world.event<Activate_Color_Effect>(); // In chromaticity.cppm
-	}
-};
+void Arrival::execute(Overworld &world) {
+	world.announce.result(std::format(
+		"{} chose {}",
+		world.getActivePlayerName(),
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination))
+	));
+	
+	world.expedition.municipality.teleport(world.active_player, world.expedition.landmark_of_destination);
+	world.event<Activate_Color_Effect>(); // In chromaticity.cppm
+}
 
-export struct Decline_Journey : Rule {
-	void execute(Overworld &world) override {
-		world.announce.result(std::format(
-			"{} stayed on {}",
-			world.getActivePlayerName(),
-			bold_cyan(world.appearanzonality(world.expedition.landmark_of_beginning))
-		));
+
+void Decline_Journey::execute(Overworld &world) {
+	world.announce.result(std::format(
+		"{} stayed on {}",
+		world.getActivePlayerName(),
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_beginning))
+	));
+}
+
+
+
+
+
+
+
+
+
+void Move_One_Space::execute(Overworld &world) {
+	world.expedition.is_journey_optional = false; // This move is not optional
+	world.event<Media_Of_Journey>();
+	world.event<Embark>();
+	world.event<Choice_Of_Passage>();
+	world.event<Decision_Of_Passage>();
+	world.event<Travel>();
+	world.event<Arrival>();
+}
+
+
+
+void Move_One_Space_Optional::execute(Overworld &world) {
+	
+	if (amount_of_optional_move > 0) {
+		world.expedition.is_journey_optional = true;
+		world.event<Media_Of_Journey>();
+		world.event<Embark>();
+		world.event<Choice_Of_Passage>();
+		world.event<Decision_Of_Passage>();
+		world.event<Apply_Optional_Journey>(amount_of_optional_move);
 	}
-};
+}
+
+void Apply_Optional_Journey::execute(Overworld &world) {
+	if (world.expedition.is_journey_declined) {
+		world.event<Decline_Journey>();
+	} else {
+		world.event<Travel>();
+		world.event<Arrival>();
+		// If there are more optional moves left, ask the player if they want to move again
+		if (amount_of_optional_move > 1) {
+			world.event<Move_One_Space_Optional>(amount_of_optional_move - 1);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 } // namespace Parity

@@ -8,6 +8,7 @@ export module Parity.Notation;
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
+	
 	import Parity.Geography;
 	import Parity.Encyclopedia;
 #endif

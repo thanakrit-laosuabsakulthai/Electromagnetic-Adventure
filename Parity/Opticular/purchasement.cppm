@@ -11,46 +11,23 @@ export module Parity.Purchasement;
 	import std; // Standard library import
 	import Parity.World;
 	import Parity.Announcement;
+	
 	import Parity.Optoelectronic;
 	import Parity.OpticalNotation;
+	
+	import Parity.Marketplace;
 #endif
 
 export namespace Parity
 {
 //
 
-export struct Purchasement_Of_Optics : Rule {
-	Overworld *terra = nullptr;
-	
-	Inventory purchasement;
-	std::multiset<int> transcribed_numerical_dialect; 
-	std::set<int> valid_numeral; // based on the current marketplace size
-	
-	void execute(Overworld &world) override {
-		terra = &world;
-		concentrate();
-		// After concentration, the local purchasement is expected to be valid and can be applied to the world state
-		world.purchasement = purchasement; // Apply the valid purchasement to the world state
-	}
-	void fill_valid_numeral();
-	Optics getOpticsFromNumber(int number);
-	
-	void query();
-	
-	bool validate_dialect(std::string &player_input);
-	void apply_dialect(std::string &player_input);
-	
-	bool validate_numerical_dialect();
-	void apply_numerical_dialect();
-	
-	bool validate_choice();
-	
-	void clause_decline_shop();
-	void clause_invalid();
-	
-	void end_concentration();
-	void concentrate();
-};
+void Purchasement_Of_Optics::execute(Overworld &world) {
+	terra = &world;
+	concentrate();
+	// After concentration, the local purchasement is expected to be valid and can be applied to the world state
+	world.purchasement = purchasement; // Apply the valid purchasement to the world state
+}
 
 void Purchasement_Of_Optics::concentrate() {
 	Overworld &world = *terra;

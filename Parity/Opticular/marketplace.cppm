@@ -1,104 +1,82 @@
 export module Parity.Marketplace;
 
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
+	#include <set>
 	#include <map>
 	#include <string>
 	#include <format>
 	#include "../type-definition.cppm"
 #else
 	import std; // Standard library import
-	import Parity.Optoelectronic;
-	import Parity.OpticalNotation;
 	import Parity.World;
 	import Parity.Announcement;
-	import Parity.Physiology;
-	import Parity.Purchasement;
-	import Parity.MarketMedia;
+	
+	import Parity.Optoelectronic;
 #endif
 
 export namespace Parity
 {
+//
 
-export struct Decline_Shop : Rule {
-	void execute(Overworld &world) override {
-		world.announce.result(std::format(
-			"{} chose to not purchase any items from the Shop.",
-			world.getActivePlayerName()
-		));
-	}
-};
-
-export struct Apply_Purchasement_Result : Rule {
-	void execute(Overworld &world) override {
-		Inventory purchasement = world.purchasement;
-		MarketValuation marketplace = world.marketplace;
-		
-		std::map<Optics, int> item_count;
-		for (const auto& item : purchasement) {
-			item_count[item]++;
-		}
-		
-		// don't check for any constraint
-		for (const auto& [optic, count] : item_count) {
-			world.event<Gain_Optical_Item>(optic, count);
-		}
-		
-		int total_cost = 0;
-		for (const auto& item : purchasement) {
-			total_cost += marketplace.at(item);
-		}
-		
-		world.event<Take_Gold_Coin>(total_cost);
-	}
-};
-
-export struct Apply_Purchasement_Of_Optics : Rule {
-	void execute(Overworld &world) override {
-		Inventory purchasement = world.purchasement;
-		
-		if (purchasement.empty()) {
-			world.event<Decline_Shop>();
-		} else {
-			world.event<Review_Of_Purchase>();
-			world.event<Apply_Purchasement_Result>();
-		}
-
-	}
-};
-
+// +++------>>> marketplace.cppm <<<------+++
 
 export struct Open_Shop : Rule {
-	void execute(Overworld &world) override {
-		PlayerIdentity active_player = world.active_player;
-		PlayerPosession &possession = world.playerbase[active_player];
-		
-		if (possession.gold_coin == 0) {
-			world.announce.result(std::format(
-				"{} has no Gold Coins and cannot purchase items from the Shop Board.",
-				world.getActivePlayerName()
-			));
-			return;
-		}
-		
-		int inventory_capacity = possession.inventory_capacity;
-		int current_inventory_size = static_cast<int>(possession.inventory.size());
-		
-		if (current_inventory_size >= inventory_capacity) {
-			world.announce.result(std::format(
-				"{} already has {} item{} in inventory and cannot purchase more from the Shop Board.",
-				world.getActivePlayerName(),
-				current_inventory_size,
-				current_inventory_size == 1 ? "" : "s"
-			));
-			return;
-		}
-		
-		world.event<Media_Of_Marketplace>();
-		world.event<Purchasement_Of_Optics>();
-		world.event<Apply_Purchasement_Of_Optics>();
-	}
+	void execute(Overworld &world) override;
+};
+export struct Apply_Purchasement_Of_Optics : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Apply_Purchasement_Result : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Decline_Shop : Rule {
+	void execute(Overworld &world) override;
 };
 
+// +++------>>> marketmedia.cppm <<<------+++
+
+export struct Media_Of_Marketplace : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_market();
+	void display_player_possesion_hint();
+};
+
+export struct Review_Of_Purchase : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_purchasement();
+	void display_inventory();
+};
+
+// +++------>>> purchasement.cppm <<<------+++
+
+export struct Purchasement_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	Inventory purchasement;
+	std::multiset<int> transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	Optics getOpticsFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	bool validate_choice();
+	
+	void clause_decline_shop();
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
+};
 
 } // namespace Parity
 
