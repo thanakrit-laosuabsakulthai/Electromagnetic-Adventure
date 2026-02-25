@@ -71,7 +71,7 @@
 	- electromagnetic:die_roll_for_attacker 
 	- electromagnetic:die_roll_for_defender
 	- electromagnetic:advantage_dice_roll_for_attacker
-	- electromagnetic:advantage_dice_roll_for_defender 
+	- electromagnetic:advantage_dice_roll_for_defender
 	- electromagnetic:summon
 	- electromagnetic:teleport
 	- electromagnetic:kill

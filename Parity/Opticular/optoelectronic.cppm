@@ -2,6 +2,7 @@ export module Parity.Optoelectronic;
 
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <set>
+	#include <map>
 	#include <string>
 	#include "../type-definition.cppm"
 #else
@@ -13,7 +14,7 @@ export namespace Parity
 
 export enum class OpticalEffect {
 	Advantage,
-	Weakness,
+	Ascendancy,
 	Repulsion,
 	Chromatic,
 	Collimation

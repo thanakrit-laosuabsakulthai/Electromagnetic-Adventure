@@ -41,6 +41,25 @@ export inline std::string_view to_string(DemonForm demon_form) {
 }
 
 export using DemonSeriality = int;
-export using DemonPossession = std::map<DemonSeriality, DemonForm>;
+export using DemonManifest = std::map<DemonSeriality, DemonForm>;
 export using Demonity = std::set<DemonSeriality>;
+export using DemonMalignity = std::map<DemonForm, int>; // Attack Power
+
+export DemonMalignity MalignityOfDemonForm{
+	{DemonForm::ElectricMinion, 1},
+	{DemonForm::MagneticDemon, 3},
+	{DemonForm::MagneticMageDemon, 10},
+	{DemonForm::ElectromagneticDemonBoss, 30}
+};
+
+
+/* 
+2.  **Electric Minion:** Base Power = 1.
+3.  **Magnetic Demon:** Base Power = 3.
+4.  **Magnetic Mage Demon:** Base Power = 10.
+5.  **Electromagnetic Demon Boss:** Base Power = 30.
+*/
+
+
+
 } // namespace Parity

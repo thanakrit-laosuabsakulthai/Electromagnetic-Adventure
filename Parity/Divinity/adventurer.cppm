@@ -8,7 +8,6 @@ export module Parity.Adventurer;
 	import std; // Standard library import
 	import Parity.World;
 	import Parity.Biology;
-	import Parity.Physiology;
 	import Parity.Announcement;
 	import Parity.Geography;
 #endif
@@ -102,6 +101,21 @@ export struct Next_Adventurer_Turn : Rule {
 	}
 };
 
+export struct Execute_As : Rule {
+	PlayerIdentity executor;
+	Execute_As(PlayerIdentity executor_identity) : executor(executor_identity) {}
+	
+	void execute(Overworld &world) override {
+		world.active_player = executor;
+	}
+};
+
+export struct Relinquish_Execution : Rule {
+	void execute(Overworld &world) override {
+		world.active_player = world.turn_of_adventurer; // Revert active player to the current adventurer in turn
+	}
+};
+
 // ---+++ overworld methods +++---
 
 std::string_view Overworld::getActivePlayerName() {
@@ -126,14 +140,20 @@ void Overworld::firstAdventurer() {
 	if (humanity.empty()) {
 		throw std::runtime_error("No adventurers in the game.");
 	}
-	active_player = *humanity.begin();
+	turn_of_adventurer = *humanity.begin(); 
+	active_player = turn_of_adventurer;
+	
+	announce.beginConsequential();
 }
 
 void Overworld::nextAdventurer() {
 	if (humanity.empty()) {
 		throw std::runtime_error("No adventurers in the game.");
 	}
-	active_player = getNextElement(humanity, active_player);
+	turn_of_adventurer = getNextElement(humanity, turn_of_adventurer);
+	active_player = turn_of_adventurer;
+	
+	announce.beginConsequential();
 }
 
 } // namespace Parity

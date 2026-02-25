@@ -10,11 +10,13 @@ export module Parity.World;
 	import std; // Standard library import
 	import Parity.DieRoll;
 	import Parity.Biology;
+	import Parity.Necrology;
 	import Parity.Geography;
 	import Parity.Expedition;
 	import Parity.Announcement;
 	import Parity.Encyclopedia;
 	import Parity.Optoelectronic;
+	import Parity.Battlefield;
 #endif
 
 
@@ -55,11 +57,23 @@ export class Overworld
 	Treasury playerbase;
 	Humanity humanity;
 	PlayerIdentity active_player;
+	PlayerIdentity turn_of_adventurer;
 	int player_count = 1;
 	int maximum_player_count = 4;
 	std::string_view getActivePlayerName();
 	void firstAdventurer();
 	void nextAdventurer();
+	
+	// +++ necrology +++
+	DemonSeriality active_demon_seriality;
+	DemonForm getActiveDemonForm();
+	Landmark getLandmarkOfActiveDemon();
+	
+	// +++ warfare-battlefield +++
+	Battlefield battlefield;
+	
+	
+	
 	
 	// +++ opticular +++
 	MarketValuation marketplace = Marketplace;

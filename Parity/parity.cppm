@@ -16,6 +16,7 @@ export module Parity;
 	#include "Divinity/biology.cppm"
 	#include "Divinity/adventurer.cppm"
 	#include "Divinity/forgather.cppm"
+	#include "Divinity/necromancy.cppm"
 
 	#include "Cartography/geography.cppm"
 	#include "Cartography/notation.cppm"
@@ -35,6 +36,15 @@ export module Parity;
 	#include "Chromaticity/chromaticity.cppm"
 	#include "Chromaticity/coloreffect.cppm"
 	
+	#include "Showcase/subdivision.cppm"
+	#include "Showcase/amusement.cppm"
+	
+	#include "Warfare/warfare.cppm"
+	#include "Warfare/battlefield.cppm"
+	#include "Warfare/armament.cppm"
+	#include "Warfare/combat.cppm"
+	#include "Warfare/simulation.cppm"
+	
 	
 #else
 	export import Parity.World;
@@ -52,6 +62,7 @@ export module Parity;
 	export import Parity.Biology;
 	export import Parity.Adventurer;
 	export import Parity.Forgather;
+	export import Parity.Necromancy;
 	
 	export import Parity.Geography;
 	export import Parity.Notation;
@@ -70,4 +81,13 @@ export module Parity;
 	
 	export import Parity.Chromaticity;
 	export import Parity.ColorEffect;
+	
+	export import Parity.Subdivision;
+	// export import Parity.Amusement;
+	
+	export import Parity.Warfare;
+	export import Parity.Battlefield;
+	// export import Parity.Armament;
+	// export import Parity.Combat;
+	export import Parity.Simulation;
 #endif

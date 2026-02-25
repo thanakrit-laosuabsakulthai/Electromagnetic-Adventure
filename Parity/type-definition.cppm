@@ -46,11 +46,20 @@ export class Overworld
 	Treasury playerbase;
 	Humanity humanity;
 	PlayerIdentity active_player;
+	PlayerIdentity turn_of_adventurer;
 	int player_count;
 	int maximum_player_count;
 	std::string_view getActivePlayerName();
 	void firstAdventurer();
 	void nextAdventurer();
+	
+	// +++ necrology +++
+	DemonSeriality active_demon_seriality;
+	DemonForm getActiveDemonForm();
+	Landmark getLandmarkOfActiveDemon();
+	
+	// +++ warfare-battlefield +++
+	Battlefield battlefield;
 	
 	// +++ opticular +++
 	const MarketValuation marketplace;
@@ -115,6 +124,7 @@ public:
 	std::string getAnalogLexicon();
 	std::string getRangeLexicon(int reach);
 	
+	void beginConsequential();
 	void action(const std::string& content_append_action);
 	void result(const std::string& content_append_result);
 	void bygone(const std::string& content_of_bygone);
@@ -160,7 +170,7 @@ public:
 
 export enum class OpticalEffect {
 	Advantage,
-	Weakness,
+	Ascendancy,
 	Repulsion,
 	Chromatic,
 	Collimation
@@ -321,10 +331,10 @@ export struct PlayerPosession {
 
 export using Treasury = std::map<PlayerIdentity, PlayerPosession>;
 export using Humanity = std::set<PlayerIdentity>;
+export inline std::string_view to_string(PlayerIdentity identity);
 
 // +++------>>> physiology.cppm <<<------+++
 
-export inline std::string_view to_string(PlayerIdentity identity);
 export struct Welcome_Adventurer : Rule {
 	int amount_of_adventurer;
 	
@@ -346,6 +356,12 @@ export struct Vitality_Hurt : Rule {
 	int amount_of_damage;
 	
 	Vitality_Hurt(int damage) : amount_of_damage(damage) {}
+	void execute(Overworld &world) override;
+};
+export struct Vitality_Hurt_Humanity : Rule {
+	int amount_of_damage;
+	
+	Vitality_Hurt_Humanity(int damage);
 	void execute(Overworld &world) override;
 };
 export struct Vitality_Heal : Rule {
@@ -405,6 +421,15 @@ export struct Next_Adventurer_Turn : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Execute_As : Rule {
+	PlayerIdentity executor;
+	Execute_As(PlayerIdentity executor_identity);
+	void execute(Overworld &world) override;
+};
+export struct Relinquish_Execution : Rule {
+	void execute(Overworld &world) override;
+};
+
 // +++------>>> necrology.cppm <<<------+++
 
 
@@ -418,8 +443,32 @@ export enum class DemonForm {
 export inline std::string_view to_string(DemonForm demon_form);
 
 export using DemonSeriality = int;
-export using DemonPossession = std::map<DemonSeriality, DemonForm>;
+export using DemonManifest = std::map<DemonSeriality, DemonForm>;
 export using Demonity = std::set<DemonSeriality>;
+
+export using DemonMalignity = std::map<DemonForm, int>; // Attack Power
+
+export DemonMalignity MalignityOfDemonForm;
+
+// +++------>>> necromancy.cppm <<<------+++
+
+
+export struct Summon_Demon : Rule {
+	DemonForm demonform;
+	Landmark landmark_of_summoning;
+	
+	Summon_Demon(DemonForm demonform, Landmark landmark_of_summoning);
+	void execute(Overworld &world) override;
+};
+
+
+
+
+
+
+
+
+
 
 // +++------>>> forgather.cppm <<<------+++
 
@@ -435,6 +484,139 @@ export struct Forgather_of_Adventurer : Rule {
 	bool validate_dialect(std::string &player_input);
 	void get_player_choice();
 };
+
+
+
+
+
+
+// ##××××-------->>> ./Warfare <<<--------××××##
+//
+//
+//
+//
+
+// +++------>>> battlefield.cppm <<<------+++
+
+export enum class BattleResult {
+	PlayerWins,
+	PlayerLoses,
+	Draw
+};
+
+export struct Battlefield {
+	DieRoll die_roll_for_combat_strength;
+	DieRoll die_roll_for_attacker;
+	DieRoll die_roll_for_defender;
+	DieRoll advantage_die_roll_for_attacker;
+	DieRoll advantage_die_roll_for_defender;
+	
+	PlayerIdentity combatant_player;
+	DemonForm combatant_demon;
+	
+	bool advantage_of_player;
+	bool advantage_of_demon;
+	bool collimation_of_player;
+	bool weakness_of_demon;
+	
+	int attack_power_modification_of_attacker;
+	int attack_power_modification_of_defender;
+	
+	
+	int attack_power_of_attacker;
+	int attack_power_of_defender;
+	int combat_strength_of_attacker;
+	int combat_strength_of_defender;
+	int attack_value_of_attacker;
+	int attack_value_of_defender;
+	
+	BattleResult battle_result;
+	
+	DemonMalignity malignity = MalignityOfDemonForm;
+};
+
+// +++------>>> armament.cppm <<<------+++
+// +++------>>> combat.cppm <<<------+++
+// +++------>>> simulation.cppm <<<------+++
+// +++------>>> warfare.cppm <<<------+++
+
+export struct Discord_Of_Beligerence : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Warfare_Iridescence : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Warfare_Iridescence : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Read_Attack_Power : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Attack_Power : Rule {
+	void execute(Overworld &world) override;
+	std::string power_of_synthesis(int attack_power, int attack_power_modification);
+	std::string modification_synthesis(int attack_power_modification);
+};
+
+export struct Roll_For_Combat_Strength : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Read_Combat_Strength : Rule {
+	std::string clause;
+	Read_Combat_Strength(const std::string& clause);
+	void execute(Overworld &world) override;
+};
+export struct Apply_Combat_Strength_Result : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Fate_Of_Combat_Strength : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Combat_Strength : Rule {
+	void execute(Overworld &world) override;
+	std::string discard_of_synthesis(DieRoll normal_die_roll, DieRoll advantage_die_roll);
+	std::string strength_of_synthesis(int combat_strength);
+	std::string dice_synthesis(int roll_number);
+};
+
+export struct Compute_Attack_Value : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Media_Of_Attack_Value : Rule {
+	void execute(Overworld &world) override;
+	std::string attack_value_synthesis(int attack_value, int opponent_attack_value);
+};
+
+
+export struct Preparation_Of_Combat : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Combat_Of_Fates : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Combat_Clause_Draw : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Combat_Clause_Player_Wins : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Combat_Clause_Player_Loses : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Resolution_Of_Combat : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Apply_Combat_Result : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Commencement_Of_Warfare : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+
 
 
 
@@ -560,7 +742,7 @@ export Geography Atlas;
 export inline bool is_arrow_path(const Path& path);
 export inline bool is_restricted_path(const Path& path);
 export inline bool is_gradient_color(const ApparentColor& color);
-
+export inline bool is_demon_zone(const Zone& zone);
 // +++------>>> notation.cppm <<<------+++
 
 export inline std::string_view to_string(Landmark landmark);
@@ -621,15 +803,18 @@ export using DemonLocator = std::map<Landmark, Demonity>;
 export struct AntiDivinity {
 	DemonLocation demon_location;
 	DemonLocator demon_locator;
+	DemonManifest demon_manifest;
+	int next_demon_seriality;
 	
 	void teleport(DemonSeriality target_demon, Landmark landmark_of_destination);
 	
-	Landmark getLandmarkOf(DemonSeriality demon) const;
-	Demonity getDemonityAt(Landmark landmark) const;
+	Landmark getLandmarkOf(DemonSeriality demon);
+	Demonity getDemonityAt(Landmark landmark);
 	
-	void addDemon(DemonSeriality demon, Landmark landmark);
+	void addDemon(DemonForm demon_form, Landmark landmark);
 	void removeDemon(DemonSeriality demon);
 };
+
 
 export struct Expedition
 {
@@ -856,6 +1041,46 @@ export struct Demon_Board : Rule
 {
 	void execute(Overworld &world) override;
 };
+
+
+
+// ##××××-------->>> ./Showcase <<<--------××××##
+//
+//
+//
+//
+
+// +++------>>> subdivision.cppm <<<------+++
+
+export struct Showcase_Movement : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+export struct Showcase_Fortuneboard : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+export struct Showcase_Marketplace : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+export struct Showcase_Adventurer_Turn : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+export struct Showcase_Reincarnation : Rule {
+	void execute(Overworld &world) override {
+	}
+};
+
+
+
+
+
+
+
+
+
 
 
 

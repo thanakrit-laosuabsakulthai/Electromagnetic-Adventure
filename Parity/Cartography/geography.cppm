@@ -306,6 +306,10 @@ export inline bool is_gradient_color(const ApparentColor& color) {
 	return color == PinkOrangeYellowGradient || color == RedPurpleGradient || color == WhiteGrayGradient;
 }
 
+export inline bool is_demon_zone(const Zone& zone) {
+	return zone == Zone::DemonZone;
+}
+
 } // End of namespace Parity
 
 /* 

@@ -145,6 +145,10 @@ public:
 		return bold("» Choice {}: ");
 	}
 	
+	void beginConsequential() {
+		consequential_ordinal = 0;
+	}
+	
 	void action(const std::string& content_append_action) {
 		consequential_ordinal++;
 		clause = MediaClause::MediaBullet;

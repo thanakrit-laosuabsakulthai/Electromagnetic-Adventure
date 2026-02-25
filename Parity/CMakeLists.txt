@@ -18,6 +18,7 @@ target_sources(Parity PRIVATE
     Divinity/biology.cppm
     Divinity/adventurer.cppm
     Divinity/forgather.cppm
+    Divinity/necromancy.cppm
     
     Cartography/geography.cppm
     Cartography/notation.cppm
@@ -36,4 +37,13 @@ target_sources(Parity PRIVATE
     
     Chromaticity/chromaticity.cppm
     Chromaticity/coloreffect.cppm
+    
+    Showcase/subdivision.cppm
+    Showcase/amusement.cppm
+    
+    Warfare/warfare.cppm
+	Warfare/battlefield.cppm
+	Warfare/armament.cppm
+	Warfare/combat.cppm
+	Warfare/simulation.cppm
  )

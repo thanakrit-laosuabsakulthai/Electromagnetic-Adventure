@@ -76,7 +76,7 @@ export using DemonLocator = std::map<Landmark, Demonity>;
 export struct AntiDivinity {
 	DemonLocation demon_location;
 	DemonLocator demon_locator;
-	DemonPossession demon_possession;
+	DemonManifest demon_manifest;
 	int next_demon_seriality = 1; // Start from 1 for better readability
 	
 	void teleport(DemonSeriality target_demon, Landmark landmark_of_destination) {
@@ -101,7 +101,7 @@ export struct AntiDivinity {
 		DemonSeriality demon_seriality = next_demon_seriality++;
 		demon_location[demon_seriality] = landmark;
 		demon_locator[landmark].insert(demon_seriality);
-		demon_possession[demon_seriality] = demon_form;
+		demon_manifest[demon_seriality] = demon_form;
 	}
 	
 	void removeDemon(DemonSeriality demon) {
@@ -111,8 +111,8 @@ export struct AntiDivinity {
 		demon_location.erase(demon);
 		// Update demon_locator
 		demon_locator[landmark_of_demon].erase(demon);
-		// Update demon_possession
-		demon_possession.erase(demon);
+		// Update demon_manifest
+		demon_manifest.erase(demon);
 	}
 };
 
@@ -125,8 +125,8 @@ export struct Expedition
 	OmniDirection choice_of_direction;
 	bool is_journey_optional = false;
 	bool is_journey_declined = false;
-	Municipality municipality;
-	AntiDivinity antidivinity;
+	Municipality municipality = {};
+	AntiDivinity antidivinity = {};
 };
 
 } // namespace Parity

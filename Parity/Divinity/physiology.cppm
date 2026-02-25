@@ -13,28 +13,17 @@ export module Parity.Physiology;
 	import Parity.Journey;
 	import Parity.World;
 	import Parity.OpticalNotation;
+	import Parity.Adventurer;
 #endif
 
 export namespace Parity
 {
 
-export inline std::string_view to_string(PlayerIdentity identity) {
-	using enum PlayerIdentity;
-	static const std::map<PlayerIdentity, std::string_view> identityToString = {
-		{AmethystApprentice, "AmethystApprentice"},
-		{SapphireSummoner, "SapphireSummoner"},
-		{EmeraldEnchantress, "EmeraldEnchantress"},
-		{OpalinOracle, "OpalinOracle"}
-	};
-
-	return identityToString.at(identity);
-}
 
 /* - *Inflicted damage of 1 vitality heart to SapphireSummoner*
 1.  **Player Characters:** All have Base Power = 1, Maximum Hearts = 5.
 Each can hold up to 4 items. If a player dies (reaches 0 Hearts), they return to the Pink Diamond space and lose *all* their Gold and Items.
 */
-
 
 export struct Respawn : Rule {
 	void execute(Overworld &world) override {
@@ -104,6 +93,25 @@ export struct Vitality_Hurt : Rule {
 		}
 	}
 };
+
+
+export struct Vitality_Hurt_Humanity : Rule {
+	int amount_of_damage;
+	
+	Vitality_Hurt_Humanity(int damage) : amount_of_damage(damage) {}
+	void execute(Overworld &world) override {
+		
+		for (const PlayerIdentity& player : world.humanity) {
+			world.announce.subtitle(std::format("Targeting {} for damage.", to_string(player)));
+			
+			world.event<Execute_As>(player);
+			world.event<Vitality_Hurt>(amount_of_damage);
+		}
+		
+		world.event<Relinquish_Execution>();
+	}
+};
+
 
 export struct Vitality_Heal : Rule {
 	int amount_of_healing;
@@ -202,5 +210,6 @@ export struct Gain_Optical_Item : Rule
 		));
 	}
 };
+
 
 } // namespace Parity
