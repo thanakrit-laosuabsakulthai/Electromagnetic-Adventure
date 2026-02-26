@@ -169,4 +169,71 @@ void Gain_Optical_Item::execute(Overworld &world) {
 }
 
 
+// helper function to remove a specific quantity of an optical item from inventory
+export inline void remove_optical_item_from_inventory(PlayerPosession &possession, Optics item, int quantity) {
+	auto it = possession.inventory.find(item);
+	int removed_count = 0;
+	while (it != possession.inventory.end() && *it == item && removed_count < quantity) {
+		it = possession.inventory.erase(it);
+		++removed_count;
+	}
+}
+
+void Take_Optical_Item::execute(Overworld &world) {
+	PlayerPosession &possession = world.playerbase[world.active_player];
+	
+	int current_quantity = static_cast<int>(possession.inventory.count(optical_item));
+	int quantity_to_remove = std::min(quantity, current_quantity); // Ensure we don't remove more than the player has
+	
+	
+	
+	if (quantity_to_remove == 0) {
+		return;
+	}
+	
+	remove_optical_item_from_inventory(possession, optical_item, quantity_to_remove);
+	
+	world.announce.bygone(std::format(
+		"Cleared {} [{}] from {}.",
+		quantity_to_remove,
+		to_string(optical_item),
+		world.getActivePlayerName()
+	));
+}
+
+
+void Gain_Optical_Effect::execute(Overworld &world) {
+	PlayerPosession &possession = world.playerbase[world.active_player];
+	Iridescent iridescent_of_active_player = possession.active_optical_effect;
+	
+	iridescent_of_active_player.insert(optical_effect);
+	
+	world.announce.bygone(std::format(
+		"Applied [{}] effect to {}.",
+		to_string(optical_effect),
+		world.getActivePlayerName()
+	));
+}
+
+void Take_Optical_Effect::execute(Overworld &world) {
+	PlayerPosession &possession = world.playerbase[world.active_player];
+	Iridescent iridescent_of_active_player = possession.active_optical_effect;
+	
+	iridescent_of_active_player.erase(optical_effect);
+	
+	world.announce.bygone(std::format(
+		"Removed [{}] effect from {}.",
+		to_string(optical_effect),
+		world.getActivePlayerName()
+	));
+}
+
+
+
+
+
+
+
+
+
 } // namespace Parity

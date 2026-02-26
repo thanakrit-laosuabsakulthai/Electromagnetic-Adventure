@@ -23,6 +23,7 @@ export struct Dialect {
 	std::string_view below_right = "sd";
 	std::string_view decline_journey = "x";
 	std::string_view decline_shop = "x";
+	std::string_view decline_consumption = "x";
 };
 
 export inline constexpr Dialect Encyclopedia{};

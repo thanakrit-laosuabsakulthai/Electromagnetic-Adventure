@@ -33,7 +33,26 @@ export struct Decline_Shop : Rule {
 	void execute(Overworld &world) override;
 };
 
-// +++------>>> marketmedia.cppm <<<------+++
+export struct Open_Inventory : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Consumption_Of_Optics : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Consumption_Result : Rule {
+	Overworld *terra = nullptr;
+	
+	void execute(Overworld &world) override;
+	void apply_optical_item(Optics item);
+};
+
+export struct Decline_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+	// +++------>>> marketmedia.cppm <<<------+++
 
 export struct Media_Of_Marketplace : Rule {
 	Overworld *terra = nullptr;
@@ -47,6 +66,23 @@ export struct Review_Of_Purchase : Rule {
 	void execute(Overworld &world) override;
 	void display_purchasement();
 	void display_inventory();
+};
+
+export struct Media_Of_Consumption : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_consumption();
+};
+
+export struct Review_Of_Consumption : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_item_consumption(Optics item);
+	void display_fortune_consumption();
+	void display_combat_consumption();
+	void display_repulsion_consumption();
+	void display_culinary_consumption();
+	void display_chromatic_consumption();
 };
 
 // +++------>>> purchasement.cppm <<<------+++
@@ -77,6 +113,74 @@ export struct Purchasement_Of_Optics : Rule {
 	void end_concentration();
 	void concentrate();
 };
+
+// +++------>>> consumption.cppm <<<------+++
+
+export struct Consumption_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	Inventory consumption;
+	std::multiset<int> transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	Optics getOpticsFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	void clause_decline_consumption();
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
+};
+
+// +++------>>> optometrist.cppm <<<------+++
+
+export struct Excellece_Of_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_RadioWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_MicroWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_InfraredWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_LightWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_UltravioletWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_XRays : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_GammaRays : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+
+
+
+
+
 
 } // namespace Parity
 

@@ -21,6 +21,7 @@ export module Parity;
 	#include "Adventure/adventurer.cppm"
 	#include "Adventure/forgather.cppm"
 	#include "Adventure/adventure.cppm"
+	#include "Adventure/traverser.cppm"
 
 	#include "Cartography/geography.cppm"
 	#include "Cartography/notation.cppm"
@@ -30,6 +31,9 @@ export module Parity;
 	#include "Cartography/journey.cppm"
 	#include "Cartography/accoutrement.cppm"
 	#include "Cartography/passagedecision.cppm"
+	#include "Cartography/scoutfly.cppm"
+	#include "Cartography/peril.cppm"
+	#include "Cartography/entropy.cppm"
 	
 	#include "Opticular/optoelectronic.cppm"
 	#include "Opticular/opticalnotation.cppm"
@@ -37,6 +41,8 @@ export module Parity;
 	#include "Opticular/marketmedia.cppm"
 	#include "Opticular/purchasement.cppm"
 	#include "Opticular/marketeer.cppm"
+	#include "Opticular/optometrist.cppm"
+	#include "Opticular/consumption.cppm"
 	
 	#include "Chromaticity/chromaticity.cppm"
 	#include "Chromaticity/coloreffect.cppm"
@@ -72,7 +78,7 @@ export module Parity;
 	export import Parity.Adventurer;
 	export import Parity.Forgather;
 	export import Parity.Adventure;
-	
+	//export import Parity.Traverser;
 	
 	export import Parity.Geography;
 	export import Parity.Notation;
@@ -82,6 +88,9 @@ export module Parity;
 	export import Parity.Journey;
 	export import Parity.Accoutrement;
 	export import Parity.PassageDecision;
+	export import Parity.ScoutFly;
+	export import Parity.Peril;
+	export import Parity.Entropy;
 	
 	export import Parity.Optoelectronic;
 	export import Parity.OpticalNotation;
@@ -89,6 +98,8 @@ export module Parity;
 	export import Parity.MarketMedia;
 	export import Parity.Purchasement;
 	export import Parity.Marketeer;
+	export import Parity.Optometrist;
+	export import Parity.Consumption;
 	
 	export import Parity.Chromaticity;
 	export import Parity.ColorEffect;

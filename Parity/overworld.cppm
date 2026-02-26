@@ -72,12 +72,11 @@ export class Overworld
 	// +++ warfare-battlefield +++
 	Battlefield battlefield;
 	
-	
-	
-	
 	// +++ opticular +++
 	MarketValuation marketplace = Marketplace;
 	Inventory purchasement;
+	Inventory consumption;
+	Inventory potential_consumption;
 	
 	/// +++ rule-event +++
 	int amount_of_new_event = 0;

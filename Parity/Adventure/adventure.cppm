@@ -63,7 +63,7 @@ export struct Relinquish_Execution : Rule {
 export struct Forgather_of_Adventurer : Rule {
 	
 	Overworld *terra;
-	int player_choice;
+	int player_choice = 0;
 	
 	void execute(Overworld &world) override;
 	
@@ -71,6 +71,20 @@ export struct Forgather_of_Adventurer : Rule {
 	bool validate_choice(int choice);
 	bool validate_dialect(std::string &player_input);
 	void get_player_choice();
+};
+
+// +--->>> traverser.cppm <<<---+++
+
+export struct Corruption_Of_Landmark : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Forecast_Of_Combat : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Rule_Of_Adventure : Rule {
+	void execute(Overworld &world) override;
 };
 
 

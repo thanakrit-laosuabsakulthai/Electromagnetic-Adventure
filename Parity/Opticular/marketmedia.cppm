@@ -12,6 +12,7 @@ export module Parity.MarketMedia;
 	import Parity.Optoelectronic;
 	import Parity.OpticalNotation;
 	import Parity.Biology;
+	import Parity.Notation;
 	import Parity.Encyclopedia;
 	
 	import Parity.Marketplace;
@@ -185,5 +186,131 @@ void Review_Of_Purchase::display_inventory() {
 	4. ==Radio Waves==
 	- AmethystApprentice now has ==0 Gold Coins==.
 */
+
+/* 
+- **» Action 2:** SapphireSummoner may use item in their inventory:
+	- [x] **‹Ultraviolet Waves›** Use this item when entering a space with a demon. The demon retreats 1 space, and combat does not occur. This item cannot be used in the Demon Zone.
+	- [ ] Ignore item usage.
+- **« Result 2:** SapphireSummoner conjured the ‹Ultraviolet Waves› as the demons retreat from the repulsion.
+- *Clear 1 [Ultraviolet Waves] from SapphireSummoner*
+*/
+
+void Media_Of_Consumption::execute(Overworld &world) {
+	terra = &world; // for helper functions
+	
+	world.announce.action(std::format(
+		"{} may consume items from their inventory.",
+		world.getActivePlayerName()
+	));
+	
+	display_consumption();
+}
+
+void Media_Of_Consumption::display_consumption() {
+	Overworld &world = *terra;
+	Inventory& potential_consumption = world.potential_consumption;
+	
+	world.announce.beginChoice();
+	
+	for (const auto& item : potential_consumption) {
+		std::string item_name = std::string(to_string(item));
+		
+		world.announce.choice(std::format("{} {}",
+			bold_acute(item_name),
+			to_description(item)
+		));
+	}
+	
+	world.announce.choice("Ignore item usage.");
+}
+
+void Review_Of_Consumption::execute(Overworld &world) {
+	terra = &world; // for helper functions
+	
+	// see only the first item in consumption for display,
+	// since the player can only consume one class of items at a time
+	if (!world.consumption.empty()) {
+		Optics item_to_display = *world.consumption.begin();
+		display_item_consumption(item_to_display);
+	}
+}
+
+void Review_Of_Consumption::display_item_consumption(Optics item) {
+	switch (item) {
+	case Optics::RadioWaves:
+		display_fortune_consumption();
+		break;
+	case Optics::MicroWaves:
+		display_culinary_consumption();
+		break;
+	case Optics::InfraredWaves:
+	case Optics::XRays:
+	case Optics::GammaRays:
+		display_combat_consumption();
+		break;
+	case Optics::LightWaves:
+		display_chromatic_consumption();
+		break;
+	case Optics::UltravioletWaves:
+		display_repulsion_consumption();
+		break;
+	}
+}
+
+void Review_Of_Consumption::display_fortune_consumption() {
+	Overworld &world = *terra;
+	
+	world.announce.result(std::format("{} conjured the {} as the Lucky Board blessed them with fortune.",
+		world.getActivePlayerName(),
+		bold_acute(std::string(to_string(Optics::RadioWaves)))
+	));
+}
+
+void Review_Of_Consumption::display_combat_consumption() {
+	Overworld &world = *terra;
+	
+	std::string display_of_warfare = "";
+	
+	for (const auto& item : world.consumption) {
+		if (item == Optics::InfraredWaves || item == Optics::XRays || item == Optics::GammaRays) {
+			display_of_warfare += std::format("{} ",
+				bold_acute(std::string(to_string(item)))
+			);
+		}
+	}
+	
+	world.announce.result(std::format("{} conjured {}to empower their combat.",
+		world.getActivePlayerName(),
+		display_of_warfare
+	));
+}
+
+void Review_Of_Consumption::display_repulsion_consumption() {
+	Overworld &world = *terra;
+	
+	world.announce.result(std::format("{} conjured the {} as the demons retreat from the repulsion.",
+		world.getActivePlayerName(),
+		bold_acute(std::string(to_string(Optics::UltravioletWaves)))
+	));
+}
+
+void Review_Of_Consumption::display_culinary_consumption() {
+	Overworld &world = *terra;
+	
+	world.announce.result(std::format("{} conjured the {} to cook the demon's meat, healing 1 Heart upon consumption.",
+		world.getActivePlayerName(),
+		bold_acute(std::string(to_string(Optics::MicroWaves)))
+	));
+}
+
+void Review_Of_Consumption::display_chromatic_consumption() {
+	Overworld &world = *terra;
+	
+	world.announce.result(std::format("{} conjured the {} as {} covers in radiance.",
+		world.getActivePlayerName(),
+		bold_acute(std::string(to_string(Optics::LightWaves))),
+		to_string(world.getLandmarkOfActivePlayer())
+	));
+}
 
 } // namespace Parity

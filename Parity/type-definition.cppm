@@ -64,6 +64,8 @@ export class Overworld
 	// +++ opticular +++
 	const MarketValuation marketplace;
 	Inventory purchasement;
+	Inventory consumption;
+	Inventory potential_consumption;
 	
 	// +++ rule-event +++
 	int amount_of_new_event;
@@ -96,6 +98,9 @@ export enum class FormattingNotation {
 };
 
 export inline std::string_view to_notation(FormattingNotation notation);
+
+export inline std::string bold_acute(const std::string content);
+
 export inline std::string format_with_notation(FormattingNotation notation, const std::string& content);
 export inline std::string bold(const std::string content);
 export inline std::string italic(const std::string content);
@@ -195,7 +200,9 @@ export MarketValuation Marketplace;
 
 
 export inline std::string_view to_string(Optics optical_item);
+export inline std::string_view to_string(OpticalEffect optical_effect);
 export inline std::string_view to_description(Optics optical_item);
+
 enum class ApparentColor; // forward declaration for some reason
 export using Chromaticon = std::map<ApparentColor, std::string_view>;
 export inline const Chromaticon LightWaveExtensionDescriptions;
@@ -218,7 +225,26 @@ export struct Decline_Shop : Rule {
 	void execute(Overworld &world) override;
 };
 
-// +++------>>> marketmedia.cppm <<<------+++
+export struct Open_Inventory : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Consumption_Of_Optics : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Consumption_Result : Rule {
+	Overworld *terra = nullptr;
+	
+	void execute(Overworld &world) override;
+	void apply_optical_item(Optics item);
+};
+
+export struct Decline_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+	// +++------>>> marketmedia.cppm <<<------+++
 
 export struct Media_Of_Marketplace : Rule {
 	Overworld *terra = nullptr;
@@ -232,6 +258,23 @@ export struct Review_Of_Purchase : Rule {
 	void execute(Overworld &world) override;
 	void display_purchasement();
 	void display_inventory();
+};
+
+export struct Media_Of_Consumption : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_consumption();
+};
+
+export struct Review_Of_Consumption : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_item_consumption(Optics item);
+	void display_fortune_consumption();
+	void display_combat_consumption();
+	void display_repulsion_consumption();
+	void display_culinary_consumption();
+	void display_chromatic_consumption();
 };
 
 // +++------>>> purchasement.cppm <<<------+++
@@ -262,6 +305,72 @@ export struct Purchasement_Of_Optics : Rule {
 	void end_concentration();
 	void concentrate();
 };
+
+// +++------>>> consumption.cppm <<<------+++
+
+export struct Consumption_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	Inventory consumption;
+	std::multiset<int> transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	Optics getOpticsFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	void clause_decline_consumption();
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
+};
+
+// +++------>>> optometrist.cppm <<<------+++
+
+export struct Excellece_Of_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_RadioWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_MicroWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_InfraredWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_LightWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_UltravioletWaves : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_XRays : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Consumption_Of_GammaRays : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+
+
+
 
 // +++------>>> chromaticity.cppm <<<------+++
 
@@ -402,6 +511,32 @@ export struct Gain_Optical_Item : Rule
 	void execute(Overworld &world) override;
 };
 
+export struct Take_Optical_Item : Rule
+{
+	Optics optical_item;
+	int quantity;
+	
+	Take_Optical_Item(Optics item, int quantity) : optical_item(item), quantity(quantity) {}
+	void execute(Overworld &world) override;
+};
+
+// helper function to remove a specific quantity of an optical item from inventory
+export inline void remove_optical_item_from_inventory(PlayerPosession &possession, Optics item, int quantity);
+
+export struct Gain_Optical_Effect : Rule
+{
+	OpticalEffect optical_effect;
+	Gain_Optical_Effect(OpticalEffect effect) : optical_effect(effect) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Take_Optical_Effect : Rule
+{
+	OpticalEffect optical_effect;
+	Take_Optical_Effect(OpticalEffect effect) : optical_effect(effect) {}
+	void execute(Overworld &world) override;
+};
+
 
 
 // +++------>>> necrology.cppm <<<------+++
@@ -504,6 +639,24 @@ export struct Forgather_of_Adventurer : Rule {
 	bool validate_dialect(std::string &player_input);
 	void get_player_choice();
 };
+
+// +--->>> traverser.cppm <<<---+++
+
+export struct Corruption_Of_Landmark : Rule {
+	void execute(Overworld &world) override;
+};
+export struct Forecast_Of_Combat : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Rule_Of_Adventure : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+
+
+
 
 
 
@@ -865,6 +1018,7 @@ export struct Dialect {
 	std::string_view below_right;
 	std::string_view decline_journey;
 	std::string_view decline_shop;
+	std::string_view decline_consumption;
 };
 
 export constexpr Dialect Encyclopedia;
@@ -956,6 +1110,43 @@ export struct Apply_Optional_Journey : Rule {
 	Apply_Optional_Journey(int amount) : amount_of_optional_move(amount) {}
 	void execute(Overworld &world) override;
 };
+
+// +++------>>> scoutfly.cppm <<<------+++
+
+export struct March_Towards_Entropy : Rule {
+	int amount_of_march;
+	March_Towards_Entropy(int amount) : amount_of_march(amount) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Knockback_One_Space : Rule {
+	void execute(Overworld &world) override;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

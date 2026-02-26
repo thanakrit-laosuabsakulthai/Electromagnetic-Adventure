@@ -77,5 +77,27 @@ export struct Gain_Optical_Item : Rule
 	void execute(Overworld &world) override;
 };
 
+export struct Take_Optical_Item : Rule
+{
+	Optics optical_item;
+	int quantity;
+	
+	Take_Optical_Item(Optics item, int quantity) : optical_item(item), quantity(quantity) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Gain_Optical_Effect : Rule
+{
+	OpticalEffect optical_effect;
+	Gain_Optical_Effect(OpticalEffect effect) : optical_effect(effect) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Take_Optical_Effect : Rule
+{
+	OpticalEffect optical_effect;
+	Take_Optical_Effect(OpticalEffect effect) : optical_effect(effect) {}
+	void execute(Overworld &world) override;
+};
 
 } // namespace Parity

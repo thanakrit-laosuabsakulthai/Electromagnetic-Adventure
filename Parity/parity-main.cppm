@@ -33,7 +33,11 @@ int main()
 	
 	// world.event<Showcase_Adventurer_Turn>();
 	// world.event<Showcase_Reincarnation>();
-	world.event<Showcase_Movement>();
+	// world.event<Showcase_Movement>();
+	
+	world.event<Welcome_Adventurer>(1);
+	world.event<First_Adventurer_Turn>();
+	world.event<Excellece_Of_Consumption>();
 	
 	world.main_loop();
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 

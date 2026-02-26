@@ -19,27 +19,16 @@ export module Parity.Forgather;
 export namespace Parity
 {
 
-export struct Forgather_of_Adventurer : Rule {
+void Forgather_of_Adventurer::execute(Overworld &world) {
+	terra = &world;
 	
-	Overworld *terra = nullptr;
-	int player_choice = 0;
+	world.announce.caption("Choose the number of adventurers in the game.");
+	get_player_choice();
 	
-	void execute(Overworld &world) override {
-		terra = &world;
-		
-		world.announce.caption("Choose the number of adventurers in the game.");
-		get_player_choice();
-		
-		world.announce.redact(); // Remove the caption after getting the player's choice
-		world.player_count = player_choice;
-		world.event<Welcome_Adventurer>();
-	}
-	
-	void query();
-	bool validate_choice(int choice);
-	bool validate_dialect(std::string &player_input);
-	void get_player_choice();
-};
+	world.announce.redact(); // Remove the caption after getting the player's choice
+	world.player_count = player_choice;
+	world.event<Welcome_Adventurer>();
+}
 
 void Forgather_of_Adventurer::query() {
 	Overworld &world = *terra;

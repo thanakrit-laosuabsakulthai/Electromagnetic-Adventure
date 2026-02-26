@@ -23,6 +23,7 @@ target_sources(Parity PRIVATE
     Adventure/adventurer.cppm
     Adventure/forgather.cppm
     Adventure/adventure.cppm
+    Adventure/traverser.cppm
     
     Cartography/geography.cppm
     Cartography/notation.cppm
@@ -32,6 +33,9 @@ target_sources(Parity PRIVATE
     Cartography/journey.cppm
     Cartography/accoutrement.cppm
     Cartography/passagedecision.cppm
+    Cartography/scoutfly.cppm
+    Cartography/peril.cppm
+    Cartography/entropy.cppm
     
     Opticular/optoelectronic.cppm
     Opticular/opticalnotation.cppm
@@ -39,6 +43,8 @@ target_sources(Parity PRIVATE
     Opticular/marketmedia.cppm
     Opticular/purchasement.cppm
     Opticular/marketeer.cppm
+    Opticular/optometrist.cppm
+    Opticular/consumption.cppm
     
     Chromaticity/chromaticity.cppm
     Chromaticity/coloreffect.cppm

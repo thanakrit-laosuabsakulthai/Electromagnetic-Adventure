@@ -45,6 +45,7 @@ export inline std::string_view to_notation(FormattingNotation notation) {
 	return formattingLexiconToString.at(notation);
 }
 
+
 export inline std::string format_with_notation(FormattingNotation notation, const std::string& content) {
 	std::string_view notation_template = to_notation(notation);
 	return std::vformat(notation_template, std::make_format_args(content));
@@ -80,6 +81,10 @@ export inline std::string bold_cyan(const std::string content) {
 
 export inline std::string bold_italic_cyan(const std::string content) {
 	return bold(italic(cyan(content)));
+}
+
+export inline std::string bold_acute(const std::string content) {
+	return bold("‹" + content + "›");
 }
 
 export class Announcement {

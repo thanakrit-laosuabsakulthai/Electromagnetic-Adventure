@@ -3,7 +3,6 @@ export module Parity.Purchasement;
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <string>
 	#include <format>
-	#include <sstream>
 	#include <set>
 	#include <regex>
 	#include "../type-definition.cppm"
