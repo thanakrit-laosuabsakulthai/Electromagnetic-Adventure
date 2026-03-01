@@ -310,6 +310,11 @@ export inline bool is_demon_zone(const Zone& zone) {
 	return zone == Zone::DemonZone;
 }
 
+export inline bool is_safe_zone(const Zone& zone) {
+	return zone == Zone::SafeZone;
+}
+
+
 } // End of namespace Parity
 
 /* 

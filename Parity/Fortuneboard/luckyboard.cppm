@@ -73,7 +73,7 @@ export struct Apply_Lucky_Board_Result : Rule
 		applyLuckyBoardResult(world, world.die_roll_for_fortune_board);
 	}
 	void applyLuckyBoardResult(Overworld &world, DieRoll roll) {
-		world.announce.result(Media_Of_Lucky_Board::outcomes[static_cast<int>(roll) - 1]);
+		std::string result_description = Media_Of_Lucky_Board::outcomes[static_cast<int>(roll) - 1];
 		
 		int multiplier = 1;
 		if (roll != DieRoll::Two) {
@@ -86,22 +86,42 @@ export struct Apply_Lucky_Board_Result : Rule
 			for (int i = 0; i < multiplier; ++i) {
 				world.event<Event_Board>();
 			}
+			if (multiplier > 1) {
+				world.announce.result(std::format(
+					"Trigger the {} {} times.",
+					bold_cyan("Event Board"),
+					multiplier
+				));
+			} else {
+				world.announce.result(std::format(
+					"Trigger the {} once.",
+					bold_cyan("Event Board")
+				));
+			}
 			break;
 		case Two:
 			world.event<Double_Lucky_Board_Multiplier>();
 			world.event<Lucky_Board>();
+			world.announce.result(std::format(
+				"Trigger the {} again, but the result is doubled.",
+				bold_cyan("Lucky Board")
+			));
 			break;
 		case Three:
 			world.event<Move_Again_One_Space>();
+			world.announce.result(result_description);
 			break;
 		case Four:
 			world.event<Gain_Gold_Coin>(1 * multiplier);
+			world.announce.result(result_description);
 			break;
 		case Five:
 			world.event<Gain_Permanent_Power_Point>(1 * multiplier);
+			world.announce.result(result_description);
 			break;
 		case Six:
 			world.event<Gain_Gold_Coin>(5 * multiplier);
+			world.announce.result(result_description);
 			break;
 		}
 	}

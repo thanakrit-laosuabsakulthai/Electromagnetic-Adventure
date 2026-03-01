@@ -61,27 +61,43 @@ export struct Apply_Event_Board_Result : Rule
 		applyEventBoardResult(world, world.die_roll_for_fortune_board);
 	}
 	void applyEventBoardResult(Overworld &world, DieRoll roll) {
-		world.announce.result(Media_Of_Event_Board::outcomes[static_cast<int>(roll) - 1]);
+		// world.announce.result(Media_Of_Event_Board::outcomes[static_cast<int>(roll) - 1]);
+		std::string result_description = Media_Of_Event_Board::outcomes[static_cast<int>(roll) - 1];
 		
 		using enum DieRoll;
 		switch (roll) {
 		case One:
 			world.event<Demon_Board>();
+			world.announce.result(std::format(
+				"Trigger the {} once.",
+				bold_cyan("Demon Board")
+			));
 			break;
 		case Two:
 			world.event<Unlucky_Board>();
+			world.announce.result(std::format(
+				"Trigger the {} once.",
+				bold_cyan("Unlucky Board")
+			));
 			break;
 		case Three:
 			world.event<Lucky_Board>();
+			world.announce.result(std::format(
+				"Trigger the {} once.",
+				bold_cyan("Lucky Board")
+			));
 			break;
 		case Four:
 			// Logic to allow the player to purchase an item from the shop
+			world.announce.result(result_description);
 			break;
 		case Five:
 			world.event<All_Players_Gain_Gold_Coin>(1);
+			world.announce.result(result_description);
 			break;
 		case Six:
 			// Logic to roll a die and give the player a free random item from the shop
+			world.announce.result(result_description);
 			break;
 		}
 	}

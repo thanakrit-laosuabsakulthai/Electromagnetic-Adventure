@@ -18,7 +18,7 @@ export module Parity.Adventurer;
 
 export namespace Parity
 {
-//
+// 
 
 void Rule_Of_Adventure::execute(Overworld &world) {
 }

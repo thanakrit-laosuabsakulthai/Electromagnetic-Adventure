@@ -96,16 +96,6 @@ void Next_Adventurer_Turn::execute(Overworld &world) {
 }
 
 
-void Execute_As::execute(Overworld &world) {
-	world.active_player = executor;
-}
-
-
-void Relinquish_Execution::execute(Overworld &world) {
-	world.active_player = world.turn_of_adventurer; // Revert active player to the current adventurer in turn
-}
-
-
 // ---+++ overworld methods +++---
 
 std::string_view Overworld::getActivePlayerName() {

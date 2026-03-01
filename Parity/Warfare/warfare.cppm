@@ -9,6 +9,7 @@ export module Parity.Warfare;
 	import Parity.Biology;
 	import Parity.Necrology;
 	import Parity.DieRoll;
+	import Parity.Geography;
 #endif
 
 export namespace Parity
@@ -88,6 +89,16 @@ export struct Apply_Combat_Result : Rule {
 export struct Commencement_Of_Warfare : Rule {
 	void execute(Overworld &world) override;
 };
+
+export struct Potential_Of_Warfare : Rule {
+	Landmark target_landmark;
+	Potential_Of_Warfare(Landmark target_landmark) : target_landmark(target_landmark) {}
+	void execute(Overworld &world) override;
+};
+
+
+
+
 
 
 }

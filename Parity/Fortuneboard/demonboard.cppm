@@ -36,6 +36,26 @@ export namespace Parity
 {
 //
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export struct Media_Of_Demon_Board : Rule {
 	void execute(Overworld &world) override {
 		world.announce.subtitle("Roll 1 die and apply the result...");

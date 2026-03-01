@@ -23,6 +23,16 @@ Each can hold up to 4 items. If a player dies (reaches 0 Hearts), they return to
 
 // +++------>>> physiology.cppm <<<------+++
 
+export struct Execute_As : Rule {
+	PlayerIdentity executor;
+	Execute_As(PlayerIdentity executor_identity) : executor(executor_identity) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Relinquish_Execution : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Respawn : Rule {
 	void execute(Overworld &world) override;
 };
@@ -97,6 +107,11 @@ export struct Take_Optical_Effect : Rule
 {
 	OpticalEffect optical_effect;
 	Take_Optical_Effect(OpticalEffect effect) : optical_effect(effect) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Take_All_Optical_Effects : Rule
+{
 	void execute(Overworld &world) override;
 };
 

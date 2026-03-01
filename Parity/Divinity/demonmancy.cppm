@@ -33,4 +33,8 @@ void Summon_Demon::execute(Overworld &world) {
 	
 }
 
+void Execute_As_Demon::execute(Overworld &world) {
+	world.active_demon_seriality = demon_seriality;
+}
+
 } // namespace Parity

@@ -14,12 +14,19 @@ export module Parity.Psychology;
 	import Parity.Optoelectronic;
 	
 	import Parity.Journey;
-	import Parity.Adventure;
 	import Parity.Physiology;
 #endif
 
 export namespace Parity
 {
+
+void Execute_As::execute(Overworld &world) {
+	world.active_player = executor;
+}
+
+void Relinquish_Execution::execute(Overworld &world) {
+	world.active_player = world.turn_of_adventurer; // Revert active player to the current adventurer in turn
+}
 
 void Respawn::execute(Overworld &world) {
 	// Teleport the active player back to the landmark of beginning
@@ -30,8 +37,6 @@ void Respawn::execute(Overworld &world) {
 		bold_cyan(world.appearanzonality(Landmark::DiamondOfCattail))
 	));
 }
-
-
 
 void Vitality_Death::execute(Overworld &world) {
 	
@@ -204,7 +209,7 @@ void Take_Optical_Item::execute(Overworld &world) {
 
 void Gain_Optical_Effect::execute(Overworld &world) {
 	PlayerPosession &possession = world.playerbase[world.active_player];
-	Iridescent iridescent_of_active_player = possession.active_optical_effect;
+	Iridescent &iridescent_of_active_player = possession.active_optical_effect;
 	
 	iridescent_of_active_player.insert(optical_effect);
 	
@@ -217,7 +222,7 @@ void Gain_Optical_Effect::execute(Overworld &world) {
 
 void Take_Optical_Effect::execute(Overworld &world) {
 	PlayerPosession &possession = world.playerbase[world.active_player];
-	Iridescent iridescent_of_active_player = possession.active_optical_effect;
+	Iridescent &iridescent_of_active_player = possession.active_optical_effect;
 	
 	iridescent_of_active_player.erase(optical_effect);
 	
@@ -226,6 +231,16 @@ void Take_Optical_Effect::execute(Overworld &world) {
 		to_string(optical_effect),
 		world.getActivePlayerName()
 	));
+}
+
+void Take_All_Optical_Effects::execute(Overworld &world) {
+	PlayerPosession &possession = world.playerbase[world.active_player];
+	Iridescent &iridescent_of_active_player = possession.active_optical_effect;
+	
+	// call Take_Optical_Effect for each
+	for (const OpticalEffect& effect : iridescent_of_active_player) {
+		world.event<Take_Optical_Effect>(effect);
+	}
 }
 
 

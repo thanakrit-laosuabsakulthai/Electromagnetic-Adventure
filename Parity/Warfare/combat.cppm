@@ -7,13 +7,17 @@ export module Parity.Combat;
 #else
 	import Parity.World;
 	import Parity.Announcement;
+	
 	import Parity.Biology;
 	import Parity.Necrology;
 	import Parity.Battlefield;
-	import Parity.Warfare;
 	import Parity.Optoelectronic;
+	import Parity.OpticalNotation;
 	
+	import Parity.Warfare;
 	import Parity.Physiology;
+	import Parity.ScoutFly;
+	
 #endif
 
 export namespace Parity
@@ -421,6 +425,7 @@ void Combat_Clause_Player_Wins::execute(Overworld &world) {
 	world.expedition.antidivinity.removeDemon(world.active_demon_seriality);
 	world.event<Gain_Gold_Coin>(battlefield.malignity.at(battlefield.combatant_demon));
 	world.event<Gain_Permanent_Power_Point>(1);
+	world.event<Take_All_Optical_Effects>();
 }
 
 void Combat_Clause_Player_Loses::execute(Overworld &world) {
@@ -431,8 +436,13 @@ void Combat_Clause_Player_Loses::execute(Overworld &world) {
 		bold("Lost")
 	));
 	
+	world.event<Take_All_Optical_Effects>();
 	world.event<Vitality_Hurt>(1);
-	// world.event<Push_Back_To_Previous_Space>();
+	
+	if (world.playerbase[world.active_player].vitality_heart > 1) {
+		// push back if adventurer will not be knocked out
+		world.event<Knockback_Adventurer>();
+	}
 }
 
 void Resolution_Of_Combat::execute(Overworld &world) {

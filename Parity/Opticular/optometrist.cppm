@@ -53,4 +53,28 @@ void Excellece_Of_Consumption::execute(Overworld &world) {
 	world.event<Open_Inventory>();
 }
 
+void Potential_Of_Combat_Consumption::execute(Overworld &world) {
+	std::vector<Optics> combat_optics = {
+		Optics::InfraredWaves,
+		Optics::XRays,
+		Optics::GammaRays
+	};
+	
+	// Check active player's inventory for combat optics
+	Inventory& player_inventory = world.playerbase.at(world.active_player).inventory;
+	world.potential_consumption.clear();
+	for (const auto& optic : combat_optics) {
+		if (player_inventory.count(optic) > 0) {
+			world.potential_consumption.insert(optic);
+		}
+	}
+	
+	if (world.potential_consumption.empty()) {
+		return; // No combat optics available, skip offering consumption
+	} 
+	
+	world.event<Open_Inventory>();
+}
+
+
 } // namespace Parity

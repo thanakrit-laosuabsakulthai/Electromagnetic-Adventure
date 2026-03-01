@@ -29,28 +29,15 @@ void Embark::execute(Overworld &world) {
 	world.event<Media_Of_Embark>(); // In accountrement.cppm
 }
 
-
 // Populate the choice_of_direction based on the passageway of the landmark of beginning
 void Choice_Of_Passage::execute(Overworld &world) {
 	world.event<Media_Of_Passage>(); // In accountrement.cppm
 	
-	Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
-	Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
-	world.expedition.choice_of_direction.clear();
-	for (const auto& pathway : passageway_of_beginning) {
-		if (is_restricted_path(pathway.pathType)) {
-			continue; // Skip restricted paths when adding choices
-		}
-		
-		world.expedition.choice_of_direction.add(pathway.direction);
-	}
+	world.event<Restricted_Choice_Of_Passage>(); // Populate the choice_of_direction with non-restricted paths
 }
-
 
 // Write the landmark_of_destination based on the chosen_direction and the passageway of the landmark of beginning
 void Travel::execute(Overworld &world) {
-	world.expedition.landmark_of_beginning = world.getLandmarkOfActivePlayer();
-	
 	Landmark &landmark_of_beginning = world.expedition.landmark_of_beginning;
 	Passageway &passageway_of_beginning = world.atlas[landmark_of_beginning].passageway;
 	
@@ -63,6 +50,8 @@ void Travel::execute(Overworld &world) {
 	
 	// If the chosen direction is not valid, stay in the same place
 	world.expedition.landmark_of_destination = world.expedition.landmark_of_beginning;
+	// debug
+	
 }
 
 
@@ -75,7 +64,6 @@ void Arrival::execute(Overworld &world) {
 	));
 	
 	world.expedition.municipality.teleport(world.active_player, world.expedition.landmark_of_destination);
-	world.event<Activate_Color_Effect>(); // In chromaticity.cppm
 }
 
 
@@ -89,12 +77,6 @@ void Decline_Journey::execute(Overworld &world) {
 
 
 
-
-
-
-
-
-
 void Move_One_Space::execute(Overworld &world) {
 	world.expedition.is_journey_optional = false; // This move is not optional
 	world.event<Media_Of_Journey>();
@@ -103,6 +85,7 @@ void Move_One_Space::execute(Overworld &world) {
 	world.event<Decision_Of_Passage>();
 	world.event<Travel>();
 	world.event<Arrival>();
+	world.event<Activate_Color_Effect>(); // In chromaticity.cppm
 }
 
 
@@ -125,6 +108,7 @@ void Apply_Optional_Journey::execute(Overworld &world) {
 	} else {
 		world.event<Travel>();
 		world.event<Arrival>();
+		world.event<Activate_Color_Effect>(); // In chromaticity.cppm
 		// If there are more optional moves left, ask the player if they want to move again
 		if (amount_of_optional_move > 1) {
 			world.event<Move_One_Space_Optional>(amount_of_optional_move - 1);

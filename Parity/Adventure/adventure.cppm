@@ -48,15 +48,6 @@ export struct Next_Adventurer_Turn : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Execute_As : Rule {
-	PlayerIdentity executor;
-	Execute_As(PlayerIdentity executor_identity) : executor(executor_identity) {}
-	void execute(Overworld &world) override;
-};
-export struct Relinquish_Execution : Rule {
-	void execute(Overworld &world) override;
-};
-
 
 // +++------>>> forgather.cppm <<<------+++
 

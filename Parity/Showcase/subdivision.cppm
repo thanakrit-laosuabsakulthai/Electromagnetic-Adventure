@@ -12,6 +12,7 @@ export module Parity.Subdivision;
 	import Parity.Adventure;
 	import Parity.Journey;
 	import Parity.FortuneBoard;
+	import Parity.ScoutFly;
 #endif
 
 export namespace Parity
@@ -87,6 +88,26 @@ export struct Showcase_Warfare : Rule {
 		world.event<Summon_Demon>(DemonForm::ElectricMinion, Landmark::DiamondOfParity);
 		
 		world.event<Commencement_Of_Warfare>();
+	}
+};
+
+export struct Showcase_Demon_Movement : Rule {
+	void execute(Overworld &world) override {
+		world.event<Welcome_Adventurer>(1);
+		world.event<First_Adventurer_Turn>();
+		world.event<Summon_Demon>(DemonForm::ElectricMinion, Landmark::DiamondOfParity);
+		world.event<Move_Demon_Towards_Player>(16);
+	}
+};
+
+export struct Showcase_Potential_Of_Warfare : Rule {
+	void execute(Overworld &world) override {
+		world.event<Welcome_Adventurer>(1);
+		world.event<First_Adventurer_Turn>();
+		world.event<Summon_Demon>(DemonForm::ElectricMinion, Landmark::DiamondOfParity);
+		world.event<Move_One_Space_Optional>(3);
+		world.event<Move_Demon_Towards_Player>(16);
+		world.event<Potential_Of_Warfare>(Landmark::OpticalMarketplace);
 	}
 };
 

@@ -147,6 +147,10 @@ export struct Excellece_Of_Consumption : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Potential_Of_Combat_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Consumption_Of_RadioWaves : Rule {
 	void execute(Overworld &world) override;
 };

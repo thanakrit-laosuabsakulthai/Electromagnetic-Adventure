@@ -25,6 +25,7 @@ export class Overworld
 	Announcement announce;
 	// +++ geography +++
 	Geography atlas;
+	
 	// +++ expedition-embark +++
 	Expedition expedition;
 	Landmark getLandmarkOfActivePlayer();
@@ -32,6 +33,8 @@ export class Overworld
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);
+	std::string pathochronality(Direction target_direction);
+	DieRoll die_roll_for_entropy;
 	
 	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board;
@@ -339,6 +342,10 @@ export struct Excellece_Of_Consumption : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Potential_Of_Combat_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Consumption_Of_RadioWaves : Rule {
 	void execute(Overworld &world) override;
 };
@@ -457,6 +464,16 @@ export inline std::string_view to_string(PlayerIdentity identity);
 
 // +++------>>> physiology.cppm <<<------+++
 
+export struct Execute_As : Rule {
+	PlayerIdentity executor;
+	Execute_As(PlayerIdentity executor_identity) : executor(executor_identity) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Relinquish_Execution : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Respawn : Rule {
 	void execute(Overworld &world) override;
 };
@@ -520,6 +537,13 @@ export struct Take_Optical_Item : Rule
 	void execute(Overworld &world) override;
 };
 
+
+export struct Take_All_Optical_Effects : Rule
+{
+	void execute(Overworld &world) override;
+};
+
+
 // helper function to remove a specific quantity of an optical item from inventory
 export inline void remove_optical_item_from_inventory(PlayerPosession &possession, Optics item, int quantity);
 
@@ -570,6 +594,11 @@ export struct Summon_Demon : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Execute_As_Demon : Rule {
+	DemonSeriality demon_seriality;
+	Execute_As_Demon(DemonSeriality demon_seriality) : demon_seriality(demon_seriality) {}
+	void execute(Overworld &world) override;
+};
 
 
 
@@ -615,14 +644,6 @@ export struct Next_Adventurer_Turn : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Execute_As : Rule {
-	PlayerIdentity executor;
-	Execute_As(PlayerIdentity executor_identity) : executor(executor_identity) {}
-	void execute(Overworld &world) override;
-};
-export struct Relinquish_Execution : Rule {
-	void execute(Overworld &world) override;
-};
 
 
 // +++------>>> forgather.cppm <<<------+++
@@ -788,7 +809,11 @@ export struct Commencement_Of_Warfare : Rule {
 	void execute(Overworld &world) override;
 };
 
-
+export struct Potential_Of_Warfare : Rule {
+	Landmark target_landmark;
+	Potential_Of_Warfare(Landmark target_landmark) : target_landmark(target_landmark) {}
+	void execute(Overworld &world) override;
+};
 
 
 
@@ -916,6 +941,8 @@ export inline bool is_arrow_path(const Path& path);
 export inline bool is_restricted_path(const Path& path);
 export inline bool is_gradient_color(const ApparentColor& color);
 export inline bool is_demon_zone(const Zone& zone);
+export inline bool is_safe_zone(const Zone& zone);
+
 // +++------>>> notation.cppm <<<------+++
 
 export inline std::string_view to_string(Landmark landmark);
@@ -1000,6 +1027,8 @@ export struct Expedition
 	bool is_journey_declined;
 	Municipality municipality;
 	AntiDivinity antidivinity;
+	int amount_of_conquest_remaining = 0;
+	int amount_of_conquest = 0;
 };
 
 
@@ -1049,12 +1078,103 @@ export struct Media_Of_Journey : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Restricted_Choice_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Every_Choice_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> entropy.cppm <<<------+++
+
+export struct Roll_For_Entropy : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Entropy_Of_Adventurer : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Entropy_Of_Corruption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Fate_Of_Corruption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Entropy_Of_Repulsion : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> accoutrement.cppm <<<------+++
+
+export struct Media_Of_Conquest : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Media_Of_Perpetrate : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Meida_Of_Conquest_Success : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Meida_Of_Conquest_Failure : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++------>>> peril.cppm <<<------+++
+
+export struct Knockback : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Knockback_Adventurer : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Repulse : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Repulse_Demon : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Perpetrate : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Step_Of_Conquest : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Forfence_Of_Cattail : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Move_Demon_Towards_Player : Rule {
+	int amount_of_conquest = 0;
+	Move_Demon_Towards_Player(int amount) : amount_of_conquest(amount) {}
+	void execute(Overworld &world) override;
+};
+
+export struct Conquest_Of_Demon : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Conquest_Of_Demon_Result : Rule {
+	void execute(Overworld &world) override;
+};
+
 // +++------>>> embark.cppm <<<------+++
 
 export struct Embark : Rule {
 	void execute(Overworld &world) override;
 };
-
 
 export struct Choice_Of_Passage : Rule {
 	void execute(Overworld &world) override;
@@ -1110,19 +1230,6 @@ export struct Apply_Optional_Journey : Rule {
 	Apply_Optional_Journey(int amount) : amount_of_optional_move(amount) {}
 	void execute(Overworld &world) override;
 };
-
-// +++------>>> scoutfly.cppm <<<------+++
-
-export struct March_Towards_Entropy : Rule {
-	int amount_of_march;
-	March_Towards_Entropy(int amount) : amount_of_march(amount) {}
-	void execute(Overworld &world) override;
-};
-
-export struct Knockback_One_Space : Rule {
-	void execute(Overworld &world) override;
-};
-
 
 
 

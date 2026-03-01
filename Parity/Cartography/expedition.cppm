@@ -42,6 +42,10 @@ export struct Municipality {
 	}
 	
 	Humanity getHumanityAt(Landmark landmark) const {
+		if (player_locator.find(landmark) == player_locator.end()) {
+			return {}; // Return an empty set if no players are at the landmark
+		}
+		
 		return player_locator.at(landmark);
 	}
 	
@@ -95,6 +99,10 @@ export struct AntiDivinity {
 	}
 	
 	Demonity getDemonityAt(Landmark landmark) const {
+		if (demon_locator.find(landmark) == demon_locator.end()) {
+			return {}; // Return an empty set if no demons are at the landmark
+		}
+		
 		return demon_locator.at(landmark);
 	}
 	
@@ -128,6 +136,9 @@ export struct Expedition
 	bool is_journey_declined = false;
 	Municipality municipality = {};
 	AntiDivinity antidivinity = {};
+	
+	int amount_of_conquest_remaining = 0;
+	int amount_of_conquest = 0;
 };
 
 } // namespace Parity

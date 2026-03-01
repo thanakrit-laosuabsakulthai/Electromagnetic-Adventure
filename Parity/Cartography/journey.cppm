@@ -31,12 +31,20 @@ export struct Media_Of_Journey : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Restricted_Choice_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Every_Choice_Of_Passage : Rule {
+	void execute(Overworld &world) override;
+};
+
+
 // +++------>>> embark.cppm <<<------+++
 
 export struct Embark : Rule {
 	void execute(Overworld &world) override;
 };
-
 
 export struct Choice_Of_Passage : Rule {
 	void execute(Overworld &world) override;

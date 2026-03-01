@@ -45,25 +45,35 @@ export struct Apply_Unlucky_Board_Result : Rule
 		applyUnluckyBoardResult(world, world.die_roll_for_fortune_board);
 	}
 	void applyUnluckyBoardResult(Overworld &world, DieRoll roll) {
-		world.announce.result(Media_Of_Unlucky_Board::outcomes[static_cast<int>(roll) - 1]);
+		// world.announce.result(Media_Of_Unlucky_Board::outcomes[static_cast<int>(roll) - 1]);
+		std::string result_description = Media_Of_Unlucky_Board::outcomes[static_cast<int>(roll) - 1];
 		
 		using enum DieRoll;
 		switch (roll) {
 		case One:
 			world.event<Demon_Board>();
+			world.announce.result(std::format(
+				"Trigger the {} once.",
+				bold_cyan("Demon Board")
+			));
 			break;
 		case Two:
+			world.announce.result(result_description);
 			break;
 		case Three:
+			world.announce.result(result_description);
 			break;
 		case Four:
 			world.event<Vitality_Hurt>(1);
+			world.announce.result(result_description);
 			break;
 		case Five:
 			world.event<Take_Gold_Coin>(1);
+			world.announce.result(result_description);
 			break;
 		case Six:
 			world.event<Take_Gold_Coin>(3);
+			world.announce.result(result_description);
 			break;
 		}
 	}

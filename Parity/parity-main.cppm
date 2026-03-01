@@ -35,9 +35,16 @@ int main()
 	// world.event<Showcase_Reincarnation>();
 	// world.event<Showcase_Movement>();
 	
+	
 	world.event<Welcome_Adventurer>(1);
 	world.event<First_Adventurer_Turn>();
-	world.event<Excellece_Of_Consumption>();
+	world.event<Summon_Demon>(DemonForm::ElectricMinion, Landmark::DiamondOfParity);
+	world.event<Repulse_Demon>();
+	world.event<Repulse_Demon>();
+	/*
+	//world.event<Excellece_Of_Consumption>();
+	world.event<Knockback_Adventurer>();
+	world.event<Knockback_Adventurer>(); */
 	
 	world.main_loop();
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 

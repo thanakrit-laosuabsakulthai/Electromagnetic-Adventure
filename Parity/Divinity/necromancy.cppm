@@ -38,6 +38,13 @@ export struct Summon_Demon : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Execute_As_Demon : Rule {
+	DemonSeriality demon_seriality;
+	Execute_As_Demon(DemonSeriality demon_seriality) : demon_seriality(demon_seriality) {}
+	void execute(Overworld &world) override;
+};
+
+
 /* 
 appearancy()
 - *Electric Minion spawns on the Red Square space.*

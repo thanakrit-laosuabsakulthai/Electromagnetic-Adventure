@@ -36,6 +36,7 @@ export class Overworld
 	Announcement announce;
 	// +++ geography +++
 	Geography atlas = Atlas;
+	
 	// +++ expedition-embark +++
 	Expedition expedition;
 	Landmark getLandmarkOfActivePlayer();
@@ -43,6 +44,8 @@ export class Overworld
 	std::string appearanzonality(Landmark target_landmark);
 	std::string appearancity(Landmark target_landmark);
 	std::string pathochronality(Pathway target_pathway);
+	std::string pathochronality(Direction target_direction);
+	DieRoll die_roll_for_entropy = DieRoll::One;
 	
 	// +++ fortuneboard +++
 	DieRoll die_roll_for_fortune_board = DieRoll::One;
