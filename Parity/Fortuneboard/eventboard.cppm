@@ -11,9 +11,12 @@ export module Parity.EventBoard;
 	import Parity.Announcement;
 	
 	import Parity.DieRoll;
+	import Parity.OpticalNotation;
+	import Parity.Optoelectronic;
 	
 	import Parity.FortuneBoard;
 	import Parity.Physiology;
+	import Parity.Marketplace;
 #endif
 
 export namespace Parity
@@ -32,8 +35,88 @@ export struct All_Players_Gain_Gold_Coin : Rule
 			"Gave {} [Gold Coin] to all players.",
 			amount_of_gold_coin
 		));
+	} 
+};
+
+
+export struct Apply_Gift_Of_Optics : Rule {
+	void execute(Overworld &world) override {
+		DieRoll roll = world.die_roll_for_fortune_board;
+		int optic_index = static_cast<int>(roll) - 1; // Convert DieRoll to 0-based index
+		
+		if (! (optic_index >= 0 && optic_index < static_cast<int>(obtainable_optical_items.size())) ) {
+			return; // Invalid die roll, do nothing
+		}
+		
+		Optics aquired_optic = obtainable_optical_items[optic_index];
+		world.event<Gain_Optical_Item>(aquired_optic);
+		
+		world.announce.result(std::format(
+			"{} received {} for free.",
+			to_string(world.active_player),
+			bold_cyan(std::string(to_string(aquired_optic)))
+		));
+	}
+
+	static inline const std::vector<Optics> obtainable_optical_items = {
+		Optics::RadioWaves,
+		Optics::MicroWaves,
+		Optics::InfraredWaves,
+		Optics::LightWaves,
+		Optics::UltravioletWaves,
+		Optics::XRays
+		// Note: Gamma Rays is unobtainable from this result
+	};
+
+};
+
+export struct Gift_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	void execute(Overworld &world) override {
+		terra = &world; // for helper functions
+		// Check inventory capacity 
+		
+		PlayerIdentity active_player = world.active_player;
+		PlayerPosession& possession = world.playerbase.at(active_player);
+		
+		int inventory_capacity = possession.inventory_capacity;
+		int current_inventory_size = static_cast<int>(possession.inventory.size());
+		
+		if (current_inventory_size >= inventory_capacity) {
+			world.announce.result(std::format(
+				"{} already has {} item{} in inventory and cannot receive more from the Shop Board.",
+				world.getActivePlayerName(),
+				current_inventory_size,
+				current_inventory_size == 1 ? "" : "s"
+			));
+			return;
+		}
+		
+		// Logic to give the player a free random item from the shop
+		world.announce.action(std::format(
+			"{} rolls a die to receive an item...",
+			to_string(world.active_player)
+		));
+		
+		display_gift_of_optics();
+		
+		world.event<Roll_For_Random_Board>();
+		world.event<Apply_Gift_Of_Optics>();
+	}
+	
+		
+	void display_gift_of_optics() {
+		Overworld &world = *terra;
+		std::vector<Optics> obtainable_optical_items = Apply_Gift_Of_Optics::obtainable_optical_items;
+		
+		world.announce.beginChoice();
+		for (const auto& optic : obtainable_optical_items) {
+			world.announce.choice(std::string(to_string(optic)));
+		}
 	}
 };
+
 
 export struct Media_Of_Event_Board : Rule {
 	void execute(Overworld &world) override {
@@ -89,6 +172,7 @@ export struct Apply_Event_Board_Result : Rule
 			break;
 		case Four:
 			// Logic to allow the player to purchase an item from the shop
+			world.event<Open_Delivery>();
 			world.announce.result(result_description);
 			break;
 		case Five:
@@ -97,6 +181,7 @@ export struct Apply_Event_Board_Result : Rule
 			break;
 		case Six:
 			// Logic to roll a die and give the player a free random item from the shop
+			world.event<Gift_Of_Optics>();
 			world.announce.result(result_description);
 			break;
 		}

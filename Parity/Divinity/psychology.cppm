@@ -12,6 +12,7 @@ export module Parity.Psychology;
 	import Parity.Biology;
 	import Parity.OpticalNotation;
 	import Parity.Optoelectronic;
+	import Parity.Geography;
 	
 	import Parity.Journey;
 	import Parity.Physiology;
@@ -91,7 +92,22 @@ void Vitality_Hurt::execute(Overworld &world) {
 void Vitality_Hurt_Humanity::execute(Overworld &world) {
 	
 	for (const PlayerIdentity& player : world.humanity) {
-		world.announce.subtitle(std::format("Targeting {} for damage.", to_string(player)));
+		//world.announce.subtitle(std::format("Targeting {} for damage.", to_string(player)));
+		
+		world.event<Execute_As>(player);
+		world.event<Vitality_Hurt>(amount_of_damage);
+	}
+	
+	world.event<Relinquish_Execution>();
+}
+void Vitality_Hurt_Humanity_In_Demon_Zone::execute(Overworld &world) {
+	// hurt every player in demon zone
+	
+	for (const PlayerIdentity& player : world.humanity) {
+		Landmark player_landmark = world.getLandmarkOfActivePlayer();
+		if (!is_demon_zone(world.atlas[player_landmark].zone)) {
+			continue; // Skip players not in demon zone
+		}
 		
 		world.event<Execute_As>(player);
 		world.event<Vitality_Hurt>(amount_of_damage);

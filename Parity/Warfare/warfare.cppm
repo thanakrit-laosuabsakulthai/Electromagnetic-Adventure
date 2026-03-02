@@ -96,6 +96,13 @@ export struct Potential_Of_Warfare : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Potential_Of_Warfare_At_Active_Player : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Warfare_At_Active_Demon : Rule {
+	void execute(Overworld &world) override;
+};
 
 
 

@@ -11,9 +11,12 @@ export module Parity.UnluckyBoard;
 	
 	import Parity.DieRoll;
 	import Parity.Biology;
+	import Parity.Necrology;
 	
 	import Parity.FortuneBoard;
 	import Parity.Physiology;
+	import Parity.Necromancy;
+	import Parity.Warfare;
 #endif
 
 export namespace Parity
@@ -58,10 +61,20 @@ export struct Apply_Unlucky_Board_Result : Rule
 			));
 			break;
 		case Two:
-			world.announce.result(result_description);
+			world.announce.result(std::format(
+				"A {} spawns in this space and initiates combat.",
+				bold_cyan("Magnetic Demon")
+			));
+			world.event<Summon_Demon>(DemonForm::MagneticDemon, world.getLandmarkOfActivePlayer());
+			world.event<Potential_Of_Warfare_At_Active_Demon>();
 			break;
 		case Three:
-			world.announce.result(result_description);
+			world.announce.result(std::format(
+				"An {} spawns in this space and initiates combat.",
+				bold_cyan("Electric Minion")
+			));
+			world.event<Summon_Demon>(DemonForm::ElectricMinion, world.getLandmarkOfActivePlayer());
+			world.event<Potential_Of_Warfare_At_Active_Demon>();
 			break;
 		case Four:
 			world.event<Vitality_Hurt>(1);

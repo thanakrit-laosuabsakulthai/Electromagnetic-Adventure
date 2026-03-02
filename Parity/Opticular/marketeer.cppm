@@ -30,7 +30,7 @@ void Decline_Shop::execute(Overworld &world) {
 
 
 void Apply_Purchasement_Result::execute(Overworld &world) {
-	Inventory purchasement = world.purchasement;
+	Inventory &purchasement = world.purchasement;
 	MarketValuation marketplace = world.marketplace;
 	
 	std::map<Optics, int> item_count;
@@ -53,7 +53,7 @@ void Apply_Purchasement_Result::execute(Overworld &world) {
 
 
 void Apply_Purchasement_Of_Optics::execute(Overworld &world) {
-	Inventory purchasement = world.purchasement;
+	Inventory &purchasement = world.purchasement;
 	
 	if (purchasement.empty()) {
 		world.event<Decline_Shop>();
@@ -94,6 +94,47 @@ void Open_Shop::execute(Overworld &world) {
 	world.event<Apply_Purchasement_Of_Optics>();
 }
 
+void Open_Delivery::execute(Overworld &world) {
+	PlayerIdentity active_player = world.active_player;
+	PlayerPosession &possession = world.playerbase[active_player];
+	
+	if (possession.gold_coin == 0) {
+		world.announce.result(std::format(
+			"{} has no Gold Coins and cannot order items from the Shop Board.",
+			world.getActivePlayerName()
+		));
+		return;
+	}
+	
+	int inventory_capacity = possession.inventory_capacity;
+	int current_inventory_size = static_cast<int>(possession.inventory.size());
+	
+	if (current_inventory_size >= inventory_capacity) {
+		world.announce.result(std::format(
+			"{} already has {} item{} in inventory and cannot order more from the Shop Board.",
+			world.getActivePlayerName(),
+			current_inventory_size,
+			current_inventory_size == 1 ? "" : "s"
+		));
+		return;
+	}
+	
+	world.event<Media_Of_Delivery>();
+	world.event<Order_Of_Optics>();
+	world.event<Apply_Purchasement_Of_Optics>();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 void Decline_Consumption::execute(Overworld &world) {
 	world.announce.result(std::format(
 		"{} chose to not use any items from their inventory.",
@@ -102,7 +143,7 @@ void Decline_Consumption::execute(Overworld &world) {
 }
 
 void Apply_Consumption_Of_Optics::execute(Overworld &world) {
-	Inventory consumption = world.consumption;
+	Inventory &consumption = world.consumption;
 	
 	if (consumption.empty()) {
 		world.event<Decline_Consumption>();
@@ -115,7 +156,7 @@ void Apply_Consumption_Of_Optics::execute(Overworld &world) {
 void Apply_Consumption_Result::execute(Overworld &world) {
 	terra = &world; // for helper functions
 	
-	Inventory consumption = world.consumption;
+	Inventory &consumption = world.consumption;
 	
 	// for removing items only
 	std::map<Optics, int> item_count;
@@ -164,7 +205,7 @@ void Apply_Consumption_Result::apply_optical_item(Optics item) {
 }
 
 void Open_Inventory::execute(Overworld &world) {
-	Inventory potential_consumption = world.potential_consumption;
+	Inventory &potential_consumption = world.potential_consumption;
 	
 	if (potential_consumption.empty()) {
 		world.announce.result(std::format(

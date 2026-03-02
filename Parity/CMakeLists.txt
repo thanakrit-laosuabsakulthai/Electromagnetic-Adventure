@@ -45,6 +45,7 @@ target_sources(Parity PRIVATE
     Opticular/marketeer.cppm
     Opticular/optometrist.cppm
     Opticular/consumption.cppm
+    Opticular/order.cppm
     
     Chromaticity/chromaticity.cppm
     Chromaticity/coloreffect.cppm

@@ -45,6 +45,20 @@ void Potential_Of_Warfare::execute(Overworld &world) {
 	world.event<Relinquish_Execution>();
 }
 
+void Potential_Of_Warfare_At_Active_Player::execute(Overworld &world) {
+	PlayerIdentity active_player = world.active_player;
+	Landmark player_landmark = world.getLandmarkOfActivePlayer();
+	
+	world.event<Potential_Of_Warfare>(player_landmark);
+}
+
+void Potential_Of_Warfare_At_Active_Demon::execute(Overworld &world) {
+	DemonSeriality active_demon = world.active_demon_seriality;
+	Landmark demon_landmark = world.getLandmarkOfActiveDemon();
+	
+	world.event<Potential_Of_Warfare>(demon_landmark);
+}
+
 
 } // namespace Parity
 

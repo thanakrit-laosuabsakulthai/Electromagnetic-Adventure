@@ -18,6 +18,7 @@ export module Parity.Embark;
 	
 	import Parity.Chromaticity;
 	import Parity.Journey;
+	import Parity.Adventure;
 #endif
 
 export namespace Parity {
@@ -85,6 +86,7 @@ void Move_One_Space::execute(Overworld &world) {
 	world.event<Decision_Of_Passage>();
 	world.event<Travel>();
 	world.event<Arrival>();
+	world.event<Omen_Of_Corruption>(); // In adventure.cppm
 	world.event<Activate_Color_Effect>(); // In chromaticity.cppm
 }
 
@@ -108,6 +110,7 @@ void Apply_Optional_Journey::execute(Overworld &world) {
 	} else {
 		world.event<Travel>();
 		world.event<Arrival>();
+		world.event<Omen_Of_Corruption>(); // In adventure.cppm
 		world.event<Activate_Color_Effect>(); // In chromaticity.cppm
 		// If there are more optional moves left, ask the player if they want to move again
 		if (amount_of_optional_move > 1) {

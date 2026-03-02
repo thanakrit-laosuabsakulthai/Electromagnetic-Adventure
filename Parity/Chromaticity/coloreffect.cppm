@@ -192,6 +192,16 @@ void Red_Purple_Gradient_Effect::execute(Overworld &world) {
 
 
 void Activate_Color_Effect::execute(Overworld &world) {
+	PlayerIdentity active_player = world.active_player;
+	PlayerPosession &active_player_posession = world.playerbase[active_player];
+	Landmark current_landmark = world.getLandmarkOfActivePlayer();
+	
+	if (current_landmark == Landmark::DiamondOfCattail
+		&& active_player_posession.vitality_heart >= active_player_posession.vitality_maximum_heart
+	) {
+		return; // Do not activate color effect if on Diamond of Cattail and already at maximum Hearts
+	}
+	
 	ApparentColor color_under_active_player = world.getColorUnderActivePlayer();
 	
 	world.announce.action(activation_synthesis(color_under_active_player));
@@ -223,7 +233,7 @@ void Activate_Color_Effect::execute(Overworld &world) {
 			world.event<Red_Purple_Gradient_Effect>();
 			break;
 		default:
-			world.announce.result("Nothing happens.");
+			world.announce.result("Nothing happened.");
 			break;
 	}
 }

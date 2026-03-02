@@ -38,9 +38,23 @@ int main()
 	
 	world.event<Welcome_Adventurer>(1);
 	world.event<First_Adventurer_Turn>();
+	world.event<Mediumship_Of_Corruption>();
+	/*
+	world.event<All_Players_In_Demon_Zone_Lose_One_Heart>();
+	world.event<Move_One_Space_Optional>(10);
+	world.event<All_Players_In_Demon_Zone_Lose_One_Heart>();
+	
+	
+	// world.event<Gift_Of_Optics>();
+	/*
+	world.event<Gain_Gold_Coin>(10);
+	world.event<Open_Delivery>();
+	
+	world.event<Gain_Optical_Item>(Optics::GammaRays);
+	world.event<Gain_Optical_Item>(Optics::UltravioletWaves);
+	world.event<Gain_Optical_Item>(Optics::MicroWaves);
 	world.event<Summon_Demon>(DemonForm::ElectricMinion, Landmark::DiamondOfParity);
-	world.event<Repulse_Demon>();
-	world.event<Repulse_Demon>();
+	world.event<Move_Demon_Towards_Player>(4);
 	/*
 	//world.event<Excellece_Of_Consumption>();
 	world.event<Knockback_Adventurer>();

@@ -43,6 +43,7 @@ export module Parity;
 	#include "Opticular/marketeer.cppm"
 	#include "Opticular/optometrist.cppm"
 	#include "Opticular/consumption.cppm"
+	#include "Opticular/order.cppm"
 	
 	#include "Chromaticity/chromaticity.cppm"
 	#include "Chromaticity/coloreffect.cppm"
@@ -100,6 +101,7 @@ export module Parity;
 	export import Parity.Marketeer;
 	export import Parity.Optometrist;
 	export import Parity.Consumption;
+	export import Parity.Order;
 	
 	export import Parity.Chromaticity;
 	export import Parity.ColorEffect;

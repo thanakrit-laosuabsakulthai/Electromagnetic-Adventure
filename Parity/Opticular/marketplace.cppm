@@ -11,6 +11,8 @@ export module Parity.Marketplace;
 	import Parity.World;
 	import Parity.Announcement;
 	
+	import Parity.Geography;
+	
 	import Parity.Optoelectronic;
 #endif
 
@@ -30,6 +32,10 @@ export struct Apply_Purchasement_Result : Rule {
 	void execute(Overworld &world) override;
 };
 export struct Decline_Shop : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Open_Delivery : Rule {
 	void execute(Overworld &world) override;
 };
 
@@ -85,6 +91,13 @@ export struct Review_Of_Consumption : Rule {
 	void display_chromatic_consumption();
 };
 
+export struct Media_Of_Delivery : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_market();
+	void display_player_possesion_hint();
+};
+
 // +++------>>> purchasement.cppm <<<------+++
 
 export struct Purchasement_Of_Optics : Rule {
@@ -113,6 +126,37 @@ export struct Purchasement_Of_Optics : Rule {
 	void end_concentration();
 	void concentrate();
 };
+
+// +++------>>> order.cppm <<<------+++
+
+
+export struct Order_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	Inventory purchasement;
+	int transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	Optics getOpticsFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	bool validate_choice();
+	
+	void clause_decline_shop();
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
+};
+
 
 // +++------>>> consumption.cppm <<<------+++
 
@@ -151,6 +195,22 @@ export struct Potential_Of_Combat_Consumption : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Potential_Of_Repulsion_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Culinary_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Chromatic_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Fortune_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Consumption_Of_RadioWaves : Rule {
 	void execute(Overworld &world) override;
 };
@@ -179,7 +239,11 @@ export struct Consumption_Of_GammaRays : Rule {
 	void execute(Overworld &world) override;
 };
 
-
+export struct Power_Of_Repulsion : Rule {
+	Landmark target_landmark;
+	Power_Of_Repulsion(Landmark target_landmark) : target_landmark(target_landmark) {}
+	void execute(Overworld &world) override;
+};
 
 
 

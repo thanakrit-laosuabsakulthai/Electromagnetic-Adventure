@@ -48,11 +48,11 @@ export struct Media_Of_Perpetrate : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Meida_Of_Conquest_Success : Rule {
+export struct Media_Of_Conquest_Success : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Meida_Of_Conquest_Failure : Rule {
+export struct Media_Of_Conquest_Failure : Rule {
 	void execute(Overworld &world) override;
 };
 

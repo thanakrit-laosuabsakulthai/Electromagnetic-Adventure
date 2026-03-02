@@ -81,6 +81,51 @@ void Media_Of_Marketplace::display_player_possesion_hint() {
 	));
 }
 
+void Media_Of_Delivery::execute(Overworld &world) {
+	terra = &world; // for helper functions
+	
+	world.announce.action(std::format(
+		"{} may order an item from the Shop Board",
+		world.getActivePlayerName()
+	));
+	
+	display_market();
+	display_player_possesion_hint();
+}
+
+void Media_Of_Delivery::display_market() {
+	Overworld &world = *terra;
+	
+	world.announce.beginChoice();
+	
+	for (const auto& [optic, price] : world.marketplace) {
+		std::string optical_item_title = std::format("{} ({} Gold)", to_string(optic), price);
+		
+		world.announce.choice(optical_item_title);
+	}
+}
+
+void Media_Of_Delivery::display_player_possesion_hint() {
+	Overworld &world = *terra;
+	PlayerIdentity active_player = world.active_player;
+	const PlayerPosession& player_possession = world.playerbase.at(active_player);
+	
+	std::string gold_coin_hint = bold(
+		std::format("{} Gold Coin{}",
+			player_possession.gold_coin,
+			player_possession.gold_coin == 1 ? "" : "s"
+		)
+	);
+	
+	// order upto 1 item from the shop
+	
+	world.announce.linger(std::format("{} has {}. They may order {} item from the Shop.",
+		world.getActivePlayerName(),
+		gold_coin_hint,
+		bold("1")
+	));
+}
+
 
 void Review_Of_Purchase::execute(Overworld &world) {
 	terra = &world; // for helper functions

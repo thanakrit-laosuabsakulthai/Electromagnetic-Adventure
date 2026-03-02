@@ -17,7 +17,7 @@ export module Parity.Combat;
 	import Parity.Warfare;
 	import Parity.Physiology;
 	import Parity.ScoutFly;
-	
+	import Parity.Marketplace;
 #endif
 
 export namespace Parity
@@ -403,6 +403,14 @@ void Combat_Of_Fates::execute(Overworld &world) {
 	world.event<Media_Of_Attack_Value>();
 }
 
+
+
+
+
+
+
+
+
 void Combat_Clause_Draw::execute(Overworld &world) {
 	world.announce.linger(std::format("The battle resulted in a {}. Rolling for combat again...",
 		bold("Draw")
@@ -426,6 +434,8 @@ void Combat_Clause_Player_Wins::execute(Overworld &world) {
 	world.event<Gain_Gold_Coin>(battlefield.malignity.at(battlefield.combatant_demon));
 	world.event<Gain_Permanent_Power_Point>(1);
 	world.event<Take_All_Optical_Effects>();
+	world.event<Potential_Of_Culinary_Consumption>();
+	world.event<Potential_Of_Warfare_At_Active_Player>();
 }
 
 void Combat_Clause_Player_Loses::execute(Overworld &world) {
@@ -441,9 +451,29 @@ void Combat_Clause_Player_Loses::execute(Overworld &world) {
 	
 	if (world.playerbase[world.active_player].vitality_heart > 1) {
 		// push back if adventurer will not be knocked out
+		world.event<Execute_As>(world.active_player);
 		world.event<Knockback_Adventurer>();
+		world.event<Relinquish_Execution>();
 	}
+
+	world.event<Potential_Of_Warfare>(world.getLandmarkOfActiveDemon());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void Resolution_Of_Combat::execute(Overworld &world) {
 	Battlefield &battlefield = world.battlefield;

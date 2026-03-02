@@ -123,6 +123,16 @@ export struct AntiDivinity {
 		// Update demon_manifest
 		demon_manifest.erase(demon);
 	}
+	
+	Demonity getAllLesserDemons() const {
+		Demonity all_lesser_demons;
+		for (const auto& [demon_seriality, demon_form] : demon_manifest) {
+			if (demon_form == DemonForm::ElectricMinion) {
+				all_lesser_demons.insert(demon_seriality);
+			}
+		}
+		return all_lesser_demons;
+	}
 };
 
 export struct Expedition

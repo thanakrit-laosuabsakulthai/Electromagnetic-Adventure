@@ -228,6 +228,10 @@ export struct Decline_Shop : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Open_Delivery : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Open_Inventory : Rule {
 	void execute(Overworld &world) override;
 };
@@ -280,6 +284,13 @@ export struct Review_Of_Consumption : Rule {
 	void display_chromatic_consumption();
 };
 
+export struct Media_Of_Delivery : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_market();
+	void display_player_possesion_hint();
+};
+
 // +++------>>> purchasement.cppm <<<------+++
 
 export struct Purchasement_Of_Optics : Rule {
@@ -287,6 +298,37 @@ export struct Purchasement_Of_Optics : Rule {
 	
 	Inventory purchasement;
 	std::multiset<int> transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	Optics getOpticsFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	bool validate_choice();
+	
+	void clause_decline_shop();
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
+};
+
+
+// +++------>>> order.cppm <<<------+++
+
+
+export struct Order_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	
+	Inventory purchasement;
+	int transcribed_numerical_dialect; 
 	std::set<int> valid_numeral;
 	void execute(Overworld &world) override;
 	void fill_valid_numeral();
@@ -346,6 +388,22 @@ export struct Potential_Of_Combat_Consumption : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Potential_Of_Repulsion_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Culinary_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Chromatic_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Fortune_Consumption : Rule {
+	void execute(Overworld &world) override;
+};
+
 export struct Consumption_Of_RadioWaves : Rule {
 	void execute(Overworld &world) override;
 };
@@ -374,7 +432,11 @@ export struct Consumption_Of_GammaRays : Rule {
 	void execute(Overworld &world) override;
 };
 
-
+export struct Power_Of_Repulsion : Rule {
+	Landmark target_landmark;
+	Power_Of_Repulsion(Landmark target_landmark) : target_landmark(target_landmark) {}
+	void execute(Overworld &world) override;
+};
 
 
 
@@ -410,11 +472,11 @@ export struct Roll_For_Chromaticity : Rule {
 };
 export struct Media_Of_Pink_Orange_Yellow_Gradient : Rule {
 	void execute(Overworld &world) override;
-	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
-	static inline const std::vector<std::string> outcomes;
 };
 export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 	void execute(Overworld &world) override;
+	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
+	static inline const std::vector<std::string> outcomes;
 };
 export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 	void execute(Overworld &world) override;
@@ -492,6 +554,12 @@ export struct Vitality_Hurt_Humanity : Rule {
 	int amount_of_damage;
 	
 	Vitality_Hurt_Humanity(int damage) : amount_of_damage(damage) {}
+	void execute(Overworld &world) override;
+};
+export struct Vitality_Hurt_Humanity_In_Demon_Zone : Rule {
+	int amount_of_damage;
+	
+	Vitality_Hurt_Humanity_In_Demon_Zone(int damage) : amount_of_damage(damage) {}
 	void execute(Overworld &world) override;
 };
 export struct Vitality_Heal : Rule {
@@ -663,10 +731,11 @@ export struct Forgather_of_Adventurer : Rule {
 
 // +--->>> traverser.cppm <<<---+++
 
-export struct Corruption_Of_Landmark : Rule {
+export struct Omen_Of_Corruption : Rule {
 	void execute(Overworld &world) override;
 };
-export struct Forecast_Of_Combat : Rule {
+
+export struct Apply_Omen_Of_Corruption : Rule {
 	void execute(Overworld &world) override;
 };
 
@@ -815,6 +884,13 @@ export struct Potential_Of_Warfare : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Potential_Of_Warfare_At_Active_Player : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Potential_Of_Warfare_At_Active_Demon : Rule {
+	void execute(Overworld &world) override;
+};
 
 
 
@@ -1013,6 +1089,7 @@ export struct AntiDivinity {
 	
 	void addDemon(DemonForm demon_form, Landmark landmark);
 	void removeDemon(DemonSeriality demon);
+	Demonity getAllLesserDemons() const;
 };
 
 
@@ -1118,11 +1195,11 @@ export struct Media_Of_Perpetrate : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Meida_Of_Conquest_Success : Rule {
+export struct Media_Of_Conquest_Success : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Meida_Of_Conquest_Failure : Rule {
+export struct Media_Of_Conquest_Failure : Rule {
 	void execute(Overworld &world) override;
 };
 
@@ -1311,6 +1388,18 @@ export struct All_Players_Gain_Gold_Coin : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Gift_Of_Optics : Rule {
+	Overworld *terra = nullptr;
+	void execute(Overworld &world) override;
+	void display_gift_of_optics();
+};
+
+
+export struct Apply_Gift_Of_Optics : Rule {
+	void execute(Overworld &world) override;
+	static inline const std::vector<Optics> obtainable_optical_items;
+};
+
 export struct Media_Of_Event_Board : Rule {
 	void execute(Overworld &world) override;
 	static inline const std::vector<std::string> outcomes;
@@ -1343,9 +1432,23 @@ export struct Unlucky_Board : Rule {
 
 // +++------>>> demonboard.cppm <<<------+++
 
-export struct Media_Of_Demon_Board : Rule {
+
+export struct All_Players_In_Demon_Zone_Lose_One_Heart : Rule {
 	void execute(Overworld &world) override;
+};
+
+export struct Apply_Mediumship_Of_Corruption : Rule {
+	void execute(Overworld &world) override;
+	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
 	static inline const std::vector<std::string> outcomes;
+};
+
+export struct Media_Of_Mediumship : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Mediumship_Of_Corruption : Rule {
+	void execute(Overworld &world) override;
 };
 
 export struct Apply_Demon_Board_Result : Rule {

@@ -39,15 +39,15 @@ export struct Roll_For_Chromaticity : Rule {
 };
 export struct Media_Of_Pink_Orange_Yellow_Gradient : Rule {
 	void execute(Overworld &world) override;
+};
+export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
+	void execute(Overworld &world) override;
 	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
 	static inline const std::vector<std::string> outcomes = {
 		"Yellow space effect.",
 		"Orange space effect.",
 		"Pink space effect."
 	};
-};
-export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
-	void execute(Overworld &world) override;
 };
 export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 	void execute(Overworld &world) override;

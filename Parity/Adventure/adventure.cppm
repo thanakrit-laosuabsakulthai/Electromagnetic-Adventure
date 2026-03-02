@@ -66,11 +66,11 @@ export struct Forgather_of_Adventurer : Rule {
 
 // +--->>> traverser.cppm <<<---+++
 
-export struct Corruption_Of_Landmark : Rule {
+export struct Omen_Of_Corruption : Rule {
 	void execute(Overworld &world) override;
 };
 
-export struct Forecast_Of_Combat : Rule {
+export struct Apply_Omen_Of_Corruption : Rule {
 	void execute(Overworld &world) override;
 };
 

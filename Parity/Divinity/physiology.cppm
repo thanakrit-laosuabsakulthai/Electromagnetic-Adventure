@@ -53,6 +53,12 @@ export struct Vitality_Hurt_Humanity : Rule {
 	Vitality_Hurt_Humanity(int damage) : amount_of_damage(damage) {}
 	void execute(Overworld &world) override;
 };
+export struct Vitality_Hurt_Humanity_In_Demon_Zone : Rule {
+	int amount_of_damage;
+	
+	Vitality_Hurt_Humanity_In_Demon_Zone(int damage) : amount_of_damage(damage) {}
+	void execute(Overworld &world) override;
+};
 export struct Vitality_Heal : Rule {
 	int amount_of_healing;
 	
@@ -83,7 +89,7 @@ export struct Gain_Optical_Item : Rule
 	Optics optical_item;
 	int quantity;
 	
-	Gain_Optical_Item(Optics item, int quantity) : optical_item(item), quantity(quantity) {}
+	Gain_Optical_Item(Optics item, int quantity = 1) : optical_item(item), quantity(quantity) {}
 	void execute(Overworld &world) override;
 };
 
@@ -92,7 +98,7 @@ export struct Take_Optical_Item : Rule
 	Optics optical_item;
 	int quantity;
 	
-	Take_Optical_Item(Optics item, int quantity) : optical_item(item), quantity(quantity) {}
+	Take_Optical_Item(Optics item, int quantity = 1) : optical_item(item), quantity(quantity) {}
 	void execute(Overworld &world) override;
 };
 

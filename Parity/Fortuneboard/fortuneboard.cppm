@@ -21,6 +21,7 @@ export struct Roll_For_Random_Board : Rule
 	void execute(Overworld &world) override {
 		world.die_roll_for_fortune_board = static_cast<DieRoll>((std::rand() % 6) + 1);
 		
+		world.announce.clause = MediaClause::MediaBullet;
 		world.announce.bygone(std::format(
 			"Rolled [{}] on the die.",
 			static_cast<int>(world.die_roll_for_fortune_board)
