@@ -22,21 +22,6 @@ export module Parity.EventBoard;
 export namespace Parity
 {
 
-export struct All_Players_Gain_Gold_Coin : Rule
-{
-	int amount_of_gold_coin;
-	All_Players_Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
-	void execute(Overworld &world) override {
-		for (auto& [player_identity, posession] : world.playerbase) {
-			posession.gold_coin += amount_of_gold_coin;
-		}
-		
-		world.announce.bygone(std::format(
-			"Gave {} [Gold Coin] to all players.",
-			amount_of_gold_coin
-		));
-	} 
-};
 
 
 export struct Apply_Gift_Of_Optics : Rule {

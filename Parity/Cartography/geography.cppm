@@ -94,6 +94,7 @@ export enum class Direction {
 };
 
 export using MultiDirection = std::vector<Direction>;
+export using PolyChromaticity = std::set<ApparentColor>;
 
 export struct Pathway {
 	Path pathType;

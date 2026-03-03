@@ -101,5 +101,10 @@ export struct Apply_Optional_Journey : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Teleport : Rule {
+	Landmark landmark_of_destination;
+	Teleport(Landmark landmark_of_destination) : landmark_of_destination(landmark_of_destination) {}
+	void execute(Overworld &world) override;
+};
 
 } // namespace Parity

@@ -1,5 +1,15 @@
 export module Parity.DieRoll;
 
+#if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
+	#include <deque>
+	#include "../type-definition.cppm"
+#else
+	import std; // Standard library import
+#endif
+
+
+
+
 export namespace Parity {
 
 export enum class DieRoll : int
@@ -12,5 +22,6 @@ export enum class DieRoll : int
 	Six
 };
 
+export using Certainty = std::deque<int>;
 
 } // namespace Parity

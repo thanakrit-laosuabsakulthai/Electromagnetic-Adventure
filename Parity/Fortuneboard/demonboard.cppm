@@ -82,6 +82,12 @@ export struct All_Lesser_Demons_Move_One_Space_Towards_Player : Rule {
 		Demonity lesser_demonity = world.expedition.antidivinity.getAllLesserDemons();
 		
 		for (const DemonSeriality& demon : lesser_demonity) {
+			
+			/* DemonForm demon_form = world.expedition.antidivinity.demon_manifest[demon];
+			world.announce.linger(std::format(
+				"{} moves 1 space towards a player.",
+				bold_cyan(std::string(to_string(demon_form)))
+			)); */
 			world.event<Execute_As_Demon>(demon);
 			world.event<Move_Demon_Towards_Player>(1);
 		}
@@ -208,10 +214,19 @@ export struct Apply_Demon_Board_Result : Rule
 };
 
 void Demon_Board::execute(Overworld &world) {
-	world.announce.action(std::format(
-		"{} rolls the Demon Board once.",
-		to_string(world.active_player)
-	));
+	if( world.clause_of_adventure != CelestialClause::Moonfall ) {
+		world.announce.action(std::format(
+			"{} rolls the Demon Board once.",
+			to_string(world.active_player)
+		));
+	} else {
+		world.announce.action(std::format(
+			"The {} rolls the Demon Board once.",
+			std::string(to_string(
+				DemonForm::ElectromagneticDemonBoss
+			))
+		));
+	}
 	
 	world.event<Media_Of_Demon_Board>();
 	world.event<Roll_For_Random_Board>();

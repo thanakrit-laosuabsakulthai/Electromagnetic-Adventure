@@ -93,6 +93,7 @@ public:
 	int consequential_ordinal = 0;
 	int choice_ordinal = 0;
 	int analog_ordinal = 0;
+	int suspense_level = 0;
 	
 	std::string_view getMediaNotation() {
 		static const std::map<MediaClause, std::string_view> mediaClauseToNotation = {
@@ -261,6 +262,23 @@ public:
 		std::getline(std::cin, player_input);
 		return player_input;
 	}
+	
+	void suspense() {
+		std::string player_input;
+		std::getline(std::cin, player_input);
+		redact(); // Clear the suspense line after input
+	}
+	
+	void suspense(int quiet_above_level) {
+		if (suspense_level == 0) {
+			return;
+		}
+		if (suspense_level > quiet_above_level) {
+			return;
+		}
+		suspense();
+	}
+	
 };
 
 } // namespace Parity

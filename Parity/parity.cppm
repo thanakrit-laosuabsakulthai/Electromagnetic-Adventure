@@ -10,6 +10,7 @@ export module Parity;
 	#include "Fortuneboard/eventboard.cppm"
 	#include "Fortuneboard/unluckyboard.cppm"
 	#include "Fortuneboard/demonboard.cppm"
+	#include "Fortuneboard/oracle.cppm"
 
 	#include "Divinity/physiology.cppm"
 	#include "Divinity/psychology.cppm"
@@ -22,6 +23,7 @@ export module Parity;
 	#include "Adventure/forgather.cppm"
 	#include "Adventure/adventure.cppm"
 	#include "Adventure/traverser.cppm"
+	#include "Adventure/celestial.cppm"
 
 	#include "Cartography/geography.cppm"
 	#include "Cartography/notation.cppm"
@@ -47,6 +49,8 @@ export module Parity;
 	
 	#include "Chromaticity/chromaticity.cppm"
 	#include "Chromaticity/coloreffect.cppm"
+	#include "Chromaticity/prismarine.cppm"
+	#include "Chromaticity/glazier.cppm"
 	
 	#include "Showcase/subdivision.cppm"
 	#include "Showcase/amusement.cppm"
@@ -68,6 +72,7 @@ export module Parity;
 	export import Parity.EventBoard;
 	export import Parity.UnluckyBoard;
 	export import Parity.DemonBoard;
+	export import Parity.Oracle;
 	
 	export import Parity.Psychology;
 	export import Parity.Physiology;
@@ -79,7 +84,8 @@ export module Parity;
 	export import Parity.Adventurer;
 	export import Parity.Forgather;
 	export import Parity.Adventure;
-	//export import Parity.Traverser;
+	export import Parity.Traverser;
+	export import Parity.Celestial;
 	
 	export import Parity.Geography;
 	export import Parity.Notation;
@@ -105,9 +111,11 @@ export module Parity;
 	
 	export import Parity.Chromaticity;
 	export import Parity.ColorEffect;
+	export import Parity.Prismarine;
+	export import Parity.Glazier;
 	
 	export import Parity.Subdivision;
-	// export import Parity.Amusement;
+	export import Parity.Amusement;
 	
 	export import Parity.Warfare;
 	export import Parity.Battlefield;

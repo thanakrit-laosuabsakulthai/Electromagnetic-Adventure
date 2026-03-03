@@ -127,7 +127,7 @@ export struct AntiDivinity {
 	Demonity getAllLesserDemons() const {
 		Demonity all_lesser_demons;
 		for (const auto& [demon_seriality, demon_form] : demon_manifest) {
-			if (demon_form == DemonForm::ElectricMinion) {
+			if (demon_form != DemonForm::ElectromagneticDemonBoss) {
 				all_lesser_demons.insert(demon_seriality);
 			}
 		}

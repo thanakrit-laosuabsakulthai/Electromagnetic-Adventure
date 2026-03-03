@@ -17,6 +17,7 @@ export module Parity.World;
 	import Parity.Encyclopedia;
 	import Parity.Optoelectronic;
 	import Parity.Battlefield;
+	import Parity.Celestial;
 #endif
 
 
@@ -52,6 +53,10 @@ export class Overworld
 	int lucky_board_multiplier = 1;
 	int useLuckyBoardMultiplier();
 	
+	// +++ oracle +++
+	Certainty certainty = {};
+	DieRoll fatesAndCertainty();
+	
 	// +++ chromaticity +++
 	DieRoll die_roll_for_chromaticity = DieRoll::One;
 	ApparentColor getColorUnderActivePlayer();
@@ -80,6 +85,14 @@ export class Overworld
 	Inventory purchasement;
 	Inventory consumption;
 	Inventory potential_consumption;
+	
+	// +++ prismarine +++
+	ApparentColor chosen_prismarine;
+	PolyChromaticity potential_prismarine;
+	
+	// +++ traverser +++
+	int calendar_of_sunrise = 0;
+	CelestialClause clause_of_adventure = CelestialClause::VoidOfForgather;
 	
 	/// +++ rule-event +++
 	int amount_of_new_event = 0;

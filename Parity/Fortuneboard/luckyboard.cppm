@@ -55,6 +55,7 @@ export struct Media_Of_Lucky_Board : Rule
 		for (const auto& media : outcomes) {
 			world.announce.choice(media);
 		}
+		
 	}
 	
 	static inline const std::vector<std::string> outcomes = {

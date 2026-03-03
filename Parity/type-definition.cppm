@@ -41,6 +41,10 @@ export class Overworld
 	int lucky_board_multiplier;
 	int useLuckyBoardMultiplier();
 	
+		// +++ oracle +++
+	Certainty certainty = {};
+	DieRoll fatesAndCertainty();
+	
 	// +++ chromaticity +++
 	DieRoll die_roll_for_chromaticity;
 	ApparentColor getColorUnderActivePlayer();
@@ -69,6 +73,14 @@ export class Overworld
 	Inventory purchasement;
 	Inventory consumption;
 	Inventory potential_consumption;
+	
+	// +++ prismarine +++
+	ApparentColor chosen_prismarine;
+	PolyChromaticity potential_prismarine;
+	
+	// +++ traverser +++
+	int calendar_of_sunrise;
+	CelestialClause clause_of_adventure;
 	
 	// +++ rule-event +++
 	int amount_of_new_event;
@@ -120,6 +132,7 @@ public:
 	int consequential_ordinal;
 	int choice_ordinal;
 	int analog_ordinal;
+	int suspense_level;
 	
 	std::string_view getMediaNotation();
 	void media(const std::string& content_append_media);
@@ -158,6 +171,8 @@ public:
 	void redact(); // Delete the most recent announcement
 	void reject(); // Reject the most recent user query
 	std::string listen(); // Listen for user input
+	void suspense(); // Wait for user to press enter
+	void suspense(int quiet_at_level); // only if world.annouce.suspense_level < quiet_above_level
 };
 
 
@@ -443,10 +458,65 @@ export struct Power_Of_Repulsion : Rule {
 
 // +++------>>> chromaticity.cppm <<<------+++
 
+export struct Omen_Of_Chromaticity : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Omen_Of_Chromaticity : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++----->>> prismarine.cppm <<<------+++
+
+export struct Open_Prismarine : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Media_Of_Prismatism : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Apply_Prismatism : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Coalescence_Of_Prismatism : Rule {
+	void execute(Overworld &world) override;
+};
+
+// +++----->>> glazier.cppm <<<------+++
+
+
+export struct Glazier_Of_Chromaticity : Rule {
+	Overworld *terra = nullptr;
+	
+	ApparentColor chosen_color;
+	int transcribed_numerical_dialect; 
+	std::set<int> valid_numeral;
+	void execute(Overworld &world) override;
+	void fill_valid_numeral();
+	ApparentColor getColorFromNumber(int number);
+	
+	void query();
+	
+	bool validate_dialect(std::string &player_input);
+	void apply_dialect(std::string &player_input);
+	
+	bool validate_numerical_dialect();
+	void apply_numerical_dialect();
+	
+	bool validate_choice();
+	
+	void clause_invalid();
+	
+	void end_concentration();
+	void concentrate();
+};
+
+// +++----->>> coloreffect.cppm <<<------+++
+
 export struct Activate_Color_Effect : Rule {
 	void execute(Overworld &world) override;
-	
-	ApparentColor getColorUnderActivePlayer(Overworld &world);
 };
 
 export struct Pink_Color_Effect : Rule {
@@ -476,18 +546,18 @@ export struct Media_Of_Pink_Orange_Yellow_Gradient : Rule {
 export struct Apply_Pink_Orange_Yellow_Gradient_Result : Rule {
 	void execute(Overworld &world) override;
 	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
-	static inline const std::vector<std::string> outcomes;
+	static inline const std::vector<ApparentColor> outcomes;
 };
 export struct Pink_Orange_Yellow_Gradient_Effect : Rule {
 	void execute(Overworld &world) override;
 };
 export struct Media_Of_Red_Purple_Gradient : Rule {
 	void execute(Overworld &world) override;
-	static constexpr int reach = 3; // Each outcome corresponds to 3 die results (e.g., 1-3, 4-6)
-	static inline const std::vector<std::string> outcomes;
 };
 export struct Apply_Red_Purple_Gradient_Result : Rule {
 	void execute(Overworld &world) override;
+	static constexpr int reach = 3; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
+	static inline const std::vector<ApparentColor> outcomes;
 };
 export struct Red_Purple_Gradient_Effect : Rule {
 	void execute(Overworld &world) override;
@@ -574,6 +644,13 @@ export struct Gain_Gold_Coin : Rule
 	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
 	void execute(Overworld &world) override;
 };
+
+export struct All_Players_Gain_Gold_Coin : Rule {
+	int amount_of_gold_coin;
+	All_Players_Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
+	void execute(Overworld &world) override;
+};
+
 export struct Gain_Permanent_Power_Point : Rule {
 	int amount_of_permanent_power;
 	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}
@@ -680,9 +757,24 @@ export struct Execute_As_Demon : Rule {
 //
 //
 
-// +++------>>> adventurer.cppm <<<------+++
+// +++------>>> celestial.cppm <<<------+++
+
+export enum class CelestialClause {
+	VoidOfForgather,
+	Sunrise,
+	Dayspring,
+	RestingPlace,
+	SleepingPlace,
+	Sunset,
+	Twilight,
+	Moonfall,
+	Starlight
+};
 
 
+// string repetition for emdash because emdash is a multicharacter string in UTF-8
+export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
+export inline std::string get_ornament_notation(int amount_of_emdash);
 // +++------>>> adventurer.cppm <<<------+++
 
 export struct Welcome_Adventurer : Rule {
@@ -695,9 +787,6 @@ export struct Welcome_Adventurer : Rule {
 export template <typename Element_Of_Set>
 	inline Element_Of_Set getNextElement(const std::set<Element_Of_Set>& target_set, Element_Of_Set current_element);
 
-// string repetition for emdash because emdash is a multicharacter string in UTF-8
-export inline std::string repetition(const std::string& target_string, int amount_of_repetition);
-export inline std::string get_ornament_notation(int amount_of_emdash);
 
 export struct Media_Of_Adventurer : Rule {
 	void execute(Overworld &world) override;
@@ -711,8 +800,6 @@ export struct First_Adventurer_Turn : Rule {
 export struct Next_Adventurer_Turn : Rule {
 	void execute(Overworld &world) override;
 };
-
-
 
 // +++------>>> forgather.cppm <<<------+++
 
@@ -743,11 +830,59 @@ export struct Rule_Of_Adventure : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Celestial_Clause_Forgather : Rule {
+	void execute(Overworld &world) override;
+};
 
+export struct Celestial_Clause_Sunrise : Rule {
+	void execute(Overworld &world) override;
+};
 
+export struct Celestial_Clause_Dayspring : Rule {
+	void execute(Overworld &world) override;
+};
 
+export struct Celestial_Clause_RestingPlace : Rule {
+	void execute(Overworld &world) override;
+};
 
+export struct Celestial_Clause_SleepingPlace : Rule {
+	void execute(Overworld &world) override;
+};
 
+export struct Celestial_Clause_Sunset : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Twilight : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Moonfall : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Starlight : Rule {
+	void execute(Overworld &world) override;
+};
+
+// media of celestial clauses
+
+export struct Media_Of_Sunrise : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Media_Of_Sunset : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Branch_Of_SleepingPlace : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct End_Of_Parity : Rule {
+	void execute(Overworld &world) override;
+};
 
 
 
@@ -991,6 +1126,7 @@ export enum class Direction {
 };
 
 export using MultiDirection = std::vector<Direction>;
+export using PolyChromaticity = std::set<ApparentColor>;
 
 export struct Pathway {
 	Path pathType;
@@ -1308,7 +1444,11 @@ export struct Apply_Optional_Journey : Rule {
 	void execute(Overworld &world) override;
 };
 
-
+export struct Teleport : Rule {
+	Landmark landmark_of_destination;
+	Teleport(Landmark landmark_of_destination) : landmark_of_destination(landmark_of_destination) {}
+	void execute(Overworld &world) override;
+};
 
 
 
@@ -1354,6 +1494,8 @@ export enum class DieRoll : int
 	Six
 };
 
+export using Certainty = std::deque<int>;
+
 // +++------>>> fortuneboard.cppm <<<------+++
 
 export struct Roll_For_Random_Board : Rule {
@@ -1381,12 +1523,6 @@ export struct Lucky_Board : Rule {
 };
 
 // +++------>>> eventboard.cppm <<<------+++
-
-export struct All_Players_Gain_Gold_Coin : Rule {
-	int amount_of_gold_coin;
-	All_Players_Gain_Gold_Coin(int amount);
-	void execute(Overworld &world) override;
-};
 
 export struct Gift_Of_Optics : Rule {
 	Overworld *terra = nullptr;
@@ -1439,8 +1575,8 @@ export struct All_Players_In_Demon_Zone_Lose_One_Heart : Rule {
 
 export struct Apply_Mediumship_Of_Corruption : Rule {
 	void execute(Overworld &world) override;
-	static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
-	static inline const std::vector<std::string> outcomes;
+		static constexpr int reach = 2; // Each outcome corresponds to 2 die results (e.g., 1-2, 3-4, 5-6)
+	static inline const std::vector<DemonForm> outcomes;
 };
 
 export struct Media_Of_Mediumship : Rule {
@@ -1496,7 +1632,11 @@ export struct Showcase_Warfare : Rule {
 	}
 };
 
+// +++------>>> amusement.cppm <<<------+++
 
+export struct Amusement_A : Rule {
+	void execute(Overworld &world) override;
+};
 
 
 

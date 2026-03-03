@@ -65,12 +65,20 @@ export struct Vitality_Heal : Rule {
 	Vitality_Heal(int healing) : amount_of_healing(healing) {}
 	void execute(Overworld &world) override;
 };
+
 export struct Gain_Gold_Coin : Rule
 {
 	int amount_of_gold_coin;
 	Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
 	void execute(Overworld &world) override;
 };
+
+export struct All_Players_Gain_Gold_Coin : Rule {
+	int amount_of_gold_coin;
+	All_Players_Gain_Gold_Coin(int amount) : amount_of_gold_coin(amount) {}
+	void execute(Overworld &world) override;
+};
+
 export struct Gain_Permanent_Power_Point : Rule {
 	int amount_of_permanent_power;
 	Gain_Permanent_Power_Point(int amount) : amount_of_permanent_power(amount) {}

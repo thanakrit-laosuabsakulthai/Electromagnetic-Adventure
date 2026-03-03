@@ -64,7 +64,7 @@ export struct Forgather_of_Adventurer : Rule {
 	void get_player_choice();
 };
 
-// +--->>> traverser.cppm <<<---+++
+// +++--->>> traverser.cppm <<<---+++
 
 export struct Omen_Of_Corruption : Rule {
 	void execute(Overworld &world) override;
@@ -78,5 +78,58 @@ export struct Rule_Of_Adventure : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Celestial_Clause_Forgather : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Sunrise : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Dayspring : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_RestingPlace : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_SleepingPlace : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Sunset : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Twilight : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Moonfall : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Celestial_Clause_Starlight : Rule {
+	void execute(Overworld &world) override;
+};
+
+// media for celestial clauses
+
+export struct Media_Of_Sunrise : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Media_Of_Sunset : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct Branch_Of_SleepingPlace : Rule {
+	void execute(Overworld &world) override;
+};
+
+export struct End_Of_Parity : Rule {
+	void execute(Overworld &world) override;
+};
 
 } // namespace Parity

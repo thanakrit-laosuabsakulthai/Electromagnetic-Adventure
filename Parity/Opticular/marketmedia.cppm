@@ -309,6 +309,9 @@ void Review_Of_Consumption::display_fortune_consumption() {
 		world.getActivePlayerName(),
 		bold_acute(std::string(to_string(Optics::RadioWaves)))
 	));
+	world.announce.linger(std::format("Trigger the {} once.",
+		bold_cyan("Lucky Board")
+	));
 }
 
 void Review_Of_Consumption::display_combat_consumption() {
@@ -342,10 +345,12 @@ void Review_Of_Consumption::display_repulsion_consumption() {
 void Review_Of_Consumption::display_culinary_consumption() {
 	Overworld &world = *terra;
 	
-	world.announce.result(std::format("{} conjured the {} to cook the demon's meat, healing 1 Heart upon consumption.",
+	world.announce.result(std::format("{} conjured the {} to cook the demon's meat.", // Camera with Flash Emoji: https://emojipedia.org/camera-with-flash/
 		world.getActivePlayerName(),
 		bold_acute(std::string(to_string(Optics::MicroWaves)))
 	));
+	
+	world.announce.linger(std::format("Heal 1 Heart upon consumption."));
 }
 
 void Review_Of_Consumption::display_chromatic_consumption() {

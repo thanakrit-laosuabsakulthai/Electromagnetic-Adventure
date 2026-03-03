@@ -87,7 +87,7 @@ void Move_One_Space::execute(Overworld &world) {
 	world.event<Travel>();
 	world.event<Arrival>();
 	world.event<Omen_Of_Corruption>(); // In adventure.cppm
-	world.event<Activate_Color_Effect>(); // In chromaticity.cppm
+	world.event<Omen_Of_Chromaticity>(); // In chromaticity.cppm
 }
 
 
@@ -111,7 +111,7 @@ void Apply_Optional_Journey::execute(Overworld &world) {
 		world.event<Travel>();
 		world.event<Arrival>();
 		world.event<Omen_Of_Corruption>(); // In adventure.cppm
-		world.event<Activate_Color_Effect>(); // In chromaticity.cppm
+		world.event<Omen_Of_Chromaticity>(); // In chromaticity.cppm
 		// If there are more optional moves left, ask the player if they want to move again
 		if (amount_of_optional_move > 1) {
 			world.event<Move_One_Space_Optional>(amount_of_optional_move - 1);
@@ -119,8 +119,18 @@ void Apply_Optional_Journey::execute(Overworld &world) {
 	}
 }
 
-
-
+void Teleport::execute(Overworld &world) {
+	// Teleport the active player to the landmark of destination without triggering any event
+	world.expedition.landmark_of_destination = landmark_of_destination;
+	
+	world.announce.result(std::format(
+		"{} teleported to {}",
+		world.getActivePlayerName(),
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination))
+	));
+	
+	world.expedition.municipality.teleport(world.active_player, world.expedition.landmark_of_destination);
+}
 
 
 

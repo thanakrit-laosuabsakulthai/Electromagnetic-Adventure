@@ -11,6 +11,7 @@ export module Parity.Adventurer;
 	
 	import Parity.Biology;
 	import Parity.Geography;
+	import Parity.Celestial;
 	
 	import Parity.Adventure;
 #endif
@@ -60,21 +61,6 @@ void Media_Of_Adventurer::execute(Overworld &world) {
 **Player 2 of 2:** SapphireSummoner begins their turn.
 
 */
-
-// string repetition for emdash because emdash is a multicharacter string in UTF-8
-export inline std::string repetition(const std::string& target_string, int amount_of_repetition) {
-	std::string result;
-	for (int i = 0; i < amount_of_repetition; ++i) {
-		result += target_string;
-	}
-	return result;
-}
-
-export inline std::string get_ornament_notation(int amount_of_emdash) {
-	std::string ornament_emdash = repetition("—", amount_of_emdash);
-	std::string center_placeholder = std::format("››› [{}] ‹‹‹", underline("{}"));
-	return ornament_emdash + center_placeholder + ornament_emdash;
-}
 
 void Media_Of_Adventurer_Separator::execute(Overworld &world) {
 	std::string ornament_notation = get_ornament_notation(15);

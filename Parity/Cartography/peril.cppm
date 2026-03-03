@@ -126,7 +126,6 @@ void Apply_Conquest_Of_Demon_Result::execute(Overworld &world) {
 	
 	// Check if the destination is within the Safe Zone
 	if (is_safe_zone(world.atlas[landmark_of_destination].zone)) {
-		world.expedition.amount_of_conquest_remaining = 0; // Stop the conquest immediately
 		world.event<Forfence_Of_Cattail>();
 		
 		// If the demon has moved at least 1 space before being stopped,
@@ -137,6 +136,7 @@ void Apply_Conquest_Of_Demon_Result::execute(Overworld &world) {
 			world.event<Media_Of_Conquest_Failure>();
 		}
 		
+		world.expedition.amount_of_conquest_remaining = 0; // Stop the conquest immediately
 		return; // Do not move the demon
 	}
 	

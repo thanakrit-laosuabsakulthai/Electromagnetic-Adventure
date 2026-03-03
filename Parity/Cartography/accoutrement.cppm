@@ -183,9 +183,10 @@ void Every_Choice_Of_Passage::execute(Overworld &world) {
 
 void Media_Of_Conquest::execute(Overworld &world) {
 	DemonForm active_demon_form = world.getActiveDemonForm();
-	world.announce.action(std::format("The {} moves {} spaces towards a player.",
+	world.announce.action(std::format("The {} moves {} space{} towards a player.",
 		to_string(active_demon_form),
-		world.expedition.amount_of_conquest
+		world.expedition.amount_of_conquest,
+		(world.expedition.amount_of_conquest > 1) ? "s" : ""
 	));
 }
 
@@ -203,14 +204,14 @@ void Media_Of_Perpetrate::execute(Overworld &world) {
 void Media_Of_Conquest_Success::execute(Overworld &world) {
 	world.announce.result(std::format("The {} moved to {}.",
 		to_string(world.getActiveDemonForm()),
-		world.appearanzonality(world.expedition.landmark_of_destination)
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination))
 	));
 }
 
 void Media_Of_Conquest_Failure::execute(Overworld &world) {
 	world.announce.result(std::format("The {} stayed on {}.",
 		to_string(world.getActiveDemonForm()),
-		world.appearanzonality(world.expedition.landmark_of_beginning)
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_beginning))
 	));
 }
 

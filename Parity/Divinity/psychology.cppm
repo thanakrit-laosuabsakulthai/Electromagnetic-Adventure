@@ -151,6 +151,17 @@ void Gain_Gold_Coin::execute(Overworld &world) {
 	));
 }
 
+void All_Players_Gain_Gold_Coin::execute(Overworld &world) {
+	for (auto& [player_identity, posession] : world.playerbase) {
+		posession.gold_coin += amount_of_gold_coin;
+	}
+	
+	world.announce.bygone(std::format(
+		"Gave {} [Gold Coin] to all players.",
+		amount_of_gold_coin
+	));
+} 
+
 
 void Gain_Permanent_Power_Point::execute(Overworld &world) {
 	world.playerbase[world.active_player].permanent_power_point += amount_of_permanent_power;

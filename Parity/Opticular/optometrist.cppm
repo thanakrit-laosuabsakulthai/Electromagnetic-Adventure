@@ -58,7 +58,7 @@ void Excellece_Of_Consumption::execute(Overworld &world) {
 }
 
 void Potential_Of_Combat_Consumption::execute(Overworld &world) {
-	std::vector<Optics> combat_optics = {
+	static std::vector<Optics> combat_optics = {
 		Optics::InfraredWaves,
 		Optics::XRays,
 		Optics::GammaRays
@@ -81,7 +81,7 @@ void Potential_Of_Combat_Consumption::execute(Overworld &world) {
 }
 
 void Potential_Of_Repulsion_Consumption::execute(Overworld &world) {
-	std::vector<Optics> repulsion_optics = {
+	static std::vector<Optics> repulsion_optics = {
 		Optics::UltravioletWaves,
 	};
 	
@@ -109,7 +109,7 @@ void Potential_Of_Culinary_Consumption::execute(Overworld &world) {
 		return; // Player is already at maximum Hearts, skip offering culinary consumption
 	}
 	
-	std::vector<Optics> culinary_optics = {
+	static std::vector<Optics> culinary_optics = {
 		Optics::MicroWaves,
 	};
 	
@@ -129,7 +129,7 @@ void Potential_Of_Culinary_Consumption::execute(Overworld &world) {
 }
 
 void Potential_Of_Chromatic_Consumption::execute(Overworld &world) {
-	std::vector<Optics> chromatic_optics = {
+	static std::vector<Optics> chromatic_optics = {
 		Optics::LightWaves,
 	};
 	
@@ -149,7 +149,7 @@ void Potential_Of_Chromatic_Consumption::execute(Overworld &world) {
 }
 
 void Potential_Of_Fortune_Consumption::execute(Overworld &world) {
-	std::vector<Optics> fortune_optics = {
+	static std::vector<Optics> fortune_optics = {
 		Optics::RadioWaves,
 	};
 	
@@ -157,7 +157,8 @@ void Potential_Of_Fortune_Consumption::execute(Overworld &world) {
 	world.potential_consumption.clear();
 	// insert as many fortune optics as the player has, since fortune optics can be consumed multiple times in a turn
 	for (const auto& optic : fortune_optics) {
-		int count = player_inventory.count(optic);
+		int count = static_cast<int>(player_inventory.count(optic));
+		
 		for (int i = 0; i < count; ++i) {
 			world.potential_consumption.insert(optic);
 		}
@@ -166,6 +167,8 @@ void Potential_Of_Fortune_Consumption::execute(Overworld &world) {
 	if (world.potential_consumption.empty()) {
 		return; // No fortune optics available, skip offering consumption
 	}
+	
+	world.event<Open_Inventory>();
 }
 
 void Power_Of_Repulsion::execute(Overworld &world) {

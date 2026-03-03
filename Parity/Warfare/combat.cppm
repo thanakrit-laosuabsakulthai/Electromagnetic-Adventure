@@ -18,6 +18,7 @@ export module Parity.Combat;
 	import Parity.Physiology;
 	import Parity.ScoutFly;
 	import Parity.Marketplace;
+	import Parity.Adventure;
 #endif
 
 export namespace Parity
@@ -33,6 +34,7 @@ void Discord_Of_Beligerence::execute(Overworld &world) {
 		world.getActivePlayerName(),
 		std::string(to_string(battlefield.combatant_demon))
 	));
+	world.announce.suspense(1); // quiet if world.announce.suspense_level > 1
 }
 
 void Warfare_Iridescence::execute(Overworld &world) {
@@ -149,6 +151,8 @@ void Media_Of_Attack_Power::execute(Overworld &world) {
 		std::string(to_string(battlefield.combatant_demon)),
 		power_synthesis_of_defender
 	));
+	
+	world.announce.suspense(1); // quiet if world.announce.suspense_level > 1
 }
 
 std::string Media_Of_Attack_Power::power_of_synthesis(int attack_power, int attack_power_modification) {
@@ -175,7 +179,7 @@ std::string Media_Of_Attack_Power::modification_synthesis(int attack_power_modif
 }
 
 void Roll_For_Combat_Strength::execute(Overworld &world) {
-	world.battlefield.die_roll_for_combat_strength = static_cast<DieRoll>((std::rand() % 6) + 1); // Simulate a die roll (1-6)
+	world.battlefield.die_roll_for_combat_strength = world.fatesAndCertainty(); // Simulate a die roll (1-6)
 }
 
 void Read_Combat_Strength::execute(Overworld &world) {
@@ -271,6 +275,8 @@ void Media_Of_Combat_Strength::execute(Overworld &world) {
 		strength_of_synthesis(combat_strength_of_defender),
 		advantage_die_roll_hint_of_defender.empty() ? "" : " " + advantage_die_roll_hint_of_defender
 	));
+	
+	world.announce.suspense(1); // quiet if world.announce.suspense_level > 1
 }
 
 std::string Media_Of_Combat_Strength::strength_of_synthesis(int combat_strength) {
@@ -416,6 +422,8 @@ void Combat_Clause_Draw::execute(Overworld &world) {
 		bold("Draw")
 	));
 	
+	world.announce.suspense(1); // quiet if world.announce.suspense_level > 1
+	
 	world.event<Combat_Of_Fates>();
 	world.event<Resolution_Of_Combat>();
 	world.event<Apply_Combat_Result>();
@@ -424,11 +432,19 @@ void Combat_Clause_Draw::execute(Overworld &world) {
 void Combat_Clause_Player_Wins::execute(Overworld &world) {
 	Battlefield &battlefield = world.battlefield;
 	
+	if (battlefield.combatant_demon == DemonForm::ElectromagneticDemonBoss) {
+		world.event<End_Of_Parity>();
+		return; // End of parity, 
+	}
+	
+	
 	world.announce.result(std::format("{} {} the combat. They receive {} Gold Coins and gain 1 permanent Power point.",
 		world.getActivePlayerName(),
 		bold("Won"),
 		battlefield.malignity.at(battlefield.combatant_demon)
 	));
+	
+	world.announce.suspense(1); // quiet if world.announce.suspense_level > 1
 	
 	world.expedition.antidivinity.removeDemon(world.active_demon_seriality);
 	world.event<Gain_Gold_Coin>(battlefield.malignity.at(battlefield.combatant_demon));
@@ -445,6 +461,8 @@ void Combat_Clause_Player_Loses::execute(Overworld &world) {
 		world.getActivePlayerName(),
 		bold("Lost")
 	));
+	
+	world.announce.suspense(1); // quiet if world.announce.suspense_level > 1
 	
 	world.event<Take_All_Optical_Effects>();
 	world.event<Vitality_Hurt>(1);

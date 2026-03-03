@@ -12,6 +12,7 @@ target_sources(Parity PRIVATE
     Fortuneboard/eventboard.cppm
     Fortuneboard/unluckyboard.cppm
     Fortuneboard/demonboard.cppm
+    Fortuneboard/oracle.cppm
     
     Divinity/psychology.cppm
     Divinity/physiology.cppm
@@ -24,6 +25,7 @@ target_sources(Parity PRIVATE
     Adventure/forgather.cppm
     Adventure/adventure.cppm
     Adventure/traverser.cppm
+    Adventure/celestial.cppm
     
     Cartography/geography.cppm
     Cartography/notation.cppm
@@ -49,6 +51,8 @@ target_sources(Parity PRIVATE
     
     Chromaticity/chromaticity.cppm
     Chromaticity/coloreffect.cppm
+    Chromaticity/prismarine.cppm
+    Chromaticity/glazier.cppm
     
     Showcase/subdivision.cppm
     Showcase/amusement.cppm

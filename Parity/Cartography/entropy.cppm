@@ -20,7 +20,7 @@ export namespace Parity {
 //
 
 void Roll_For_Entropy::execute(Overworld &world) {
-	world.die_roll_for_entropy = static_cast<DieRoll>((std::rand() % 6) + 1);
+	world.die_roll_for_entropy = world.fatesAndCertainty();
 }
 
 void Entropy_Of_Adventurer::execute(Overworld &world) {
@@ -52,8 +52,8 @@ void Entropy_Of_Adventurer::execute(Overworld &world) {
 }
 
 void Entropy_Of_Corruption::execute(Overworld &world) {
-	/* 
-	If landmark of beginning is The Cataclysm, pick randomly using die roll for entropy.
+	 
+	// If landmark of beginning is The Cataclysm, pick randomly using die roll for entropy.
 	
 
 	if (world.expedition.landmark_of_beginning == Landmark::TheCataclysm) {
@@ -61,7 +61,7 @@ void Entropy_Of_Corruption::execute(Overworld &world) {
 		world.event<Apply_Fate_Of_Corruption>();
 		return;
 	}
-	*/
+	
 
 	/* 
 	If there are Left, BelowLeft, or Below directions available,
@@ -100,6 +100,13 @@ void Apply_Fate_Of_Corruption::execute(Overworld &world) {
 	MultiDirection available_multidirection = world.expedition.choice_of_direction.vector();
 	int available_count = static_cast<int>(available_multidirection.size());
 	
+	// debug
+	
+	/* for (Direction dir : available_multidirection) {
+		std::print("Available direction: {}\n", to_string(dir));
+	}
+	 */
+
 	if (available_count == 0) {
 		return; // No available directions, do nothing
 	}
