@@ -29,7 +29,7 @@ export struct Amusement_A : Rule {
 			2, // an electric minion on the red square space
 			// Night [1]
 			4, // magnetic demon
-			3, // 1: aboveright, 2: below, 3: left (cataclysm)
+			3, // 1: aboveright, 2: below, 3: left (cataclysm to northern horizon)
 			// Day [2]
 			5, // all players gain 1 gold coin
 			6, // player combat strength
@@ -40,6 +40,8 @@ export struct Amusement_A : Rule {
 			5, // ultraviolet waves
 			// Night [2]
 			1, // all lesser demons move 1 space
+			2, // 1: right, 2: left, 3: below (contested corruption to golden cattail)
+			2, // 1: right, 2: left (northern horizon to optical corruption)
 			// Day [3]
 			3, // move 1 space again (optional)
 			6, // player combat strength

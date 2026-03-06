@@ -181,7 +181,9 @@ void Conquest_Of_Demon::execute(Overworld &world) {
 	
 	world.event<Perpetrate>(); // Set the landmark of beginning and announce the action
 	world.event<Every_Choice_Of_Passage>(); // Populate the choice_of_direction with all paths
-	world.event<Entropy_Of_Corruption>(); // Pick a direction based on the entropy of the corruption
+	//world.event<Entropy_Of_Corruption>(); // Pick a direction based on the entropy of the corruption
+	world.event<Maximum_Entropy_Of_Corruption>(); // random walk for demon movement
+	
 	world.event<Travel>(); // Set the landmark of destination
 	world.event<Apply_Conquest_Of_Demon_Result>(); // Move the demon and announce the result based on the landmark of destination
 }

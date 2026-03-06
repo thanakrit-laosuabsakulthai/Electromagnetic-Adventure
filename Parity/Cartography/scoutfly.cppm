@@ -38,6 +38,11 @@ export struct Entropy_Of_Repulsion : Rule {
 	void execute(Overworld &world) override;
 };
 
+export struct Maximum_Entropy_Of_Corruption : Rule {
+	void execute(Overworld &world) override;
+};
+
+
 // +++------>>> accoutrement.cppm <<<------+++
 
 export struct Media_Of_Conquest : Rule {

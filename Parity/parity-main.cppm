@@ -18,9 +18,10 @@ int main()
 	
 	// Parity::print_all_landmark_notations(); // Testing for now
 
-	// world.event<Rule_Of_Adventure>();
+	world.announce.suspense_level = 1;
+	world.event<Rule_Of_Adventure>();
 	
-	world.event<Amusement_A>();
+	// world.event<Amusement_A>();
 	
 	world.main_loop();
 	std::print("{} now has {} Gold Coins and {} Power points.\n", 

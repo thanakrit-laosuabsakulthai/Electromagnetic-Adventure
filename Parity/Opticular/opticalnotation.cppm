@@ -48,7 +48,7 @@ export inline std::string_view to_description(Optics optical_item) {
 	using enum Optics;
 	static const std::map<Optics, std::string_view> opticDescriptions = {
 		{ RadioWaves, "Use this item to call for support. Trigger the Lucky Board once." },
-		{ MicroWaves, "Use this item *after* winning a combat to cook the demon's meat. Heal 1 Heart upon consumption." },
+		{ MicroWaves, "Use this item after winning a combat to cook the demon's meat. Heal 1 Heart upon consumption." },
 		{ InfraredWaves, "Use this item to detect a demon's heat weakness. Reduce the demon's Power by 1 for that combat." },
 		{ LightWaves, "Use this item when landing on a Gradient space to choose the color effect for that turn's resolution.\n\t\t• Pink-Orange-Yellow Gradient: Choose Pink, Orange, or Yellow effect.\n\t\t• Red-Purple Gradient: Choose Red or Purple effect.\n\t\t• White-Gray Gradient: Choose any non-gradient color effect. The color effect is retained until changed again." },
 		{ UltravioletWaves, "Use this item when entering a space with a demon. The demon retreats 1 space." },

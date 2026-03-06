@@ -93,6 +93,40 @@ void Entropy_Of_Corruption::execute(Overworld &world) {
 	
 }
 
+void Maximum_Entropy_Of_Corruption::execute(Overworld &world) {
+	// If there are no available directions, do nothing
+	if (world.expedition.choice_of_direction.vector().empty()) {
+		return;
+	}
+	
+	// On The Cataclysm, never go AboveRight
+	if (world.expedition.landmark_of_beginning == Landmark::TheCataclysm) {
+		OmniDirection available_directions = world.expedition.choice_of_direction;
+		MultiDirection multidirection = available_directions.vector();
+		
+		// Remove AboveRight from the available directions if it exists
+		OmniDirection filtered_directions;
+		for (Direction searching_direction : multidirection) {
+			if (searching_direction != Direction::AboveRight) {
+				filtered_directions.add(searching_direction);
+			}
+		}
+		
+		world.expedition.choice_of_direction = filtered_directions;
+	}
+	
+	// If there is only one available direction, choose it without rolling the die
+	if (world.expedition.choice_of_direction.vector().size() == 1) {
+		world.expedition.chosen_direction = world.expedition.choice_of_direction.vector()[0];
+		return;
+	}
+	
+	// Otherwise, pick randomly from the available directions using die roll for entropy
+	world.event<Roll_For_Entropy>();
+	world.event<Apply_Fate_Of_Corruption>();
+}
+
+
 void Apply_Fate_Of_Corruption::execute(Overworld &world) {
 	DieRoll roll = world.die_roll_for_entropy;
 	int roll_value = static_cast<int>(roll);

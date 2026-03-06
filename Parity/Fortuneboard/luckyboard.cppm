@@ -42,6 +42,7 @@ export struct Move_Again_One_Space : Rule
 			amount_of_move, amount_of_move > 1 ? "s" : ""
 		));
 		
+		
 		world.event<Move_One_Space_Optional>(amount_of_move);
 	}
 };
@@ -77,7 +78,7 @@ export struct Apply_Lucky_Board_Result : Rule
 		std::string result_description = Media_Of_Lucky_Board::outcomes[static_cast<int>(roll) - 1];
 		
 		int multiplier = 1;
-		if (roll != DieRoll::Two) {
+		if (roll != DieRoll::Two && roll != DieRoll::Three) { // The multiplier only applies to certain outcomes
 			multiplier = world.useLuckyBoardMultiplier();
 		}
 		

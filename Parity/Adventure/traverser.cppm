@@ -169,6 +169,11 @@ void Media_Of_Sunrise::execute(Overworld &world) {
 	}
 	
 	int amount_of_emdash = 19;
+	int amount_of_calendar_digits = std::to_string(world.calendar_of_sunrise).length();
+	// reduce the amount of emdash by 1 em dash for every 2 digits in the calendar
+	amount_of_emdash -= (amount_of_calendar_digits - 1) / 2;
+	amount_of_emdash = std::max(amount_of_emdash, 1); // ensure at least 1 em dash is shown
+	
 	std::string day_of_synthesis = std::format("Day {}", world.calendar_of_sunrise);
 	std::string ornament_notation = get_ornament_notation(amount_of_emdash);
 	std::string content_of_announcement = std::vformat(
@@ -219,6 +224,12 @@ void Celestial_Clause_Sunset::execute(Overworld &world) {
 
 void Media_Of_Sunset::execute(Overworld &world) {
 	int amount_of_emdash = 17;
+	int amount_of_calendar_digits = std::to_string(world.calendar_of_sunrise).length();
+	// reduce the amount of emdash by 1 em dash for every 2 digits in the calendar
+	amount_of_emdash -= (amount_of_calendar_digits - 1) / 2;
+	amount_of_emdash = std::max(amount_of_emdash, 1); // ensure at least 1 em dash is shown
+	
+	
 	std::string day_of_synthesis = std::format("Night {}", world.calendar_of_sunrise);
 	std::string ornament_notation = get_ornament_notation(amount_of_emdash);
 	std::string content_of_announcement = std::vformat(

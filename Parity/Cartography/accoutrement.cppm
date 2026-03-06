@@ -202,15 +202,16 @@ void Media_Of_Perpetrate::execute(Overworld &world) {
 
 
 void Media_Of_Conquest_Success::execute(Overworld &world) {
-	world.announce.result(std::format("The {} moved to {}.",
-		to_string(world.getActiveDemonForm()),
-		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination))
+	world.announce.result(std::format("The {} moved to {} {}.",
+		bold_cyan(std::string(to_string(world.getActiveDemonForm()))),
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination)),
+		bold_cyan(world.pathochronality(world.expedition.chosen_direction))
 	));
 }
 
 void Media_Of_Conquest_Failure::execute(Overworld &world) {
 	world.announce.result(std::format("The {} stayed on {}.",
-		to_string(world.getActiveDemonForm()),
+		bold_cyan(std::string(to_string(world.getActiveDemonForm()))),
 		bold_cyan(world.appearanzonality(world.expedition.landmark_of_beginning))
 	));
 }

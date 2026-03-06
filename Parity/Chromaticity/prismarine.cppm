@@ -25,9 +25,14 @@ void Apply_Prismatism::execute(Overworld &world) {
 	// check if player is on a gradient color
 	ApparentColor current_color = world.getColorUnderActivePlayer();
 	ApparentColor chosen_color = world.chosen_prismarine;
+	Landmark current_landmark = world.getLandmarkOfActivePlayer();
+	ApparentQuality current_quality = world.atlas[current_landmark].apparentQuality;
 	
-	if (!is_gradient_color(current_color)) {
+	if (!( is_gradient_color(current_color)
+		|| current_quality == ApparentQuality::ImitationOfColor
+	)) {
 		return; // Do not apply Prismarine if not on a gradient color
+		// still apply Prismarine if on an imitation of color
 	}
 	if (is_gradient_color(chosen_color)) {
 		return; // Do not apply Prismarine if the chosen color is a gradient color
@@ -40,19 +45,19 @@ void Apply_Prismatism::execute(Overworld &world) {
 	));
 	
 	// if it is  an imitation of color, or the white-gray gradient
-	Landmark current_landmark = world.getLandmarkOfActivePlayer();
-	ApparentQuality current_quality = world.atlas[current_landmark].apparentQuality;
 	
 	if (current_quality == ApparentQuality::ImitationOfColor ||
 		current_color == ApparentColor::WhiteGrayGradient
 	) {
 		world.event<Coalescence_Of_Prismatism>();
+	} else {
+		world.announce.action(activation_synthesis(chosen_color));
 	}
 	
 	// regardless, push the color effect of the chosen color
 	
 	
-	world.announce.action(activation_synthesis(chosen_color));
+	
 	
 	using enum ApparentColor;
 	// only non-gradient colors can be chosen
@@ -101,7 +106,7 @@ void Coalescence_Of_Prismatism::execute(Overworld &world) {
 		to_string(current_landmark),
 		to_string(chosen_color)
 	));
-	
+	world.announce.action(activation_synthesis(chosen_color));
 	// change the appearance of the atlas
 	
 	world.atlas[current_landmark].apparentQuality = ApparentQuality::ImitationOfColor;
