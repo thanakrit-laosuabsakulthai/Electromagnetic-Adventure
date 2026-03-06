@@ -449,7 +449,30 @@ void Combat_Clause_Player_Wins::execute(Overworld &world) {
 	world.expedition.antidivinity.removeDemon(world.active_demon_seriality);
 	world.event<Gain_Gold_Coin>(battlefield.malignity.at(battlefield.combatant_demon));
 	world.event<Gain_Permanent_Power_Point>(1);
-	world.event<Take_All_Optical_Effects>();
+	// world.event<Take_All_Optical_Effects>();
+	
+	Iridescent combatant_player_iridescence = world.playerbase[world.battlefield.combatant_player].active_optical_effect;
+	
+	if (combatant_player_iridescence.contains(OpticalEffect::Ascendancy)) {
+		world.event<Take_Optical_Effect>(OpticalEffect::Ascendancy);
+	}
+	if (combatant_player_iridescence.contains(OpticalEffect::Advantage)) {
+		world.event<Take_Optical_Effect>(OpticalEffect::Advantage);
+	}
+	
+	Landmark landmark_of_combatant_player = world.getLandmarkOfActivePlayer();
+	bool landmark_still_has_demon = world.expedition.antidivinity.getDemonityAt(landmark_of_combatant_player).size() > 0;
+	if (combatant_player_iridescence.contains(OpticalEffect::Collimation)
+		&& !landmark_still_has_demon
+	) {
+		world.event<Take_Optical_Effect>(OpticalEffect::Collimation);
+		// Take collimation only if there will be no further combat at the player's current space
+	}
+	
+	
+	
+	
+	
 	world.event<Potential_Of_Culinary_Consumption>();
 	world.event<Potential_Of_Warfare_At_Active_Player>();
 }

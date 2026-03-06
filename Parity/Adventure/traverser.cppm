@@ -269,6 +269,7 @@ void Celestial_Clause_Starlight::execute(Overworld &world) {
 
 void End_Of_Parity::execute(Overworld &world) {
 	world.event_queue.clear();
+	world.amount_of_new_event = 0;
 	world.clause_of_adventure = CelestialClause::Starlight;
 	world.event<Rule_Of_Adventure>();
 }

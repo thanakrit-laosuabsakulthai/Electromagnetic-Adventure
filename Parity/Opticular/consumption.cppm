@@ -92,6 +92,7 @@ void Consumption_Of_Optics::concentrate() {
 		
 	} while (true);
 	
+	end_concentration();
 }
 
 
