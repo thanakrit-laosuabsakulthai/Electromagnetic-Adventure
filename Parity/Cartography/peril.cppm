@@ -61,10 +61,11 @@ void Perpetrate::execute(Overworld &world) {
 
 void Repulse::execute(Overworld &world) {
 	// same as Knockback, but with different announcement
-	world.announce.linger(std::format("The {} retreated to {}", 
+	world.announce.linger(std::format("The {} retreated to {} {}", 
 		std::string(to_string(world.getActiveDemonForm())),
-		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination
-	))));
+		bold_cyan(world.appearanzonality(world.expedition.landmark_of_destination)),
+		bold_cyan(world.pathochronality(world.expedition.chosen_direction))
+	));
 	world.expedition.antidivinity.teleport(world.active_demon_seriality, world.expedition.landmark_of_destination);
 }
 

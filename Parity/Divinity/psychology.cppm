@@ -104,7 +104,7 @@ void Vitality_Hurt_Humanity_In_Demon_Zone::execute(Overworld &world) {
 	// hurt every player in demon zone
 	
 	for (const PlayerIdentity& player : world.humanity) {
-		Landmark player_landmark = world.getLandmarkOfActivePlayer();
+		Landmark player_landmark = world.expedition.municipality.getLandmarkOf(player);
 		if (!is_demon_zone(world.atlas[player_landmark].zone)) {
 			continue; // Skip players not in demon zone
 		}

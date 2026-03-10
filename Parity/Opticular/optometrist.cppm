@@ -66,12 +66,20 @@ void Potential_Of_Combat_Consumption::execute(Overworld &world) {
 	
 	// Check active player's inventory for combat optics
 	Inventory& player_inventory = world.playerbase.at(world.active_player).inventory;
+	Iridescent& active_optical_effect = world.playerbase.at(world.active_player).active_optical_effect;
 	world.potential_consumption.clear();
 	for (const auto& optic : combat_optics) {
 		if (player_inventory.count(optic) > 0) {
 			world.potential_consumption.insert(optic);
 		}
 	}
+	
+	// if player already has collimation, do not offer gamma rays
+	if (active_optical_effect.contains(OpticalEffect::Collimation)) {
+		world.potential_consumption.erase(Optics::GammaRays);
+	}
+	
+	
 	
 	if (world.potential_consumption.empty()) {
 		return; // No combat optics available, skip offering consumption
