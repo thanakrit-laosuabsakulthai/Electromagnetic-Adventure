@@ -85,7 +85,7 @@ void Media_Of_Delivery::execute(Overworld &world) {
 	terra = &world; // for helper functions
 	
 	world.announce.action(std::format(
-		"{} may order an item from the Shop Board",
+		"{} may order an item from the Shop Board.",
 		world.getActivePlayerName()
 	));
 	
@@ -266,7 +266,7 @@ void Media_Of_Consumption::display_consumption() {
 		));
 	}
 	
-	world.announce.choice("Ignore item usage.");
+	world.announce.abandon("Ignore item usage.");
 }
 
 void Review_Of_Consumption::execute(Overworld &world) {

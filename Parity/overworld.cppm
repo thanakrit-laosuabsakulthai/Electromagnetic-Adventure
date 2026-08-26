@@ -2,6 +2,7 @@ export module Parity.World;
 
 #if defined(__INTELLISENSE__) // Use the shim header for IntelliSense
 	#include <deque>
+	#include <stack>
 	#include <memory>
 	#include <print>
 	#include <iostream>
@@ -66,6 +67,7 @@ export class Overworld
 	Humanity humanity;
 	PlayerIdentity active_player;
 	PlayerIdentity turn_of_adventurer;
+	std::stack<PlayerIdentity> executor_stack;
 	int player_count = 1;
 	int maximum_player_count = 4;
 	std::string_view getActivePlayerName();

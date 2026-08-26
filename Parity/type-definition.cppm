@@ -5,6 +5,7 @@
 #include <memory>
 #include <map>
 #include <set>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -54,6 +55,7 @@ export class Overworld
 	Humanity humanity;
 	PlayerIdentity active_player;
 	PlayerIdentity turn_of_adventurer;
+	std::stack<PlayerIdentity> executor_stack;
 	int player_count;
 	int maximum_player_count;
 	std::string_view getActivePlayerName();
@@ -142,6 +144,7 @@ public:
 	std::string getResultLexicon();
 	std::string getChoiceLexicon();
 	std::string getForbidLexicon();
+	std::string getAbandonLexicon();
 	std::string getAnalogLexicon();
 	std::string getRangeLexicon(int reach);
 	
@@ -158,6 +161,7 @@ public:
 	
 	void choice(const std::string& content_of_choice);
 	void forbid(const std::string& content_of_forbid);
+	void abandon(const std::string& content_of_abandon);
 	void range(const std::string& content_of_range, int reach);
 	void catalog(const std::string& content_of_catalog);
 	void overhang(const std::string& content_of_overhang);

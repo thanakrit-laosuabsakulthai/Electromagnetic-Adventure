@@ -135,6 +135,10 @@ public:
 		return bold_cyan("[-]");
 	}
 	
+	std::string getAbandonLexicon() {
+		return bold_cyan("[x]");
+	}
+	
 	std::string getRangeLexicon(int reach) {
 		if (reach <= 1) {
 			return getChoiceLexicon();
@@ -210,6 +214,11 @@ public:
 	void forbid(const std::string& content_of_forbid) {
 		clause = MediaClause::MediaIndent;
 		media(std::format("{} {}", getForbidLexicon(), strikethrough(content_of_forbid)));
+	}
+	
+	void abandon(const std::string& content_of_abandon) {
+		clause = MediaClause::MediaIndent;
+		media(std::format("{} {}", getAbandonLexicon(), content_of_abandon));
 	}
 	
 	void range(const std::string& content_of_range, int reach) {

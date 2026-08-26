@@ -71,9 +71,9 @@ void Yellow_Color_Effect::execute(Overworld &world) {
 	world.event<Gain_Gold_Coin>(1);
 	world.event<Open_Shop>();
 	
-	/* world.announce.result("Gain 1 Gold Coin, and you may purchase items from the Shop Board"); */
+	/* world.announce.result("Gain 1 Gold Coin, and you may purchase items from the Shop Board."); */
 	world.announce.result(std::format(
-		"Gain {}, and you may purchase items from the {}",
+		"Gain {}, and you may purchase items from the {}.",
 		bold_cyan("1 Gold Coin"),
 		bold_cyan("Shop Board")
 	));

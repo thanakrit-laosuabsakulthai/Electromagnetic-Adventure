@@ -139,7 +139,7 @@ void Media_Of_Passage::execute(Overworld &world) {
 	}
 	
 	if(world.expedition.is_journey_optional) {
-		world.announce.choice("Ignore further movements.");
+		world.announce.abandon("Ignore further movements.");
 	}
 }
 
